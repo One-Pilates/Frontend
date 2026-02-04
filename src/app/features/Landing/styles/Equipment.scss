@@ -1,0 +1,148 @@
+@use '../../../shared/styles/variables.scss' as *;
+
+.equipment {
+  padding: 10rem 1.5rem;
+  background: $branco;
+  position: relative;
+  overflow: hidden;
+
+  .equipment__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+  }
+
+  .equipment__image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    img {
+      width: 100%;
+      max-width: 450px;
+      max-height: 800px;
+      border-radius: 20px;
+      background: $bg-claro;
+      box-shadow:
+        0 0 25px rgba($laranja-principal, 0.25),
+        0 6px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.4s ease;
+      z-index: 1;
+
+      &:hover {
+        transform: scale(1.03);
+        box-shadow:
+          0 0 35px rgba($laranja-principal, 0.4),
+          0 8px 28px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 75%;
+      height: 75%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(
+        circle,
+        rgba($laranja-principal, 0.35) 0%,
+        transparent 70%
+      );
+      filter: blur(60px);
+      z-index: 0;
+      transition: all 0.4s ease;
+    }
+
+    &:hover::before {
+      filter: blur(80px);
+      background: radial-gradient(
+        circle,
+        rgba($laranja-principal, 0.5) 0%,
+        transparent 75%
+      );
+    }
+  }
+
+  .equipment__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .equipment__title {
+      font-size: 2.5rem;
+      color: #000000;
+      font-weight: 700;
+      position: relative;
+
+      &::after {
+        content: '';
+        display: block;
+        width: 70px;
+        height: 4px;
+        background: $laranja-principal;
+        margin-top: 0.8rem;
+        border-radius: 2px;
+      }
+
+      @media (max-width: 768px) {
+        font-size: 2rem;
+        &::after {
+          margin: 0.5rem auto 0;
+        }
+      }
+    }
+
+    .equipment__text {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #555;
+      max-width: 500px;
+
+      @media (max-width: 900px) {
+        margin: 0 auto;
+      }
+    }
+
+    .equipment__button {
+      align-self: flex-start;
+      background: $laranja-principal;
+      color: $branco;
+      border: none;
+      padding: 0.9rem 2rem;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 10px rgba($laranja-principal, 0.3);
+
+      &:hover {
+        background: rgba($laranja-principal, 0.85);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba($laranja-principal, 0.4);
+      }
+
+      @media (max-width: 900px) {
+        align-self: center;
+      }
+
+      .equipment__icon {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}

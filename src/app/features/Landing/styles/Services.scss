@@ -1,0 +1,42 @@
+@use '../../../shared//styles/variables.scss' as *;
+
+.services {
+  padding: 6rem 0;
+  background: $branco;
+}
+
+.services h2 {
+  text-align: center;
+  font-size: 2.2rem;
+  margin-bottom: 3.5rem;
+  color: $text-escuro;
+  line-height: 1.4;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3rem 2rem;
+  justify-items: center;
+}
+
+.service-card {
+  text-align: center;
+}
+
+.service-card img {
+  width: 200px;
+  height: auto;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.service-card:hover img {
+  transform: scale(1.08);
+}
+
+.service-card h3 {
+  font-size: 1.1rem;
+  font-weight: 600; 
+  color: $text-escuro;
+}

@@ -1,0 +1,114 @@
+@use '../../../shared/styles/variables.scss' as *;
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  background: transparent;
+  padding: 1.5rem 0;
+}
+
+.navbar-scrolled {
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo img {
+  height: 35px;
+  transition: all 0.3s ease;
+}
+
+.navbar-menu {
+  display: flex;
+  list-style: none;
+  gap: 2.5rem;
+}
+
+.navbar-menu a {
+  text-decoration: none;
+  color: var(--branco);
+  font-weight: 500;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+.navbar-menu a:hover {
+  color: $laranja-principal;
+}
+
+.navbar-toggle {
+  display: none;
+  cursor: pointer;
+}
+
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  position: absolute;
+  text-align: center;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  padding: 1.5rem 0;
+  transition: all 0.3s ease;
+  transform: translateY(-20px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mobile-menu.open {
+  display: flex;
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: all;
+}
+
+.mobile-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.mobile-menu li {
+  margin: 1rem 0;
+}
+
+.mobile-menu a {
+  color: var(--branco);
+  font-size: 1.2rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.mobile-menu a:hover {
+  color: $laranja-principal;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+  .navbar-menu {
+    display: none;
+  }
+
+  .navbar-toggle {
+    display: block;
+  }
+}
+

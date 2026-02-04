@@ -1,0 +1,126 @@
+@use '../../../shared/styles/variables.scss' as *;
+
+.faq {
+  padding: 6rem 1.5rem;
+  background: $bg-claro;
+  text-align: center;
+
+  h2 {
+    font-size: 2.5rem;
+    margin-bottom: 0.8rem;
+    color: $text-escuro;
+    font-weight: 700;
+    position: relative;
+
+    &::after {
+      content: "";
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: $laranja-principal;
+      border-radius: 3px;
+      margin: 1rem auto 0;
+    }
+  }
+
+  .faq-subtitle {
+    color: $text-cinza;
+    font-size: 1rem;
+    margin-bottom: 3rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.7;
+  }
+
+  .faq-list {
+    max-width: 850px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .faq-item {
+    margin-bottom: 1.2rem;
+    background: $branco;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba($laranja-principal, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    &.active {
+      border-color: $laranja-principal;
+      box-shadow: 0 8px 22px rgba($laranja-principal, 0.25);
+    }
+  }
+
+  .faq-question {
+    width: 100%;
+    padding: 1.4rem 1.8rem;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $text-escuro;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    position: relative;
+
+    &:hover {
+      background: rgba($laranja-principal, 0.06);
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0%;
+      height: 2px;
+      background: $laranja-principal;
+      transition: width 0.3s ease;
+    }
+
+    &:hover::after {
+      width: 100%;
+    }
+  }
+
+  .faq-icon {
+    font-size: 1.5rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    color: $laranja-principal;
+
+    &.open {
+      transform: rotate(45deg);
+    }
+  }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 1.8rem;
+    color: $text-cinza;
+    line-height: 1.7;
+    font-size: 1rem;
+    transition: all 0.4s ease;
+    border-left: 3px solid transparent;
+
+    &.show {
+      max-height: 200px;
+      padding: 1rem 1.8rem 1.5rem;
+      border-left: 3px solid $laranja-principal;
+      background: rgba($laranja-principal, 0.03);
+    }
+  }
+}

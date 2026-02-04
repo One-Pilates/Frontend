@@ -1,0 +1,106 @@
+@use '../../../shared//styles/variables.scss' as *;
+
+.hero {
+  min-height: 100vh;
+  background: url('/background.png') center/cover no-repeat;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(3px);
+  z-index: 1;
+}
+
+.hero-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-content {
+  max-width: 620px;
+  text-align: left;
+
+  h1 {
+    font-size: clamp(2rem, 4.5vw, 4rem);
+    font-weight: 800;
+    color: $branco;
+    margin-bottom: 1.2rem;
+    line-height: 1.1;
+    text-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: rgba($branco, 0.95);
+    margin-bottom: 2rem;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.hero-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.cta-btn {
+  padding: 15px 22px;
+  border-radius: 8px;
+  background: $laranja-principal;
+  color: $branco;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: $laranja-principal, 8%
+  }
+}
+
+.whatsapp-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: $branco;
+}
+
+.whatsapp-icon {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.whatsapp-texts {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.whatsapp-text {
+  font-size: 1rem;
+  font-weight: 700;
+  color: $branco;
+}
+
+@media (max-width: 768px) {
+  .hero-container {
+    padding: 60px 16px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}

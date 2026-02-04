@@ -1,0 +1,86 @@
+@use '../../../shared//styles/variables.scss' as *;
+
+.info-section {
+  width: 100%;
+  padding: 6.5rem 4rem;
+}
+
+.info-container {
+  max-width: 1250px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4.5rem;
+}
+
+.info-card {
+  padding: 2rem 2rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.info-card:hover {
+  transform: translateY(-4px);
+}
+
+.icon-wrapper {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 1.5rem;
+  background: linear-gradient(135deg, #F77433 0%, #FF9461 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(255, 112, 67, 0.25);
+}
+
+.icon {
+  font-size: 2rem;
+  color: var(--branco);
+}
+
+h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-escuro);
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.highlight {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #F77433;
+  margin-bottom: 0.8rem;
+  line-height: 1.4;
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-cinza)666;
+  margin: 0;
+}
+
+@media (max-width: 968px) {
+  .info-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .info-section {
+    padding: 4rem 1.5rem;
+  }
+
+  .info-card {
+    padding: 2rem 1.5rem;
+  }
+}
+
+@media (min-width: 969px) and (max-width: 1200px) {
+  .info-container {
+    padding: 0 2rem;
+  }
+}
