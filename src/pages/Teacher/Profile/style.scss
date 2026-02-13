@@ -1,0 +1,454 @@
+// Specialty chips styling
+.specialty-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--bg-claro);
+  border: 2px solid transparent;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+
+  &:hover {
+    background: #ffe5d9;
+    border-color: var(--laranja-principal);
+  }
+
+  &--selected {
+    background: var(--laranja-principal);
+    border-color: var(--laranja-principal);
+    
+    .specialty-chip__text {
+      color: white;
+      font-weight: 600;
+    }
+
+    &:hover {
+      background: var(--laranja-hover);
+      border-color: var(--laranja-hover);
+    }
+  }
+
+  &__text {
+    font-size: 0.875rem;
+    color: var(--text-escuro);
+    transition: color 0.3s ease;
+  }
+
+  &__check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    background: white;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    color: var(--laranja-principal);
+    font-weight: bold;
+  }
+}
+
+// Profile page background
+.profile-page {
+  min-height: 100vh;
+  background: var(--bg-claro);
+}
+
+// Old styles kept for backwards compatibility
+.profile-user {
+  padding: 1rem 1.5rem;
+  max-width: 75rem;
+  margin: 0 auto;
+
+  @media (min-width: 640px) {
+    padding: 1rem 2rem;
+  }
+
+  @media (min-width: 768px) {
+    padding: 1.5rem 3rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 0 4rem;
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+
+    @media (min-width: 640px) {
+      flex-direction: row;
+      gap: 1.5rem;
+    }
+  }
+
+  &__foto-container {
+    position: relative;
+    border-radius: 50%;
+    border: 3px solid #f77433;
+  }
+
+  &__foto {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    object-fit: cover;
+
+    @media (min-width: 640px) {
+      width: 6rem;
+      height: 6rem;
+    }
+  }
+
+  &__foto-edit {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: var(--branco);
+    border: none;
+    border-radius: 50%;
+    padding: 0.4rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: all 0.3s;
+    color: var(--text-cinza);
+
+    @media (min-width: 640px) {
+      padding: 0.5rem;
+    }
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+
+    @media (min-width: 640px) {
+      text-align: left;
+    }
+  }
+
+  &__nome {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-escuro);
+
+    @media (min-width: 640px) {
+      font-size: 1.5rem;
+    }
+  }
+
+  &__cargo {
+    font-size: 0.875rem;
+    color: var(--text-cinza);
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    @media (min-width: 768px) {
+      gap: 1.5rem;
+    }
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+
+    @media (min-width: 768px) {
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 1024px) {
+      gap: 4rem;
+    }
+
+    @media (min-width: 1280px) {
+      gap: 7rem;
+    }
+
+    &--align-end {
+      align-items: end;
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-escuro);
+    margin-bottom: 0.5rem;
+  }
+
+  &__input-group {
+    position: relative;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--branco);
+    border: none;
+    border-radius: 0.5rem;
+    color: var(--text-escuro);
+    font-size: 0.875rem;
+    outline: none;
+    transition: all 0.3s;
+    font-family: inherit;
+
+    &--placeholder {
+      color: var(--text-cinza);
+    }
+
+    /* Estilos para textarea */
+    &[disabled] {
+      background: var(--bg-claro);
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+  }
+
+  textarea.profile-user__input {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.5;
+  }
+
+  &__edit-icon {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    transition: color 0.3s;
+
+    &:hover {
+      color: #4b5563;
+    }
+  }
+
+  &__notification {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+
+    @media (min-width: 640px) {
+      gap: 1rem;
+      flex-wrap: nowrap;
+    }
+  }
+  
+  &__notification-text {
+    font-size: 0.813rem;
+    color: var(--text-escuro);
+
+    @media (min-width: 640px) {
+      font-size: 0.875rem;
+    }
+  }
+  
+  &__radio-group {
+    background-color: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__switch {
+    display: inline-block;
+    position: relative;
+    width: 52px;
+    height: 28px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+    cursor: pointer;
+
+    input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    .profile-user__switch-slider {
+      position: absolute;
+      inset: 0;
+      background: #e5e7eb; 
+      border-radius: 999px;
+      transition: background 0.2s ease;
+    }
+
+    .profile-user__switch-slider::before {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 22px;
+      height: 22px;
+      background: var(--branco);
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+      transition: transform 0.2s ease;
+    }
+
+    input:checked + .profile-user__switch-slider {
+      background: #0040ff; 
+    }
+
+    input:checked + .profile-user__switch-slider::before {
+      transform: translateX(24px);
+    }
+
+    /* Disabled state */
+    input:disabled + .profile-user__switch-slider {
+      filter: grayscale(100%);
+      opacity: 0.75;
+      cursor: default;
+    }
+
+    input:disabled + .profile-user__switch-slider::before {
+      box-shadow: none;
+    }
+  }
+
+  &__radio {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+
+    input {
+      width: 1rem;
+      height: 1rem;
+      cursor: pointer;
+    }
+
+    span {
+      font-size: 0.875rem;
+      color: #374151;
+    }
+  }
+
+  &__especialidades {
+    padding-top: 1.5rem;
+  }
+  
+  &__checkbox-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem 1rem;
+    margin-top: 0.5rem;
+
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem 1.5rem;
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem 2rem;
+    }
+  }
+
+  &__checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+
+    input {
+      width: 1rem;
+      height: 1rem;
+      border-radius: 0.25rem;
+      cursor: pointer;
+    }
+
+    span {
+      font-size: 0.875rem;
+      color: #374151;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding-top: 1.5rem;
+
+    @media (min-width: 640px) {
+      flex-direction: row;
+      gap: 1rem;
+      padding-top: 2rem;
+    }
+  }
+
+  &__btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.875rem;
+
+    @media (min-width: 640px) {
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+    }
+
+    &--cancel {
+      background: #ef4444;
+      color: var(--branco);
+
+      &:hover {
+        background: #dc2626;
+      }
+    }
+
+    &--save {
+      background: #3b82f6;
+      color: var(--branco);
+
+      &:hover {
+        background: #2563eb;
+      }
+      
+      &:disabled {
+        filter: grayscale(100%);
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+

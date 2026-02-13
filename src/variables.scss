@@ -1,0 +1,94 @@
+// Cores principais
+// Light mode
+$laranja-principal: #F77433;
+$verde-principal: #2e7d32;
+$azul-principal: #2962ff;
+
+// Dark mode
+$laranja-principal-dark: #ff5722;
+$verde-principal-dark: #388e3c;
+$azul-principal-dark: #1976d2;
+
+// Sidebar
+$bg-barra-lateral: #F77433;
+$ativo-barra-lateral: #ffffff;
+
+// Textos
+$text-escuro: #1a1a1a;
+$text-cinza: #757575;
+$texto-titulo: #111827;
+$texto-secundario: #6b7280;
+
+// Backgrounds
+$bg-claro: #f5f5f5;
+$branco: #ffffff;
+$bg-escuro: #18181b;
+$preto: #000000;
+
+// Bordas
+$cor-borda: #e0e0e0;
+$borda-input: #d1d5db;
+
+//destaque/hover
+$laranja-hover: #e54646;
+$laranja-header: #f97316;
+
+// ícones KPI
+$icone-roxo: #8b5cf6;
+$icone-laranja: #fb923c;
+$icone-azul: #60a5fa;
+$icone-amarelo: #fde68a;
+
+
+:root {
+	--laranja-principal: #F77433;
+	--verde-principal: #2e7d32;
+	--azul-principal: #2962ff;
+	--bg-barra-lateral: #F77433;
+	--ativo-barra-lateral: #ffffff;
+	--text-escuro: #1a1a1a;
+	--text-cinza: #757575;
+	--texto-titulo: #111827;
+	--texto-secundario: #6b7280;
+	--bg-claro: #f5f5f5;
+	--branco: #ffffff;
+	--cor-borda: #e0e0e0;
+	--borda-input: #d1d5db;
+	--laranja-hover: #e54646;
+	--laranja-header: #f97316;
+	--icone-roxo: #8b5cf6;
+	--icone-laranja: #fb923c;
+	--icone-azul: #60a5fa;
+	--icone-amarelo: #fde68a;
+	--bg-escuro: #18181b;
+	--preto: #000000;
+}
+
+// body.dark, .dark {
+// 	--laranja-principal: #F77433;
+// 	--verde-principal: #388e3c;
+// 	--azul-principal: #1976d2;
+// 	--bg-barra-lateral: #161B22;
+// 	--ativo-barra-lateral: #0D1117;
+// 	--text-escuro: #FAFBFC;
+// 	--text-cinza: #8B949E;
+// 	--texto-titulo: #FAFBFC;
+// 	--texto-secundario: #8B949E;
+// 	--bg-claro: #0D1117;
+// 	--branco: #161B22;
+// 	--cor-borda: #21262D;
+// 	--borda-input: #21262D;
+// 	--laranja-hover: #e54646;
+// 	--laranja-header: #f97316;
+// 	--icone-roxo: #a78bfa;
+// 	--icone-laranja: #fb923c;
+// 	--icone-azul: #60a5fa;
+// 	--icone-amarelo: #fde68a;
+// 	--bg-escuro: #0D1117;
+// 	--preto: #000000;
+// 	--component-bg: #1B1F26;
+// 	--sidebar-dark: #161B22;
+// }
+
+
+
