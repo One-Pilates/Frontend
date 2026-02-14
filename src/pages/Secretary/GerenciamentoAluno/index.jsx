@@ -1,27 +1,39 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
-import api from "../../../services/api";
-import { useAuth } from "../../../hooks/useAuth";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import api from '../../../services/api';
+import { useAuth } from '../../../hooks/useAuth';
 import {
   FiArrowLeft,
   FiArrowRight,
   FiFilter,
   FiSearch,
   FiTrash2,
-  FiDownload
-} from "react-icons/fi";
-import Botao from "../../../components/Button";
-import { abrirModalDownload } from "./components/Export";
+  FiDownload,
+} from 'react-icons/fi';
+import Botao from '../../../components/Button';
+import { abrirModalDownload } from './components/Export';
 
 export default function GerenciamentoAluno() {
   const navigate = useNavigate();
-  const {_user} = useAuth();
+  const { _user } = useAuth();
   const [alunos, setAlunos] = useState([]);
-  const [statusFilter, setStatusFilter] = useState("todos");
-  const [filterByNome, setFilterByNome] = useState("");
+  const [statusFilter, setStatusFilter] = useState('todos');
+  const [filterByNome, setFilterByNome] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const alunosPerPage = 7;
+
+  const fetchAlunos = async () => {
+    try {
+      console.log('Fetching alunos...');
+      const response = await api.get('api/alunos');
+      const data = response.data;
+      console.log('Alunos fetched:', data);
+      setAlunos(data);
+    } catch (error) {
+      console.error('Erro ao buscar alunos:', error);
+    }
+  };
 
   useEffect(() => {
     fetchAlunos();
@@ -42,54 +54,41 @@ export default function GerenciamentoAluno() {
     return age;
   };
 
-  const fetchAlunos = async () => {
-    try {
-      console.log("Fetching alunos...");
-      const response = await api.get("api/alunos");
-      const data = response.data;
-      console.log("Alunos fetched:", data);
-      setAlunos(data);
-    } catch (error) {
-      console.error("Erro ao buscar alunos:", error);
-    }
-  }
-
   const deleteAluno = async (alunoId) => {
     Swal.fire({
-      title: "Tem certeza?",
-      text: "Essa ação não poderá ser desfeita!",
-      icon: "warning",
+      title: 'Tem certeza?',
+      text: 'Essa ação não poderá ser desfeita!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Sim, deletar!",
-      cancelButtonText: "Cancelar",
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sim, deletar!',
+      cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           await api.delete(`api/alunos/${alunoId}`);
-          setAlunos(alunos.filter(aluno => aluno.id !== alunoId));
+          setAlunos(alunos.filter((aluno) => aluno.id !== alunoId));
           Swal.fire({
-            icon: "success",
-            title: "Deletado!",
-            text: "O aluno foi deletado com sucesso.",
-            confirmButtonText: "OK",
+            icon: 'success',
+            title: 'Deletado!',
+            text: 'O aluno foi deletado com sucesso.',
+            confirmButtonText: 'OK',
           });
         } catch (error) {
-          console.error("Erro ao deletar aluno:", error);
+          console.error('Erro ao deletar aluno:', error);
         }
       }
     });
-  }
+  };
 
   const filteredStudents = alunos.filter((aluno) => {
-    const matchesSearch =
-      aluno.nome.toLowerCase().includes(filterByNome.toLowerCase());
+    const matchesSearch = aluno.nome.toLowerCase().includes(filterByNome.toLowerCase());
 
     const matchesStatus =
-      statusFilter === "todos" ||
-      (statusFilter === "ativo" && aluno.status) ||
-      (statusFilter === "inativo" && !aluno.status);
+      statusFilter === 'todos' ||
+      (statusFilter === 'ativo' && aluno.status) ||
+      (statusFilter === 'inativo' && !aluno.status);
 
     return matchesSearch && matchesStatus;
   });
@@ -105,9 +104,9 @@ export default function GerenciamentoAluno() {
         <div className="flex flex-col sm:flex-row w-full justify-between items-start sm:items-center gap-4">
           <h1 className="text-2xl sm:text-3xl font-bold">Gerenciamento de Aluno</h1>
           <Botao
-            onClick={() => navigate("/secretaria/aluno/cadastrar")}
+            onClick={() => navigate('/secretaria/aluno/cadastrar')}
             cor="bg-blue-500"
-            texto={"Adicionar Aluno"}
+            texto={'Adicionar Aluno'}
           />
         </div>
 
@@ -127,7 +126,7 @@ export default function GerenciamentoAluno() {
                 borderColor: 'var(--cor-borda)',
                 borderWidth: '1px',
                 backgroundColor: 'var(--branco)',
-                color: 'var(--text-escuro)'
+                color: 'var(--text-escuro)',
               }}
             />
           </div>
@@ -136,7 +135,10 @@ export default function GerenciamentoAluno() {
             <button
               onClick={() => abrirModalDownload(filteredStudents, calculateAge)}
               className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 text-white rounded-lg transition focus:outline-none focus:ring-2 flex-1 sm:flex-none"
-              style={{ backgroundColor: 'var(--laranja-principal)', outlineColor: 'var(--laranja-principal)' }}
+              style={{
+                backgroundColor: 'var(--laranja-principal)',
+                outlineColor: 'var(--laranja-principal)',
+              }}
             >
               <FiDownload size={18} className="sm:w-5 sm:h-5" />
               <span className="text-sm sm:text-base">Exportar</span>
@@ -155,7 +157,7 @@ export default function GerenciamentoAluno() {
                   borderColor: 'var(--cor-borda)',
                   borderWidth: '1px',
                   backgroundColor: 'var(--branco)',
-                  color: 'var(--text-escuro)'
+                  color: 'var(--text-escuro)',
                 }}
               >
                 <option value="todos">Status: Todos</option>
@@ -166,60 +168,78 @@ export default function GerenciamentoAluno() {
           </div>
         </div>
 
-        <div 
+        <div
           className="rounded-xl shadow-md flex flex-col overflow-hidden"
           style={{
             backgroundColor: 'var(--branco)',
             borderColor: 'var(--cor-borda)',
-            borderWidth: '1px'
+            borderWidth: '1px',
           }}
         >
           <div className="overflow-x-auto flex-1">
             <table className="w-full table-auto min-w-[640px]">
-              <thead 
+              <thead
                 className="border-b text-sm font-semibold"
                 style={{
                   backgroundColor: 'var(--branco)',
-                  borderBottomColor: 'var(--cor-borda)'
+                  borderBottomColor: 'var(--cor-borda)',
                 }}
               >
                 <tr>
-                  <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold" style={{ color: 'var(--text-escuro)' }}>
+                  <th
+                    className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold"
+                    style={{ color: 'var(--text-escuro)' }}
+                  >
                     Nome do Aluno
                   </th>
-                  <th className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold" style={{ color: 'var(--text-escuro)' }}>
+                  <th
+                    className="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold"
+                    style={{ color: 'var(--text-escuro)' }}
+                  >
                     Email
                   </th>
-                  <th className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold" style={{ color: 'var(--text-escuro)' }}>
+                  <th
+                    className="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold"
+                    style={{ color: 'var(--text-escuro)' }}
+                  >
                     CPF
                   </th>
-                  <th className="hidden sm:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold" style={{ color: 'var(--text-escuro)' }}>
+                  <th
+                    className="hidden sm:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold"
+                    style={{ color: 'var(--text-escuro)' }}
+                  >
                     Idade
                   </th>
-                  <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold" style={{ color: 'var(--text-escuro)' }}>
+                  <th
+                    className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold"
+                    style={{ color: 'var(--text-escuro)' }}
+                  >
                     Status
                   </th>
-                  <th className="hidden xl:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold" style={{ color: 'var(--text-escuro)' }}>
+                  <th
+                    className="hidden xl:table-cell px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-semibold"
+                    style={{ color: 'var(--text-escuro)' }}
+                  >
                     Limitações
                   </th>
-                  <th className="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm font-semibold" style={{ color: 'var(--text-escuro)' }}>
+                  <th
+                    className="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs sm:text-sm font-semibold"
+                    style={{ color: 'var(--text-escuro)' }}
+                  >
                     Ações
                   </th>
                 </tr>
               </thead>
 
-              <tbody 
-                className="divide-y"
-                style={{ borderColor: 'var(--cor-borda)' }}
-              >
+              <tbody className="divide-y" style={{ borderColor: 'var(--cor-borda)' }}>
                 {currentStudents && currentStudents.length > 0 ? (
                   currentStudents.map((aluno) => (
                     <tr
                       key={aluno.id}
                       className="transition hover:bg-gray-50 dark:hover:bg-gray-800"
-                      style={{ 
+                      style={{
                         backgroundColor: 'var(--branco)',
-                        color: 'var(--text-escuro)'
+                        color: 'var(--text-escuro)',
                       }}
                     >
                       <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm">
@@ -245,12 +265,11 @@ export default function GerenciamentoAluno() {
 
                       <td className="px-3 sm:px-6 py-3 sm:py-4">
                         <span
-                          className={`inline-flex px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${aluno.status
-                              ? "bg-green-100 text-green-700"
-                              : "bg-red-100 text-red-700"
-                            }`}
+                          className={`inline-flex px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${
+                            aluno.status ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                          }`}
                         >
-                          {aluno.status ? "Ativo" : "Inativo"}
+                          {aluno.status ? 'Ativo' : 'Inativo'}
                         </span>
                       </td>
 
@@ -294,15 +313,18 @@ export default function GerenciamentoAluno() {
           </div>
 
           {filteredStudents && filteredStudents.length > 0 && (
-            <div 
+            <div
               className="px-3 sm:px-6 py-3 sm:py-4 border-t flex flex-col sm:flex-row items-center justify-between gap-3"
               style={{
                 backgroundColor: 'var(--branco)',
-                borderTopColor: 'var(--cor-borda)'
+                borderTopColor: 'var(--cor-borda)',
               }}
             >
-              <div className="text-xs sm:text-sm order-2 sm:order-1" style={{ color: 'var(--text-cinza)' }}>
-                Mostrando {startIndex + 1} a {Math.min(endIndex, filteredStudents.length)} de{" "}
+              <div
+                className="text-xs sm:text-sm order-2 sm:order-1"
+                style={{ color: 'var(--text-cinza)' }}
+              >
+                Mostrando {startIndex + 1} a {Math.min(endIndex, filteredStudents.length)} de{' '}
                 {filteredStudents.length} alunos
               </div>
 
@@ -315,7 +337,7 @@ export default function GerenciamentoAluno() {
                     backgroundColor: 'var(--branco)',
                     color: currentPage === 1 ? 'var(--text-cinza)' : 'var(--text-escuro)',
                     borderColor: 'var(--cor-borda)',
-                    borderWidth: '1px'
+                    borderWidth: '1px',
                   }}
                 >
                   <FiArrowLeft size={16} className="sm:w-[18px] sm:h-[18px]" />
@@ -332,10 +354,11 @@ export default function GerenciamentoAluno() {
                         onClick={() => setCurrentPage(p)}
                         className="w-8 h-8 sm:w-10 sm:h-10 rounded-full text-xs sm:text-sm font-medium transition"
                         style={{
-                          backgroundColor: currentPage === p ? 'var(--laranja-principal)' : 'var(--branco)',
+                          backgroundColor:
+                            currentPage === p ? 'var(--laranja-principal)' : 'var(--branco)',
                           color: currentPage === p ? '#fff' : 'var(--text-escuro)',
                           borderColor: 'var(--cor-borda)',
-                          borderWidth: '1px'
+                          borderWidth: '1px',
                         }}
                       >
                         {p}
@@ -346,9 +369,13 @@ export default function GerenciamentoAluno() {
 
                     if (currentPage > 3) {
                       pages.push(
-                        <span key="dots1" className="px-1 sm:px-2 text-xs sm:text-sm" style={{ color: 'var(--text-cinza)' }}>
+                        <span
+                          key="dots1"
+                          className="px-1 sm:px-2 text-xs sm:text-sm"
+                          style={{ color: 'var(--text-cinza)' }}
+                        >
                           …
-                        </span>
+                        </span>,
                       );
                     }
 
@@ -361,9 +388,13 @@ export default function GerenciamentoAluno() {
 
                     if (currentPage < total - 2) {
                       pages.push(
-                        <span key="dots2" className="px-1 sm:px-2 text-xs sm:text-sm" style={{ color: 'var(--text-cinza)' }}>
+                        <span
+                          key="dots2"
+                          className="px-1 sm:px-2 text-xs sm:text-sm"
+                          style={{ color: 'var(--text-cinza)' }}
+                        >
                           …
-                        </span>
+                        </span>,
                       );
                     }
 
@@ -374,16 +405,14 @@ export default function GerenciamentoAluno() {
                 </div>
 
                 <button
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-                  }
+                  onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
                   className="p-1.5 sm:p-2 rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed"
                   style={{
                     backgroundColor: 'var(--branco)',
                     color: currentPage === totalPages ? 'var(--text-cinza)' : 'var(--text-escuro)',
                     borderColor: 'var(--cor-borda)',
-                    borderWidth: '1px'
+                    borderWidth: '1px',
                   }}
                 >
                   <FiArrowRight size={16} className="sm:w-[18px] sm:h-[18px]" />

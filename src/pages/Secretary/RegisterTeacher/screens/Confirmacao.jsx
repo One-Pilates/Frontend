@@ -1,11 +1,11 @@
-import { FaCheckCircle } from "react-icons/fa";
-import Button from "../components/Button";
-import "./confirmacao.scss";
+import { FaCheckCircle } from 'react-icons/fa';
+import Button from '../components/Button';
+import './confirmacao.scss';
 
 const CardInfo = ({ label, valor }) => (
   <div className="card-info">
     <span className="card-label">{label}</span>
-    <span className="card-value">{valor || "---"}</span>
+    <span className="card-value">{valor || '---'}</span>
   </div>
 );
 
@@ -14,20 +14,19 @@ export default function ConfirmacaoProfessorScreen({
   endereco = {},
   informacoesProfissionais = {},
   especialidades = [],
-  cadastrando = false,
   onCadastrar,
   onCancelar,
   onVoltar,
 }) {
-  const especialidadesNomes = informacoesProfissionais.especialidades
-    ?.map(id => especialidades.find(e => e.id === id)?.nome)
-    .filter(Boolean)
-    .join(", ") || "Nenhuma";
+  const especialidadesNomes =
+    informacoesProfissionais.especialidades
+      ?.map((id) => especialidades.find((e) => e.id === id)?.nome)
+      .filter(Boolean)
+      .join(', ') || 'Nenhuma';
 
   return (
     <div className="confirmacao-aluno-screen">
       <div className="success-section">
-  
         <h2 className="confirm-title">Revise os dados</h2>
         <p className="confirm-message">Verifique se tudo está correto antes de cadastrar</p>
       </div>
@@ -61,7 +60,7 @@ export default function ConfirmacaoProfessorScreen({
           <div className="card-grid">
             <CardInfo label="Cargo" valor={informacoesProfissionais.cargo} />
             <CardInfo label="Especialidades" valor={especialidadesNomes} />
-            
+
             <div className="card-info">
               <span className="card-label">Notificações</span>
               <span className="card-value">
@@ -72,36 +71,38 @@ export default function ConfirmacaoProfessorScreen({
                 )}
               </span>
             </div>
-            
+
             <div className="card-info observacoes-card">
               <span className="card-label">Observações</span>
               <span className="card-value observacoes-text">
-                {informacoesProfissionais.observacoes || "Nenhuma"}
+                {informacoesProfissionais.observacoes || 'Nenhuma'}
               </span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="button-group" style={{ 
-        marginTop: '2rem', 
-        display: 'flex', 
-        gap: '1rem',
-        justifyContent: 'center',
-        flexWrap: 'wrap'
-      }}>
-       
-      <div className="confirm-actions">
-        <Button variant="tertiary" onClick={onVoltar}>
-          Voltar
-        </Button>
-        <Button variant="secondary" onClick={onCancelar}>
-          Cancelar
-        </Button>
-        <Button variant="primary" onClick={onCadastrar}>
-          Cadastrar
-        </Button>
-      </div>
+      <div
+        className="button-group"
+        style={{
+          marginTop: '2rem',
+          display: 'flex',
+          gap: '1rem',
+          justifyContent: 'center',
+          flexWrap: 'wrap',
+        }}
+      >
+        <div className="confirm-actions">
+          <Button variant="tertiary" onClick={onVoltar}>
+            Voltar
+          </Button>
+          <Button variant="secondary" onClick={onCancelar}>
+            Cancelar
+          </Button>
+          <Button variant="primary" onClick={onCadastrar}>
+            Cadastrar
+          </Button>
+        </div>
       </div>
     </div>
   );

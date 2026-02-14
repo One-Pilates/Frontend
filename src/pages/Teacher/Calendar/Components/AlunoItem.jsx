@@ -2,7 +2,6 @@ import React from 'react';
 import { FiUser } from 'react-icons/fi';
 import '../Styles/AlunoItem.scss';
 
-
 const AlunoItem = ({ nome }) => (
   <div className="aluno-item">
     <div className="aluno-avatar">

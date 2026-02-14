@@ -1,6 +1,6 @@
-import React from "react";
-import { FaArrowLeft } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { FaArrowLeft } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const Back = () => {
   const navigate = useNavigate();

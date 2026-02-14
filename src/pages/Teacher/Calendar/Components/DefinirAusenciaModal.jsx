@@ -12,8 +12,6 @@ const DefinirAusenciaModal = ({ isOpen, onClose }) => {
   const [horaFim, setHoraFim] = useState('');
   const [motivo, setMotivo] = useState('');
 
-  const [tipo, setTipo] = useState('TEMPORARIA');
-
   if (!isOpen) return null;
 
   const handleSubmit = async (e) => {
@@ -54,14 +52,18 @@ const DefinirAusenciaModal = ({ isOpen, onClose }) => {
       fimMinutes < minAllowed ||
       fimMinutes > maxAllowed
     ) {
-      await Swal.fire('Horário inválido', 'As ausências só podem ser definidas entre 07:00 e 22:00.', 'warning');
+      await Swal.fire(
+        'Horário inválido',
+        'As ausências só podem ser definidas entre 07:00 e 22:00.',
+        'warning',
+      );
       return;
     }
 
     const mapDiaSemana = (localIso) => {
       if (!localIso) return '';
       const d = new Date(localIso);
-      const map = ['DOMINGO','SEGUNDA','TERCA','QUARTA','QUINTA','SEXTA','SABADO'];
+      const map = ['DOMINGO', 'SEGUNDA', 'TERCA', 'QUARTA', 'QUINTA', 'SEXTA', 'SABADO'];
       return map[d.getDay()];
     };
 
@@ -71,7 +73,7 @@ const DefinirAusenciaModal = ({ isOpen, onClose }) => {
       dataFim: fimStr,
       diaSemanaInicio: mapDiaSemana(inicioStr),
       diaSemanaFim: mapDiaSemana(fimStr),
-      motivo
+      motivo,
     };
 
     try {
@@ -86,7 +88,11 @@ const DefinirAusenciaModal = ({ isOpen, onClose }) => {
           return !(novoFim <= exInicio || novoInicio >= exFim);
         });
         if (sobrepoe) {
-          await Swal.fire('Conflito de ausência', 'Já existe uma ausência registrada que sobrepõe esse período. Ajuste as datas.', 'warning');
+          await Swal.fire(
+            'Conflito de ausência',
+            'Já existe uma ausência registrada que sobrepõe esse período. Ajuste as datas.',
+            'warning',
+          );
           return;
         }
       } catch (err) {
@@ -100,7 +106,7 @@ const DefinirAusenciaModal = ({ isOpen, onClose }) => {
         showCancelButton: true,
         confirmButtonText: 'Sim, confirmar',
         cancelButtonText: 'Cancelar',
-        confirmButtonColor: '#ef4444'
+        confirmButtonColor: '#ef4444',
       });
 
       if (!confirm.isConfirmed) return;
@@ -118,7 +124,7 @@ const DefinirAusenciaModal = ({ isOpen, onClose }) => {
         borderColor: '#868686',
         textColor: '#ffffff',
         classNames: ['ausencia-event'],
-        extendedProps: { isAusencia: true }
+        extendedProps: { isAusencia: true },
       };
 
       window.dispatchEvent(new CustomEvent('ausencia:create', { detail: bgEvent }));
@@ -127,7 +133,7 @@ const DefinirAusenciaModal = ({ isOpen, onClose }) => {
         title: 'Ausência definida',
         icon: 'success',
         timer: 1400,
-        showConfirmButton: false
+        showConfirmButton: false,
       });
 
       setDataInicio('');
@@ -140,10 +146,20 @@ const DefinirAusenciaModal = ({ isOpen, onClose }) => {
     } catch (error) {
       console.error('Erro ao criar ausência:', error);
       if (error.request && !error.response) {
-        Swal.fire('Erro de conexão', 'Não foi possível conectar ao servidor. Verifique se o backend está rodando.', 'error');
+        Swal.fire(
+          'Erro de conexão',
+          'Não foi possível conectar ao servidor. Verifique se o backend está rodando.',
+          'error',
+        );
       } else if (error.response) {
-        const serverMsg = error.response.data && (error.response.data.message || JSON.stringify(error.response.data));
-        Swal.fire('Erro', serverMsg || 'Erro ao definir ausência. Verifique os dados e tente novamente.', 'error');
+        const serverMsg =
+          error.response.data &&
+          (error.response.data.message || JSON.stringify(error.response.data));
+        Swal.fire(
+          'Erro',
+          serverMsg || 'Erro ao definir ausência. Verifique os dados e tente novamente.',
+          'error',
+        );
       } else {
         Swal.fire('Erro', 'Erro ao definir ausência. Tente novamente.', 'error');
       }
@@ -152,10 +168,7 @@ const DefinirAusenciaModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div
-        className="modal-content ausencia-modal"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="modal-content ausencia-modal" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2>Definir Ausência</h2>
           <button className="modal-close" onClick={onClose}>

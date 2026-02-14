@@ -1,19 +1,19 @@
-import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa";
-import Swal from "sweetalert2";
-import api from "../../../services/api";
-import StepIndicator from "./components/StepIndicator";
-import Button from "./components/Button";
-import DadosPessoaisScreen from "./screens/DadosPessoais";
-import EnderecoScreen from "./screens/Endereco";
-import InformacoesAlunoScreen from "./screens/InformacoesAlunos";
-import ConfirmacaoAlunoScreen from "./screens/Confirmacao";
-import "./style.scss";
+import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { FaArrowLeft } from 'react-icons/fa';
+import Swal from 'sweetalert2';
+import api from '../../../services/api';
+import StepIndicator from './components/StepIndicator';
+import Button from './components/Button';
+import DadosPessoaisScreen from './screens/DadosPessoais';
+import EnderecoScreen from './screens/Endereco';
+import InformacoesAlunoScreen from './screens/InformacoesAlunos';
+import ConfirmacaoAlunoScreen from './screens/Confirmacao';
+import './style.scss';
 
 // Função para validar CPF
 const validarCPF = (cpf) => {
-  cpf = cpf.replace(/\D/g, "");
+  cpf = cpf.replace(/\D/g, '');
 
   if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
 
@@ -55,38 +55,38 @@ export default function RegisterStudent() {
 
   const [dadosPessoais, setDadosPessoais] = useState(
     dadosIniciais.dadosPessoais || {
-      fotoPerfil: "",
-      nomeCompleto: "",
-      email: "",
-      cpf: "",
-      dataNascimento: "",
-      telefone: "",
-    }
+      fotoPerfil: '',
+      nomeCompleto: '',
+      email: '',
+      cpf: '',
+      dataNascimento: '',
+      telefone: '',
+    },
   );
 
   const [endereco, setEndereco] = useState(
     dadosIniciais.endereco || {
-      cep: "",
-      logradouro: "",
-      numero: "",
-      bairro: "",
-      cidade: "",
-      estado: "",
-    }
+      cep: '',
+      logradouro: '',
+      numero: '',
+      bairro: '',
+      cidade: '',
+      estado: '',
+    },
   );
 
   const [informacoesAluno, setInformacoesAluno] = useState(
     dadosIniciais.informacoesAluno || {
       problemasMobilidade: false,
-      observacoes: "",
-    }
+      observacoes: '',
+    },
   );
 
   const etapas = [
-    { label: "Dados Pessoais" },
-    { label: "Endereço" },
-    { label: "Informações" },
-    { label: "Confirmação" },
+    { label: 'Dados Pessoais' },
+    { label: 'Endereço' },
+    { label: 'Informações' },
+    { label: 'Confirmação' },
   ];
 
   const atualizarDadosPessoais = (novos) => {
@@ -112,7 +112,7 @@ export default function RegisterStudent() {
 
   // Buscar CEP usando ViaCEP API
   const buscarCep = async (cep) => {
-    const cepLimpo = cep.replace(/\D/g, "");
+    const cepLimpo = cep.replace(/\D/g, '');
 
     if (cepLimpo.length === 8) {
       try {
@@ -121,17 +121,17 @@ export default function RegisterStudent() {
 
         if (!data.erro) {
           atualizarEndereco({
-            logradouro: data.logradouro || "",
-            bairro: data.bairro || "",
-            cidade: data.localidade || "",
-            estado: data.uf || "",
+            logradouro: data.logradouro || '',
+            bairro: data.bairro || '',
+            cidade: data.localidade || '',
+            estado: data.uf || '',
           });
         } else {
-          Swal.fire("CEP não encontrado!", "", "warning");
+          Swal.fire('CEP não encontrado!', '', 'warning');
         }
       } catch (err) {
-        console.error("Erro ao buscar CEP:", err);
-        Swal.fire("Erro ao buscar CEP", "Tente novamente", "error");
+        console.error('Erro ao buscar CEP:', err);
+        Swal.fire('Erro ao buscar CEP', 'Tente novamente', 'error');
       }
     }
   };
@@ -142,34 +142,33 @@ export default function RegisterStudent() {
 
     if (etapaAtual === 1) {
       if (!dadosPessoais.nomeCompleto.trim()) {
-        novosErros.nomeCompleto = "Nome completo é obrigatório";
+        novosErros.nomeCompleto = 'Nome completo é obrigatório';
       }
       if (!dadosPessoais.email.trim()) {
-        novosErros.email = "Email é obrigatório";
+        novosErros.email = 'Email é obrigatório';
       } else if (!validarEmail(dadosPessoais.email)) {
-        novosErros.email = "Email inválido";
+        novosErros.email = 'Email inválido';
       }
       if (!dadosPessoais.cpf.trim()) {
-        novosErros.cpf = "CPF é obrigatório";
+        novosErros.cpf = 'CPF é obrigatório';
       } else if (!validarCPF(dadosPessoais.cpf)) {
-        novosErros.cpf = "CPF inválido";
+        novosErros.cpf = 'CPF inválido';
       }
       if (!dadosPessoais.dataNascimento) {
-        novosErros.dataNascimento = "Data de nascimento é obrigatória";
+        novosErros.dataNascimento = 'Data de nascimento é obrigatória';
       }
       if (!dadosPessoais.telefone.trim()) {
-        novosErros.telefone = "Telefone é obrigatório";
+        novosErros.telefone = 'Telefone é obrigatório';
       }
     }
 
     if (etapaAtual === 2) {
-      if (!endereco.cep.trim()) novosErros.cep = "CEP é obrigatório";
-      if (!endereco.logradouro.trim())
-        novosErros.logradouro = "Logradouro é obrigatório";
-      if (!endereco.numero.trim()) novosErros.numero = "Número é obrigatório";
-      if (!endereco.bairro.trim()) novosErros.bairro = "Bairro é obrigatório";
-      if (!endereco.cidade.trim()) novosErros.cidade = "Cidade é obrigatória";
-      if (!endereco.estado) novosErros.estado = "Estado é obrigatório";
+      if (!endereco.cep.trim()) novosErros.cep = 'CEP é obrigatório';
+      if (!endereco.logradouro.trim()) novosErros.logradouro = 'Logradouro é obrigatório';
+      if (!endereco.numero.trim()) novosErros.numero = 'Número é obrigatório';
+      if (!endereco.bairro.trim()) novosErros.bairro = 'Bairro é obrigatório';
+      if (!endereco.cidade.trim()) novosErros.cidade = 'Cidade é obrigatória';
+      if (!endereco.estado) novosErros.estado = 'Estado é obrigatório';
     }
 
     setErros(novosErros);
@@ -185,9 +184,9 @@ export default function RegisterStudent() {
       }
     } else {
       Swal.fire(
-        "Campos obrigatórios",
-        "Por favor, preencha todos os campos obrigatórios corretamente.",
-        "warning"
+        'Campos obrigatórios',
+        'Por favor, preencha todos os campos obrigatórios corretamente.',
+        'warning',
       );
     }
   };
@@ -204,18 +203,8 @@ export default function RegisterStudent() {
     }
   };
 
-  const voltar = () => {
-    navigate("/secretary", {
-      state: {
-        dadosPessoais,
-        endereco,
-        informacoesAluno,
-      },
-    });
-  };
-
   const finalizar = () => {
-    console.log("📋 Dados do aluno (pré-visualização):", {
+    console.log('📋 Dados do aluno (pré-visualização):', {
       dadosPessoais,
       endereco,
       informacoesAluno,
@@ -224,69 +213,60 @@ export default function RegisterStudent() {
     setEtapaAtual(4);
   };
 
-  const concluir = () => {
-    Swal.fire(
-      "Cadastro concluído!",
-      "Aluno cadastrado com sucesso!",
-      "success"
-    );
-    navigate("/secretaria/alunos");
-  };
-
   const cancelarCadastro = () => {
     setDadosPessoais({
-      nomeCompleto: "",
-      email: "",
-      cpf: "",
-      dataNascimento: "",
-      telefone: "",
+      nomeCompleto: '',
+      email: '',
+      cpf: '',
+      dataNascimento: '',
+      telefone: '',
     });
 
     setEndereco({
-      cep: "",
-      logradouro: "",
-      numero: "",
-      bairro: "",
-      cidade: "",
-      estado: "",
+      cep: '',
+      logradouro: '',
+      numero: '',
+      bairro: '',
+      cidade: '',
+      estado: '',
     });
 
     setInformacoesAluno({
       problemasMobilidade: false,
-      observacoes: "",
+      observacoes: '',
     });
 
-    navigate("/secretaria/alunos");
+    navigate('/secretaria/alunos');
   };
 
   const cadastrarAluno = async () => {
     const payload = {
-      nome: dadosPessoais.nomeCompleto || "",
-      email: dadosPessoais.email || "",
-      cpf: dadosPessoais.cpf || "",
-      dataNascimento: dadosPessoais.dataNascimento || "",
+      nome: dadosPessoais.nomeCompleto || '',
+      email: dadosPessoais.email || '',
+      cpf: dadosPessoais.cpf || '',
+      dataNascimento: dadosPessoais.dataNascimento || '',
       status: true,
       alunoComLimitacoesFisicas: !!informacoesAluno.problemasMobilidade,
-      tipoContato: dadosPessoais.telefone || "",
+      tipoContato: dadosPessoais.telefone || '',
       notificacaoAtiva: true,
       endereco: {
-        rua: endereco.logradouro || "",
-        numero: endereco.numero || "",
-        bairro: endereco.bairro || "",
-        cidade: endereco.cidade || "",
-        estado: endereco.estado || "",
-        cep: endereco.cep || "",
-        uf: endereco.estado || "",
+        rua: endereco.logradouro || '',
+        numero: endereco.numero || '',
+        bairro: endereco.bairro || '',
+        cidade: endereco.cidade || '',
+        estado: endereco.estado || '',
+        cep: endereco.cep || '',
+        uf: endereco.estado || '',
       },
     };
 
     try {
-      const res = await api.post("api/alunos", payload);
-      Swal.fire("Sucesso", "Aluno cadastrado com sucesso.", "success");
-      navigate("/secretaria/alunos");
+      await api.post('api/alunos', payload);
+      Swal.fire('Sucesso', 'Aluno cadastrado com sucesso.', 'success');
+      navigate('/secretaria/alunos');
     } catch (error) {
-      console.error("Erro ao cadastrar aluno:", error);
-      Swal.fire("Erro", "Não foi possível cadastrar o aluno.", "error");
+      console.error('Erro ao cadastrar aluno:', error);
+      Swal.fire('Erro', 'Não foi possível cadastrar o aluno.', 'error');
     }
   };
 
@@ -336,10 +316,7 @@ export default function RegisterStudent() {
   return (
     <div className="register-container">
       <div className="register-header">
-        <button
-          className="back-button"
-          onClick={() => navigate("/secretaria/alunos")}
-        >
+        <button className="back-button" onClick={() => navigate('/secretaria/alunos')}>
           <FaArrowLeft />
           <span>Voltar</span>
         </button>
@@ -348,11 +325,7 @@ export default function RegisterStudent() {
 
       <div className="register-content">
         <div className="register-card">
-          <StepIndicator
-            steps={etapas}
-            currentStep={etapaAtual}
-            onStepClick={irParaEtapa}
-          />
+          <StepIndicator steps={etapas} currentStep={etapaAtual} onStepClick={irParaEtapa} />
 
           <form className="register-form" onSubmit={(e) => e.preventDefault()}>
             {renderEtapa()}
@@ -366,7 +339,7 @@ export default function RegisterStudent() {
                 )}
 
                 <Button variant="primary" onClick={proximaEtapa}>
-                  {etapaAtual === 3 ? "Cadastrar" : "Continuar"}
+                  {etapaAtual === 3 ? 'Cadastrar' : 'Continuar'}
                 </Button>
               </div>
             )}

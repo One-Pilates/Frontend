@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-export default function ScrollReveal({ 
-  children, 
-  animation = 'fade-up', 
+export default function ScrollReveal({
+  children,
+  animation = 'fade-up',
   delay = 0,
-  duration = 0.8 
+  duration = 0.8,
 }) {
   const [isVisible, setIsVisible] = useState(false);
   const elementRef = useRef(null);
@@ -19,8 +19,8 @@ export default function ScrollReveal({
       },
       {
         threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-      }
+        rootMargin: '0px 0px -50px 0px',
+      },
     );
 
     if (elementRef.current) {
@@ -37,27 +37,27 @@ export default function ScrollReveal({
   const animations = {
     'fade-up': {
       opacity: isVisible ? 1 : 0,
-      transform: isVisible ? 'translateY(0)' : 'translateY(30px)'
+      transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
     },
     'fade-down': {
       opacity: isVisible ? 1 : 0,
-      transform: isVisible ? 'translateY(0)' : 'translateY(-30px)'
+      transform: isVisible ? 'translateY(0)' : 'translateY(-30px)',
     },
     'fade-left': {
       opacity: isVisible ? 1 : 0,
-      transform: isVisible ? 'translateX(0)' : 'translateX(30px)'
+      transform: isVisible ? 'translateX(0)' : 'translateX(30px)',
     },
     'fade-right': {
       opacity: isVisible ? 1 : 0,
-      transform: isVisible ? 'translateX(0)' : 'translateX(-30px)'
+      transform: isVisible ? 'translateX(0)' : 'translateX(-30px)',
     },
     'zoom-in': {
       opacity: isVisible ? 1 : 0,
-      transform: isVisible ? 'scale(1)' : 'scale(0.9)'
+      transform: isVisible ? 'scale(1)' : 'scale(0.9)',
     },
-    'fade': {
-      opacity: isVisible ? 1 : 0
-    }
+    fade: {
+      opacity: isVisible ? 1 : 0,
+    },
   };
 
   return (
@@ -65,7 +65,7 @@ export default function ScrollReveal({
       ref={elementRef}
       style={{
         transition: `all ${duration}s ease-out ${delay}s`,
-        ...animations[animation]
+        ...animations[animation],
       }}
     >
       {children}

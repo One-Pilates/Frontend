@@ -1,5 +1,5 @@
-import React from "react";
-import { FiEdit2 } from "react-icons/fi";
+import React from 'react';
+import { FiEdit2 } from 'react-icons/fi';
 
 export default function Etapa4Confirmacao(props) {
   const {
@@ -18,13 +18,11 @@ export default function Etapa4Confirmacao(props) {
 
   const professoresMap = professores.find((p) => p.id === parseInt(professor));
   const salasMap = salas.find((s) => s.id === parseInt(sala));
-  const especialidadesMap = especialidades.find(
-    (e) => e.id === parseInt(especialidade)
-  );
+  const especialidadesMap = especialidades.find((e) => e.id === parseInt(especialidade));
 
   const formatarData = (data) => {
     const date = new Date(data);
-    return date.toLocaleDateString("pt-BR");
+    return date.toLocaleDateString('pt-BR');
   };
 
   return (
@@ -37,11 +35,7 @@ export default function Etapa4Confirmacao(props) {
           <div className="confirmation-item">
             <span className="label">Data:</span>
             <span className="value">{formatarData(dataHora.data)}</span>
-            <button
-              className="btn-edit-mini"
-              onClick={() => irParaEtapa(1)}
-              title="Editar"
-            >
+            <button className="btn-edit-mini" onClick={() => irParaEtapa(1)} title="Editar">
               <FiEdit2 size={14} />
             </button>
           </div>
@@ -56,11 +50,7 @@ export default function Etapa4Confirmacao(props) {
           <div className="confirmation-item">
             <span className="label">Professor:</span>
             <span className="value">{professoresMap?.nome}</span>
-            <button
-              className="btn-edit-mini"
-              onClick={() => irParaEtapa(2)}
-              title="Editar"
-            >
+            <button className="btn-edit-mini" onClick={() => irParaEtapa(2)} title="Editar">
               <FiEdit2 size={14} />
             </button>
           </div>
@@ -85,11 +75,7 @@ export default function Etapa4Confirmacao(props) {
                   </div>
                 ))}
               </div>
-              <button
-                className="btn-edit-mini"
-                onClick={() => irParaEtapa(3)}
-                title="Editar"
-              >
+              <button className="btn-edit-mini" onClick={() => irParaEtapa(3)} title="Editar">
                 <FiEdit2 size={14} /> Editar alunos
               </button>
             </>

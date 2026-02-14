@@ -1,22 +1,33 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useAuth } from "../../../hooks/useAuth";
-import api from "../../../services/api";
-import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
-import { FiUser, FiMail, FiCalendar, FiPhone, FiCamera, FiEdit3, FiBell, FiAward, FiSave, FiX } from "react-icons/fi";
-import userIconImg from "/user-icon.png";
-import "./style.scss";
+import React, { useState, useRef, useEffect } from 'react';
+import { useAuth } from '../../../hooks/useAuth';
+import api from '../../../services/api';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
+import {
+  FiUser,
+  FiMail,
+  FiCalendar,
+  FiPhone,
+  FiCamera,
+  FiEdit3,
+  FiBell,
+  FiAward,
+  FiSave,
+  FiX,
+} from 'react-icons/fi';
+import userIconImg from '/user-icon.png';
+import './style.scss';
 
 const ProfileUser = () => {
   const { user, setUser } = useAuth();
   const [userData, setUserData] = useState({
-    nome: "",
-    cargo: "",
-    role: "",
-    email: "",
-    foto: "",
-    dataNascimento: "",
-    telefone: "",
+    nome: '',
+    cargo: '',
+    role: '',
+    email: '',
+    foto: '',
+    dataNascimento: '',
+    telefone: '',
     receberNotificacao: false,
   });
   const [profileImage, setProfileImage] = useState(null);
@@ -31,22 +42,20 @@ const ProfileUser = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!user || user.role !== "PROFESSOR") return;
+      if (!user || user.role !== 'PROFESSOR') return;
       try {
         const especialidadesResponse = await api.get(`api/especialidades`);
         const especialidadesData = especialidadesResponse.data;
 
         if (user.especialidades && Array.isArray(user.especialidades)) {
-          const idsEspecialidadesProfessor = new Set(
-            user.especialidades.map((esp) => esp.id)
-          );
+          const idsEspecialidadesProfessor = new Set(user.especialidades.map((esp) => esp.id));
           setSelectedSpecialties(idsEspecialidadesProfessor);
           setOriginalSpecialties(new Set(idsEspecialidadesProfessor));
         }
 
         setSpecialtiesMap(especialidadesData);
       } catch (err) {
-        console.error("Erro ao carregar especialidades:", err);
+        console.error('Erro ao carregar especialidades:', err);
       }
     };
     fetchData();
@@ -54,17 +63,16 @@ const ProfileUser = () => {
 
   useEffect(() => {
     const currentData = {
-      nome: user?.nome || "",
-      cargo: user?.cargo || "",
-      role: user?.role || "",
+      nome: user?.nome || '',
+      cargo: user?.cargo || '',
+      role: user?.role || '',
       foto: user?.foto
-        ? `${api.defaults.baseURL}/api/imagens/${user.foto}?token=${localStorage.getItem("token")}`
+        ? `${api.defaults.baseURL}/api/imagens/${user.foto}?token=${localStorage.getItem('token')}`
         : userIconImg,
-      email: user?.email || "",
-      dataNascimento: user?.idade || user?.dataNascimento || "",
-      telefone: user?.telefone || "",
-      receberNotificacao:
-        user?.notificacaoAtiva ?? user?.receberNotificacao ?? false,
+      email: user?.email || '',
+      dataNascimento: user?.idade || user?.dataNascimento || '',
+      telefone: user?.telefone || '',
+      receberNotificacao: user?.notificacaoAtiva ?? user?.receberNotificacao ?? false,
     };
 
     setUserData(currentData);
@@ -75,7 +83,7 @@ const ProfileUser = () => {
     const dataChanged = JSON.stringify(userData) !== JSON.stringify(originalData);
 
     const specialtiesChanged =
-      userData.role === "PROFESSOR" &&
+      userData.role === 'PROFESSOR' &&
       (selectedSpecialties.size !== originalSpecialties.size ||
         ![...selectedSpecialties].every((id) => originalSpecialties.has(id)));
 
@@ -90,25 +98,25 @@ const ProfileUser = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
+    if (!file.type.startsWith('image/')) {
       Swal.fire({
-        icon: "error",
-        title: "Formato inválido",
-        text: "Por favor, selecione apenas arquivos de imagem (PNG, JPG, JPEG, etc).",
-        confirmButtonText: "OK",
+        icon: 'error',
+        title: 'Formato inválido',
+        text: 'Por favor, selecione apenas arquivos de imagem (PNG, JPG, JPEG, etc).',
+        confirmButtonText: 'OK',
       });
-      e.target.value = "";
+      e.target.value = '';
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
       Swal.fire({
-        icon: "warning",
-        title: "Arquivo muito grande",
-        text: "A imagem deve ter no máximo 5MB. Por favor, selecione uma imagem menor.",
-        confirmButtonText: "OK",
+        icon: 'warning',
+        title: 'Arquivo muito grande',
+        text: 'A imagem deve ter no máximo 5MB. Por favor, selecione uma imagem menor.',
+        confirmButtonText: 'OK',
       });
-      e.target.value = "";
+      e.target.value = '';
       return;
     }
 
@@ -122,12 +130,12 @@ const ProfileUser = () => {
       foto: objectUrl,
     }));
 
-    e.target.value = "";
+    e.target.value = '';
   };
 
   const cancelChanges = () => {
     setUserData(originalData);
-    if (user.role === "PROFESSOR") {
+    if (user.role === 'PROFESSOR') {
       setSelectedSpecialties(new Set(originalSpecialties));
     }
     if (previewUrl) {
@@ -148,23 +156,23 @@ const ProfileUser = () => {
     const emailChanged = userData.email !== originalData.email;
 
     try {
-      let endpoint = "";
-      let endpointImg = "";
+      let endpoint = '';
+      let endpointImg = '';
       switch (user.role) {
-        case "PROFESSOR":
+        case 'PROFESSOR':
           endpoint = `api/professores/${user.id}`;
           endpointImg = `api/professores/${user.id}/uploadFoto`;
           break;
-        case "ADMINISTRADOR":
+        case 'ADMINISTRADOR':
           endpoint = `api/administradores/${user.id}`;
           endpointImg = `api/administradores/${user.id}/uploadFoto`;
           break;
-        case "SECRETARIA":
+        case 'SECRETARIA':
           endpoint = `api/secretarias/${user.id}`;
           endpointImg = `api/secretarias/${user.id}/uploadFoto`;
           break;
         default:
-          throw new Error("Role não reconhecida");
+          throw new Error('Role não reconhecida');
       }
 
       let imageName = user.foto;
@@ -172,11 +180,11 @@ const ProfileUser = () => {
       if (profileImage) {
         try {
           const formData = new FormData();
-          formData.append("file", profileImage);
+          formData.append('file', profileImage);
 
           const fotoResponse = await api.post(endpointImg, formData, {
             headers: {
-              "Content-Type": "multipart/form-data",
+              'Content-Type': 'multipart/form-data',
             },
           });
 
@@ -188,12 +196,12 @@ const ProfileUser = () => {
           }
           setProfileImage(null);
         } catch (err) {
-          console.error("Erro ao fazer upload da foto:", err);
+          console.error('Erro ao fazer upload da foto:', err);
           Swal.fire({
-            icon: "error",
-            title: "Erro ao enviar foto",
-            text: "Não foi possível fazer upload da imagem. Os outros dados serão salvos.",
-            confirmButtonText: "OK",
+            icon: 'error',
+            title: 'Erro ao enviar foto',
+            text: 'Não foi possível fazer upload da imagem. Os outros dados serão salvos.',
+            confirmButtonText: 'OK',
           });
         }
       }
@@ -206,7 +214,7 @@ const ProfileUser = () => {
         notificacaoAtiva: userData.receberNotificacao,
       };
 
-      if (user.role === "PROFESSOR") {
+      if (user.role === 'PROFESSOR') {
         userDTO.especialidadeIds = Array.from(selectedSpecialties);
       }
 
@@ -215,7 +223,7 @@ const ProfileUser = () => {
 
       const updatedData = {
         ...userData,
-        foto: `${api.defaults.baseURL}/api/imagens/${imageName}?token=${localStorage.getItem("token")}`,
+        foto: `${api.defaults.baseURL}/api/imagens/${imageName}?token=${localStorage.getItem('token')}`,
       };
 
       setUserData(updatedData);
@@ -223,37 +231,37 @@ const ProfileUser = () => {
       setOriginalSpecialties(new Set(selectedSpecialties));
 
       setUser(data);
-      localStorage.setItem("user", JSON.stringify(data));
+      localStorage.setItem('user', JSON.stringify(data));
 
       setHasChanged(false);
 
       if (emailChanged) {
         await Swal.fire({
-          icon: "success",
-          title: "Perfil atualizado!",
-          text: "Seu email foi alterado. Por segurança, você precisa fazer login novamente.",
-          confirmButtonText: "OK",
+          icon: 'success',
+          title: 'Perfil atualizado!',
+          text: 'Seu email foi alterado. Por segurança, você precisa fazer login novamente.',
+          confirmButtonText: 'OK',
         });
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
         setUser(null);
-        navigate("/login");
+        navigate('/login');
       } else {
         Swal.fire({
-          icon: "success",
-          title: "Perfil atualizado!",
-          text: "Seus dados foram atualizados com sucesso.",
-          confirmButtonText: "OK",
+          icon: 'success',
+          title: 'Perfil atualizado!',
+          text: 'Seus dados foram atualizados com sucesso.',
+          confirmButtonText: 'OK',
         });
       }
     } catch (error) {
       Swal.fire({
-        icon: "error",
-        title: "Erro ao atualizar perfil",
-        text: "Ocorreu um erro ao atualizar seus dados. Por favor, tente novamente mais tarde.",
-        confirmButtonText: "OK",
+        icon: 'error',
+        title: 'Erro ao atualizar perfil',
+        text: 'Ocorreu um erro ao atualizar seus dados. Por favor, tente novamente mais tarde.',
+        confirmButtonText: 'OK',
       });
-      console.error("Erro ao atualizar dados:", error);
+      console.error('Erro ao atualizar dados:', error);
     }
   };
 
@@ -278,9 +286,7 @@ const ProfileUser = () => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-4">
-          <h1 className="text-xl sm:text-2xl font-bold text-(--text-escuro) mb-2">
-            Editar Perfil
-          </h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-(--text-escuro) mb-2">Editar Perfil</h1>
           <p className="text-sm sm:text-base text-(--text-cinza)">
             Gerencie suas informações pessoais e preferências
           </p>
@@ -293,7 +299,7 @@ const ProfileUser = () => {
               <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-(--laranja-principal) shadow-lg">
                 <img
                   src={previewUrl || userData.foto || userIconImg}
-                  alt={userData.nome || "Usuário"}
+                  alt={userData.nome || 'Usuário'}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -309,17 +315,17 @@ const ProfileUser = () => {
                 ref={fileInputRef}
                 type="file"
                 accept="image/*"
-                style={{ display: "none" }}
+                style={{ display: 'none' }}
                 onChange={handleFileChange}
               />
             </div>
-            
+
             <div className="flex-1 text-center sm:text-left">
               <h2 className="text-2xl sm:text-3xl font-bold text-(--text-escuro) mb-1">
-                {userData.nome || "Nome do Usuário"}
+                {userData.nome || 'Nome do Usuário'}
               </h2>
               <p className="text-base sm:text-lg text-(--text-cinza) mb-3">
-                {userData.cargo || "Professor"}
+                {userData.cargo || 'Professor'}
               </p>
               {hasChanged && (
                 <span className="inline-flex items-center gap-1 px-3 py-1 bg-orange-100 text-(--laranja-principal) text-sm font-medium rounded-full">
@@ -337,7 +343,7 @@ const ProfileUser = () => {
             <FiUser className="text-(--laranja-principal)" size={24} />
             Informações Pessoais
           </h3>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {/* Nome */}
             <div>
@@ -360,9 +366,7 @@ const ProfileUser = () => {
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-semibold text-(--text-escuro) mb-2">
-                Email
-              </label>
+              <label className="block text-sm font-semibold text-(--text-escuro) mb-2">Email</label>
               <div className="relative">
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
                   <FiMail size={20} />
@@ -422,12 +426,10 @@ const ProfileUser = () => {
             <FiBell className="text-(--laranja-principal)" size={24} />
             Preferências de Notificação
           </h3>
-          
+
           <div className="flex items-center justify-between p-4 bg-(--bg-claro) rounded-xl">
             <div>
-              <p className="font-semibold text-(--text-escuro) mb-1">
-                Receber Notificações
-              </p>
+              <p className="font-semibold text-(--text-escuro) mb-1">Receber Notificações</p>
               <p className="text-sm text-(--text-cinza)">
                 Receba atualizações sobre suas aulas e lembretes
               </p>
@@ -445,31 +447,32 @@ const ProfileUser = () => {
         </div>
 
         {/* Specialties Card - Only for Professors */}
-        {userData.role === "PROFESSOR" && (
+        {userData.role === 'PROFESSOR' && (
           <div className="bg-white rounded-2xl shadow-md p-5 sm:p-6 mb-4">
             <h3 className="text-xl font-bold text-(--text-escuro) mb-4 flex items-center gap-2">
               <FiAward className="text-(--laranja-principal)" size={24} />
               Especialidades
             </h3>
-            
+
             <div className="flex flex-wrap gap-3">
-              {specialtiesMap && specialtiesMap.map((especialidade) => (
-                <label
-                  key={especialidade.id}
-                  className={`specialty-chip ${isSpecialtySelected(especialidade.id) ? 'specialty-chip--selected' : ''}`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={isSpecialtySelected(especialidade.id)}
-                    onChange={() => toggleSpecialty(especialidade.id)}
-                    className="hidden"
-                  />
-                  <span className="specialty-chip__text">{especialidade.nome}</span>
-                  {isSpecialtySelected(especialidade.id) && (
-                    <span className="specialty-chip__check">✓</span>
-                  )}
-                </label>
-              ))}
+              {specialtiesMap &&
+                specialtiesMap.map((especialidade) => (
+                  <label
+                    key={especialidade.id}
+                    className={`specialty-chip ${isSpecialtySelected(especialidade.id) ? 'specialty-chip--selected' : ''}`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isSpecialtySelected(especialidade.id)}
+                      onChange={() => toggleSpecialty(especialidade.id)}
+                      className="hidden"
+                    />
+                    <span className="specialty-chip__text">{especialidade.nome}</span>
+                    {isSpecialtySelected(especialidade.id) && (
+                      <span className="specialty-chip__check">✓</span>
+                    )}
+                  </label>
+                ))}
             </div>
           </div>
         )}
@@ -484,7 +487,7 @@ const ProfileUser = () => {
             <FiSave size={20} />
             Salvar Alterações
           </button>
-          
+
           {hasChanged && (
             <button
               onClick={cancelChanges}

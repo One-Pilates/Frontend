@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import { FiX } from "react-icons/fi";
-import AlunoItem from "./AlunoItem";
-import "../Styles/Modal.scss";
+import React, { useState } from 'react';
+import { FiX } from 'react-icons/fi';
+import AlunoItem from './AlunoItem';
+import '../Styles/Modal.scss';
 
 const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
-  const [activeTab, setActiveTab] = useState("informacoes");
+  const [activeTab, setActiveTab] = useState('informacoes');
 
   if (!isOpen || !agendamento) return null;
 
   const formatTime = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+    return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
   };
 
   const handleClose = () => {
-    setActiveTab("informacoes");
+    setActiveTab('informacoes');
     onClose();
   };
 
@@ -32,21 +32,21 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
 
         <div className="modal-tabs">
           <button
-            className={`modal-tab ${activeTab === "informacoes" ? "active" : ""}`}
-            onClick={() => setActiveTab("informacoes")}
+            className={`modal-tab ${activeTab === 'informacoes' ? 'active' : ''}`}
+            onClick={() => setActiveTab('informacoes')}
           >
             Informações
           </button>
           <button
-            className={`modal-tab ${activeTab === "alunos" ? "active" : ""}`}
-            onClick={() => setActiveTab("alunos")}
+            className={`modal-tab ${activeTab === 'alunos' ? 'active' : ''}`}
+            onClick={() => setActiveTab('alunos')}
           >
             Alunos ({agendamento.alunos?.length || 0})
           </button>
         </div>
 
         <div className="modal-body">
-          {activeTab === "informacoes" && (
+          {activeTab === 'informacoes' && (
             <div className="info-section">
               <div className="info-group">
                 <div className="info-item">
@@ -63,9 +63,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
                 </div>
                 <div className="info-item">
                   <span className="info-label">Horário:</span>
-                  <span className="info-value">
-                    {formatTime(agendamento.dataHora)}
-                  </span>
+                  <span className="info-value">{formatTime(agendamento.dataHora)}</span>
                 </div>
                 <div className="info-item">
                   <span className="info-label">Observações:</span>
@@ -79,14 +77,14 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
             </div>
           )}
 
-          {activeTab === "alunos" && (
+          {activeTab === 'alunos' && (
             <div className="alunos-section">
               {agendamento.alunos && agendamento.alunos.length > 0 ? (
                 agendamento.alunos.map((aluno, i) => (
                   <AlunoItem key={i} nome={aluno.nome} status={aluno.status} />
                 ))
               ) : (
-                <p style={{ textAlign: "center", color: "#888" }}>
+                <p style={{ textAlign: 'center', color: '#888' }}>
                   Nenhum aluno neste agendamento.
                 </p>
               )}

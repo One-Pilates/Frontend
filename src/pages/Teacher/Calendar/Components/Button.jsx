@@ -1,11 +1,23 @@
 import React from 'react';
 import '../Styles/Button.scss';
 
-const Button = ({ children, onClick, variant = 'primary', disabled, type = 'button', className = '' }) => {
+const Button = ({
+  children,
+  onClick,
+  variant = 'primary',
+  disabled,
+  type = 'button',
+  className = '',
+}) => {
   const baseClass = 'btn';
   const variantClass = variant === 'primary' ? 'btn-primary' : 'btn-secondary';
   return (
-    <button type={type} className={`${baseClass} ${variantClass} ${className}`} onClick={onClick} disabled={disabled}>
+    <button
+      type={type}
+      className={`${baseClass} ${variantClass} ${className}`}
+      onClick={onClick}
+      disabled={disabled}
+    >
       {children}
     </button>
   );

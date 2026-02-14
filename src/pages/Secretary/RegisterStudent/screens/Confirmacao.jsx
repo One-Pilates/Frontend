@@ -1,10 +1,10 @@
-import "./confirmacao.scss";
-import Button from "../components/Button";
+import './confirmacao.scss';
+import Button from '../components/Button';
 
 const CardInfo = ({ label, valor }) => (
   <div className="card-info">
     <span className="card-label">{label}</span>
-    <span className="card-value">{valor || "---"}</span>
+    <span className="card-value">{valor || '---'}</span>
   </div>
 );
 
@@ -19,7 +19,7 @@ export default function ConfirmacaoAlunoScreen({
   return (
     <div className="confirmacao-aluno-screen">
       <div className="confirm-header">
-         <h2 className="confirm-title">Revise os dados</h2>
+        <h2 className="confirm-title">Revise os dados</h2>
         <p className="confirm-message">Verifique se tudo está correto antes de cadastrar</p>
       </div>
 
@@ -30,10 +30,7 @@ export default function ConfirmacaoAlunoScreen({
             <CardInfo label="Nome" valor={dadosPessoais.nomeCompleto} />
             <CardInfo label="Email" valor={dadosPessoais.email} />
             <CardInfo label="CPF" valor={dadosPessoais.cpf} />
-            <CardInfo
-              label="Data de Nascimento"
-              valor={dadosPessoais.dataNascimento}
-            />
+            <CardInfo label="Data de Nascimento" valor={dadosPessoais.dataNascimento} />
             <CardInfo label="Telefone" valor={dadosPessoais.telefone} />
           </div>
         </div>
@@ -67,8 +64,7 @@ export default function ConfirmacaoAlunoScreen({
             <div className="card-info observacoes-card">
               <span className="card-label">Observações</span>
               <span className="card-value observacoes-text">
-                {informacoesAluno.observacoes ||
-                  "Nenhuma observação registrada"}
+                {informacoesAluno.observacoes || 'Nenhuma observação registrada'}
               </span>
             </div>
           </div>

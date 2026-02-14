@@ -1,5 +1,5 @@
-import React from "react";
-import { FiTrash2, FiPlus } from "react-icons/fi";
+import React from 'react';
+import { FiTrash2, FiPlus } from 'react-icons/fi';
 
 export default function Etapa3Alunos(props) {
   const {
@@ -36,11 +36,7 @@ export default function Etapa3Alunos(props) {
           {mostrarListaAlunos && (
             <div className="search-results">
               {alunosDisponiveis
-                .filter((aluno) =>
-                  aluno.nome
-                    .toLowerCase()
-                    .includes(searchAluno.toLowerCase())
-                )
+                .filter((aluno) => aluno.nome.toLowerCase().includes(searchAluno.toLowerCase()))
                 .slice(0, 10)
                 .map((aluno) => (
                   <div
@@ -52,14 +48,11 @@ export default function Etapa3Alunos(props) {
                   </div>
                 ))}
               {alunosDisponiveis.filter((aluno) =>
-                aluno.nome
-                  .toLowerCase()
-                  .includes(searchAluno.toLowerCase())
-              ).length === 0 && searchAluno && (
-                <div className="search-result-item empty">
-                  Nenhum aluno encontrado
-                </div>
-              )}
+                aluno.nome.toLowerCase().includes(searchAluno.toLowerCase()),
+              ).length === 0 &&
+                searchAluno && (
+                  <div className="search-result-item empty">Nenhum aluno encontrado</div>
+                )}
             </div>
           )}
         </div>
@@ -85,9 +78,7 @@ export default function Etapa3Alunos(props) {
         ) : (
           <p className="no-alunos">Nenhum aluno selecionado</p>
         )}
-        {erros.alunos && (
-          <span className="error-message">{erros.alunos}</span>
-        )}
+        {erros.alunos && <span className="error-message">{erros.alunos}</span>}
       </div>
     </div>
   );

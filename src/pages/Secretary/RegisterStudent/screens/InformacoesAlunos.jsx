@@ -1,11 +1,7 @@
-import Input from "../components/Input";
-import "./informacoesAlunos.scss";
+import Input from '../components/Input';
+import './informacoesAlunos.scss';
 
-export default function InformacoesAlunoScreen({
-  dados,
-  atualizar,
-  erros = {},
-}) {
+export default function InformacoesAlunoScreen({ dados, atualizar, erros = {} }) {
   return (
     <div className="informacoes-aluno-screen">
       <div className="aluno-content">
@@ -22,19 +18,15 @@ export default function InformacoesAlunoScreen({
         </div>
 
         <div className="textarea-section">
-          <label className="textarea-label">
-            Observações
-          </label>
+          <label className="textarea-label">Observações</label>
           <textarea
             placeholder="Digite observações sobre o aluno..."
-            value={dados.observacoes || ""}
+            value={dados.observacoes || ''}
             onChange={(e) => atualizar({ observacoes: e.target.value })}
-            className={`textarea-field ${erros.observacoes ? "textarea-error" : ""}`}
+            className={`textarea-field ${erros.observacoes ? 'textarea-error' : ''}`}
             rows={6}
           />
-          {erros.observacoes && (
-            <span className="error-message">{erros.observacoes}</span>
-          )}
+          {erros.observacoes && <span className="error-message">{erros.observacoes}</span>}
         </div>
       </div>
     </div>

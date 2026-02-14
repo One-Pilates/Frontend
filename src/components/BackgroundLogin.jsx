@@ -1,5 +1,5 @@
-import React from "react";
-import "../pages/Login/Login.scss";
+import React from 'react';
+import '../pages/Login/Login.scss';
 
 const BackgroundLogin = () => {
   return (

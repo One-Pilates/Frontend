@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { FaChevronDown, FaCog, FaKey, FaMoon, FaSun, FaUserCircle } from "react-icons/fa";
-import { useAuth } from "../hooks/useAuth.jsx";
-import ContactAdm from "./ContactAdm.jsx";
-import api from "../services/api";
-import userIconImg from "/user-icon.png";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaChevronDown, FaCog, FaKey, FaMoon, FaSun, FaUserCircle } from 'react-icons/fa';
+import { useAuth } from '../hooks/useAuth.jsx';
+import ContactAdm from './ContactAdm.jsx';
+import api from '../services/api';
+import userIconImg from '/user-icon.png';
 
 function Account() {
   const navigate = useNavigate();
@@ -30,14 +30,14 @@ function Account() {
     setIsAdminModalOpen(true);
   };
 
-  const nome = user?.nome || user?.name || "Usuário";
-  const roleRaw = user?.role || user?.cargo || "";
+  const nome = user?.nome || user?.name || 'Usuário';
+  const roleRaw = user?.role || user?.cargo || '';
   const papel = (() => {
-    if (!roleRaw) return "";
+    if (!roleRaw) return '';
     const r = roleRaw.toString().toUpperCase();
-    if (r.includes("PROF")) return "Professor(a)";
-    if (r.includes("SECRET")) return "Secretaria";
-    if (r.includes("ADMIN")) return "Administrador";
+    if (r.includes('PROF')) return 'Professor(a)';
+    if (r.includes('SECRET')) return 'Secretaria';
+    if (r.includes('ADMIN')) return 'Administrador';
     return roleRaw;
   })();
 
@@ -46,7 +46,7 @@ function Account() {
       <button
         onClick={() => setMenuAberto(!menuAberto)}
         className="flex items-center gap-2 md:gap-3 px-2 py-2 rounded-lg transition-all duration-200 group"
-        style={{ 
+        style={{
           color: 'var(--text-escuro)',
         }}
         aria-expanded={menuAberto}
@@ -60,7 +60,7 @@ function Account() {
             style={{ outline: '2px solid var(--laranja-principal)' }}
           />
         ) : (
-          <div 
+          <div
             className="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center"
             style={{ backgroundColor: 'var(--bg-claro)', color: 'var(--text-cinza)' }}
           >
@@ -69,11 +69,18 @@ function Account() {
         )}
 
         <div className="hidden md:block text-left">
-          <p className="font-semibold leading-tight text-sm lg:text-base" style={{ color: 'var(--text-escuro)' }}>{nome}</p>
-          <p className="text-xs" style={{ color: 'var(--text-cinza)' }}>{papel}</p>
+          <p
+            className="font-semibold leading-tight text-sm lg:text-base"
+            style={{ color: 'var(--text-escuro)' }}
+          >
+            {nome}
+          </p>
+          <p className="text-xs" style={{ color: 'var(--text-cinza)' }}>
+            {papel}
+          </p>
         </div>
 
-        <FaChevronDown 
+        <FaChevronDown
           className={`hidden sm:block transition-all duration-300 text-sm md:text-base group-hover:translate-y-0.5 ${menuAberto ? 'rotate-180' : ''}`}
           style={{ color: 'var(--text-cinza)' }}
         />
@@ -81,23 +88,27 @@ function Account() {
 
       {menuAberto && (
         <>
-          <div 
-            onClick={() => setMenuAberto(false)}
-            className="fixed inset-0 z-40"
-          />
+          <div onClick={() => setMenuAberto(false)} className="fixed inset-0 z-40" />
 
-          <div 
+          <div
             className="absolute right-0 mt-2 w-64 sm:w-72 rounded-lg shadow-lg z-50 overflow-hidden"
-            style={{ 
+            style={{
               backgroundColor: 'var(--branco)',
               borderColor: 'var(--cor-borda)',
-              borderWidth: '1px'
+              borderWidth: '1px',
             }}
           >
-            <div className="p-3 sm:p-4" style={{ background: `linear-gradient(to right, var(--laranja-principal), #E85D25)` }}>
+            <div
+              className="p-3 sm:p-4"
+              style={{ background: `linear-gradient(to right, var(--laranja-principal), #E85D25)` }}
+            >
               <div className="flex items-center gap-3">
                 <img
-                  src={user?.foto ? `${api.defaults.baseURL}/api/imagens/${user.foto}?token=${localStorage.getItem('token')}` : userIconImg}
+                  src={
+                    user?.foto
+                      ? `${api.defaults.baseURL}/api/imagens/${user.foto}?token=${localStorage.getItem('token')}`
+                      : userIconImg
+                  }
                   alt={nome}
                   className="w-12 h-12 sm:w-14 sm:h-14 rounded-full ring-2 ring-white object-cover"
                 />
@@ -109,12 +120,12 @@ function Account() {
             </div>
 
             <div className="py-2">
-              <button 
+              <button
                 onClick={openAdminModal}
                 className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left transition-colors flex items-center gap-3 hover:bg-gray-50 active:bg-gray-100"
-                style={{ 
+                style={{
                   backgroundColor: 'var(--branco)',
-                  color: 'var(--text-escuro)'
+                  color: 'var(--text-escuro)',
                 }}
               >
                 <FaCog className="text-base" style={{ color: 'var(--text-cinza)' }} />
@@ -122,23 +133,23 @@ function Account() {
               </button>
 
               <button
-                onClick={() => navigate("/redifinir-senha")}
+                onClick={() => navigate('/redifinir-senha')}
                 className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left transition-colors flex items-center gap-3 hover:bg-gray-50 active:bg-gray-100"
-                style={{ 
+                style={{
                   backgroundColor: 'var(--branco)',
-                  color: 'var(--text-escuro)'
+                  color: 'var(--text-escuro)',
                 }}
               >
                 <FaKey className="text-base" style={{ color: 'var(--text-cinza)' }} />
                 <span className="text-sm sm:text-base">Senhas</span>
               </button>
 
-              <button 
+              <button
                 onClick={toggleModoEscuro}
                 className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left transition-colors flex items-center justify-between hover:bg-gray-50 active:bg-gray-100"
-                style={{ 
+                style={{
                   backgroundColor: 'var(--branco)',
-                  color: 'var(--text-escuro)'
+                  color: 'var(--text-escuro)',
                 }}
               >
                 <div className="flex items-center gap-3">
@@ -149,8 +160,20 @@ function Account() {
                   )}
                   <span className="text-sm sm:text-base">Modo Escuro</span>
                 </div>
-                <div className="w-11 h-6 rounded-full transition-colors" style={{ backgroundColor: modoEscuro ? 'var(--laranja-principal)' : 'var(--cor-borda)' }}>
-                  <div className="w-4 h-4 rounded-full bg-white mt-1 transition-transform" style={{ transform: modoEscuro ? 'translateX(24px) translateX(4px)' : 'translateX(4px)' }}></div>
+                <div
+                  className="w-11 h-6 rounded-full transition-colors"
+                  style={{
+                    backgroundColor: modoEscuro ? 'var(--laranja-principal)' : 'var(--cor-borda)',
+                  }}
+                >
+                  <div
+                    className="w-4 h-4 rounded-full bg-white mt-1 transition-transform"
+                    style={{
+                      transform: modoEscuro
+                        ? 'translateX(24px) translateX(4px)'
+                        : 'translateX(4px)',
+                    }}
+                  ></div>
                 </div>
               </button>
             </div>
@@ -164,4 +187,3 @@ function Account() {
 }
 
 export default Account;
-

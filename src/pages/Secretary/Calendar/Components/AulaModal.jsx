@@ -1,49 +1,51 @@
-import React, { useState, useEffect } from "react";
-import { FiEdit2, FiX, FiPlus, FiTrash2 } from "react-icons/fi";
-import AlunoItem from "./AlunoItem";
-import api from "../../../../services/api";
+import React, { useState, useEffect } from 'react';
+import { FiEdit2, FiX, FiPlus, FiTrash2 } from 'react-icons/fi';
+import AlunoItem from './AlunoItem';
+import api from '../../../../services/api';
 import Swal from 'sweetalert2';
-import "../Styles/Modal.scss";
+import '../Styles/Modal.scss';
 
 const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
-  const [activeTab, setActiveTab] = useState("informacoes");
+  const [activeTab, setActiveTab] = useState('informacoes');
   const [editFields, setEditFields] = useState({});
   const [professores, setProfessores] = useState([]);
   const [especialidades, setEspecialidades] = useState([]);
   const [salas, setSalas] = useState([]);
   const [todosAlunos, setTodosAlunos] = useState([]);
   const [alunosSelecionados, setAlunosSelecionados] = useState([]);
-  const [alunoParaAdicionar, setAlunoParaAdicionar] = useState("");
-  const [searchAluno, setSearchAluno] = useState("");
+  const [searchAluno, setSearchAluno] = useState('');
   const [mostrarListaAlunos, setMostrarListaAlunos] = useState(false);
   const [carregando, setCarregando] = useState(false);
 
   useEffect(() => {
     if (editFields.professor !== undefined) {
-      api.get("/api/professores").then(res => setProfessores(res.data || []));
+      api.get('/api/professores').then((res) => setProfessores(res.data || []));
     }
     if (editFields.especialidade !== undefined) {
-      api.get("/api/especialidades").then(res => setEspecialidades(res.data || []));
+      api.get('/api/especialidades').then((res) => setEspecialidades(res.data || []));
     }
     if (editFields.sala !== undefined) {
-      api.get("/api/salas").then(res => setSalas(res.data || []));
+      api.get('/api/salas').then((res) => setSalas(res.data || []));
     }
   }, [editFields]);
 
   useEffect(() => {
-    if (activeTab === "alunos" && todosAlunos.length === 0) {
-      api.get("/api/alunos")
-        .then(res => setTodosAlunos(res.data || []))
-        .catch(err => console.error("Erro ao carregar alunos:", err));
+    if (activeTab === 'alunos' && todosAlunos.length === 0) {
+      api
+        .get('/api/alunos')
+        .then((res) => setTodosAlunos(res.data || []))
+        .catch((err) => console.error('Erro ao carregar alunos:', err));
     }
   }, [activeTab, todosAlunos.length]);
 
   useEffect(() => {
     if (agendamento?.alunos) {
-      setAlunosSelecionados(agendamento.alunos.map(a => ({
-        id: a.id || 0,
-        nome: a.nome
-      })));
+      setAlunosSelecionados(
+        agendamento.alunos.map((a) => ({
+          id: a.id || 0,
+          nome: a.nome,
+        })),
+      );
     }
   }, [agendamento]);
 
@@ -51,34 +53,39 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
 
   const formatTime = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+    return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
   };
 
   const handleClose = () => {
-    setActiveTab("informacoes");
+    setActiveTab('informacoes');
     setEditFields({});
-    setAlunosSelecionados(agendamento?.alunos?.map(a => ({
-      id: a.id || 0,
-      nome: a.nome
-    })) || []);
-    setSearchAluno("");
+    setAlunosSelecionados(
+      agendamento?.alunos?.map((a) => ({
+        id: a.id || 0,
+        nome: a.nome,
+      })) || [],
+    );
+    setSearchAluno('');
     setMostrarListaAlunos(false);
     onClose();
   };
 
   const handleAdicionarAluno = (aluno) => {
-    if (aluno && !alunosSelecionados.find(a => a.id === aluno.id)) {
-      setAlunosSelecionados([...alunosSelecionados, { 
-        id: aluno.id, 
-        nome: aluno.nome
-      }]);
-      setSearchAluno("");
+    if (aluno && !alunosSelecionados.find((a) => a.id === aluno.id)) {
+      setAlunosSelecionados([
+        ...alunosSelecionados,
+        {
+          id: aluno.id,
+          nome: aluno.nome,
+        },
+      ]);
+      setSearchAluno('');
       setMostrarListaAlunos(false);
     }
   };
 
   const handleRemoverAluno = (alunoId) => {
-    setAlunosSelecionados(alunosSelecionados.filter(a => a.id !== alunoId));
+    setAlunosSelecionados(alunosSelecionados.filter((a) => a.id !== alunoId));
   };
 
   const handleSave = async () => {
@@ -89,18 +96,18 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
       showCancelButton: true,
       confirmButtonText: 'Sim, salvar',
       cancelButtonText: 'Cancelar',
-      reverseButtons: true
+      reverseButtons: true,
     });
 
     if (result.isConfirmed) {
-      let patchData = {};
+      const patchData = {};
 
       // Sempre enviar todos os campos necessários para validação
       // (data/hora, sala, professor, especialidade e alunos)
-      
+
       if (editFields.horario !== undefined) {
         const dataAtual = new Date(agendamento.dataHora);
-        const [horas, minutos] = editFields.horario.split(":");
+        const [horas, minutos] = editFields.horario.split(':');
         dataAtual.setHours(parseInt(horas), parseInt(minutos));
         patchData.dataHora = dataAtual.toISOString();
       } else {
@@ -136,15 +143,15 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
         patchData.observacoes = editFields.observacoes;
       }
 
-      const alunosOriginais = agendamento.alunos?.map(a => a.id) || [];
-      const alunosAtuais = alunosSelecionados.map(a => a.id);
-      
-      const alunosMudaram = 
+      const alunosOriginais = agendamento.alunos?.map((a) => a.id) || [];
+      const alunosAtuais = alunosSelecionados.map((a) => a.id);
+
+      const alunosMudaram =
         alunosOriginais.length !== alunosAtuais.length ||
-        !alunosOriginais.every(id => alunosAtuais.includes(id));
+        !alunosOriginais.every((id) => alunosAtuais.includes(id));
 
       if (alunosMudaram) {
-        patchData.alunoIds = alunosSelecionados.map(a => a.id);
+        patchData.alunoIds = alunosSelecionados.map((a) => a.id);
       } else {
         // Se alunos não mudaram, enviar os IDs originais
         patchData.alunoIds = alunosOriginais;
@@ -157,15 +164,16 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
         await api.patch(`/api/agendamentos/${agendamento.id}`, patchData);
         setEditFields({});
         Swal.fire('Alteração salva!', '', 'success');
-        window.location.reload(); 
+        window.location.reload();
       } catch (e) {
         setCarregando(false);
         console.error('Erro ao salvar:', e);
         if (e.response) {
           console.error('Resposta do backend:', e.response);
-          const errorMsg = e.response.data && typeof e.response.data === 'object' 
-            ? JSON.stringify(e.response.data) 
-            : e.response.data;
+          const errorMsg =
+            e.response.data && typeof e.response.data === 'object'
+              ? JSON.stringify(e.response.data)
+              : e.response.data;
           Swal.fire('Erro ao salvar', `Erro do backend: ${errorMsg}`, 'error');
         } else {
           Swal.fire('Erro ao salvar', 'Tente novamente', 'error');
@@ -176,21 +184,23 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
 
   const handleCancel = () => {
     setEditFields({});
-    setAlunosSelecionados(agendamento?.alunos?.map(a => ({
-      id: a.id || 0,
-      nome: a.nome
-    })) || []);
-    setSearchAluno("");
+    setAlunosSelecionados(
+      agendamento?.alunos?.map((a) => ({
+        id: a.id || 0,
+        nome: a.nome,
+      })) || [],
+    );
+    setSearchAluno('');
     setMostrarListaAlunos(false);
   };
 
   const alunosDisponiveis = todosAlunos.filter(
-    aluno => !alunosSelecionados.find(a => a.id === aluno.id)
+    (aluno) => !alunosSelecionados.find((a) => a.id === aluno.id),
   );
 
-  const alunosMudaram = 
+  const alunosMudaram =
     (agendamento.alunos?.length || 0) !== alunosSelecionados.length ||
-    !agendamento.alunos?.every(a => alunosSelecionados.find(s => s.id === a.id));
+    !agendamento.alunos?.every((a) => alunosSelecionados.find((s) => s.id === a.id));
 
   const temMudancas = Object.keys(editFields).length > 0 || alunosMudaram;
 
@@ -202,8 +212,8 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
             {agendamento.especialidade} - {formatTime(agendamento.dataHora)}h
           </h2>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-            <button 
-              className="btn-delete-aula" 
+            <button
+              className="btn-delete-aula"
               onClick={() => onDelete && onDelete(agendamento.id)}
               title="Deletar aula"
             >
@@ -217,24 +227,23 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
 
         <div className="modal-tabs">
           <button
-            className={`modal-tab ${activeTab === "informacoes" ? "active" : ""}`}
-            onClick={() => setActiveTab("informacoes")}
+            className={`modal-tab ${activeTab === 'informacoes' ? 'active' : ''}`}
+            onClick={() => setActiveTab('informacoes')}
           >
             Informações
           </button>
           <button
-            className={`modal-tab ${activeTab === "alunos" ? "active" : ""}`}
-            onClick={() => setActiveTab("alunos")}
+            className={`modal-tab ${activeTab === 'alunos' ? 'active' : ''}`}
+            onClick={() => setActiveTab('alunos')}
           >
             Alunos ({alunosSelecionados.length})
           </button>
         </div>
 
         <div className="modal-body">
-          {activeTab === "informacoes" && (
+          {activeTab === 'informacoes' && (
             <div className="info-section">
               <div className="info-group">
-
                 <div className="info-item">
                   <span className="info-label">Professor:</span>
                   <div className="info-content">
@@ -242,11 +251,15 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                       <select
                         className="info-edit-input"
                         value={editFields.professor}
-                        onChange={e => setEditFields(fields => ({ ...fields, professor: e.target.value }))}
+                        onChange={(e) =>
+                          setEditFields((fields) => ({ ...fields, professor: e.target.value }))
+                        }
                       >
                         <option value="">Selecione</option>
                         {professores.map((p) => (
-                          <option key={p.id} value={p.nome}>{p.nome}</option>
+                          <option key={p.id} value={p.nome}>
+                            {p.nome}
+                          </option>
                         ))}
                       </select>
                     ) : (
@@ -254,7 +267,12 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                         <span className="info-value">{agendamento.professor}</span>
                         <button
                           className="icon-btn"
-                          onClick={() => setEditFields(fields => ({ ...fields, professor: agendamento.professor || "" }))}
+                          onClick={() =>
+                            setEditFields((fields) => ({
+                              ...fields,
+                              professor: agendamento.professor || '',
+                            }))
+                          }
                           title="Editar Professor"
                         >
                           <FiEdit2 size={16} />
@@ -272,14 +290,23 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                         type="time"
                         className="info-edit-input"
                         value={editFields.horario}
-                        onChange={e => setEditFields(fields => ({ ...fields, horario: e.target.value }))}
+                        onChange={(e) =>
+                          setEditFields((fields) => ({ ...fields, horario: e.target.value }))
+                        }
                       />
                     ) : (
                       <>
                         <span className="info-value">{formatTime(agendamento.dataHora)}</span>
                         <button
                           className="icon-btn"
-                          onClick={() => setEditFields(fields => ({ ...fields, horario: agendamento.dataHora ? agendamento.dataHora.substring(11,16) : "" }))}
+                          onClick={() =>
+                            setEditFields((fields) => ({
+                              ...fields,
+                              horario: agendamento.dataHora
+                                ? agendamento.dataHora.substring(11, 16)
+                                : '',
+                            }))
+                          }
                           title="Editar Horário"
                         >
                           <FiEdit2 size={16} />
@@ -296,11 +323,15 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                       <select
                         className="info-edit-input"
                         value={editFields.sala}
-                        onChange={e => setEditFields(fields => ({ ...fields, sala: e.target.value }))}
+                        onChange={(e) =>
+                          setEditFields((fields) => ({ ...fields, sala: e.target.value }))
+                        }
                       >
                         <option value="">Selecione</option>
                         {salas.map((s) => (
-                          <option key={s.id} value={s.nome}>{s.nome}</option>
+                          <option key={s.id} value={s.nome}>
+                            {s.nome}
+                          </option>
                         ))}
                       </select>
                     ) : (
@@ -308,7 +339,9 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                         <span className="info-value">{agendamento.sala}</span>
                         <button
                           className="icon-btn"
-                          onClick={() => setEditFields(fields => ({ ...fields, sala: agendamento.sala || "" }))}
+                          onClick={() =>
+                            setEditFields((fields) => ({ ...fields, sala: agendamento.sala || '' }))
+                          }
                           title="Editar Sala"
                         >
                           <FiEdit2 size={16} />
@@ -325,11 +358,15 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                       <select
                         className="info-edit-input"
                         value={editFields.especialidade}
-                        onChange={e => setEditFields(fields => ({ ...fields, especialidade: e.target.value }))}
+                        onChange={(e) =>
+                          setEditFields((fields) => ({ ...fields, especialidade: e.target.value }))
+                        }
                       >
                         <option value="">Selecione</option>
                         {especialidades.map((e) => (
-                          <option key={e.id} value={e.nome}>{e.nome}</option>
+                          <option key={e.id} value={e.nome}>
+                            {e.nome}
+                          </option>
                         ))}
                       </select>
                     ) : (
@@ -337,7 +374,12 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                         <span className="info-value">{agendamento.especialidade}</span>
                         <button
                           className="icon-btn"
-                          onClick={() => setEditFields(fields => ({ ...fields, especialidade: agendamento.especialidade || "" }))}
+                          onClick={() =>
+                            setEditFields((fields) => ({
+                              ...fields,
+                              especialidade: agendamento.especialidade || '',
+                            }))
+                          }
                           title="Editar Especialidade"
                         >
                           <FiEdit2 size={16} />
@@ -346,7 +388,6 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                     )}
                   </div>
                 </div>
-
               </div>
 
               {temMudancas && (
@@ -362,7 +403,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
             </div>
           )}
 
-          {activeTab === "alunos" && (
+          {activeTab === 'alunos' && (
             <div className="alunos-section">
               <div className="adicionar-aluno-box">
                 <div className="adicionar-aluno-label">Adicionar Aluno</div>
@@ -383,9 +424,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                       <div className="search-results">
                         {alunosDisponiveis
                           .filter((aluno) =>
-                            aluno.nome
-                              .toLowerCase()
-                              .includes(searchAluno.toLowerCase())
+                            aluno.nome.toLowerCase().includes(searchAluno.toLowerCase()),
                           )
                           .slice(0, 10)
                           .map((aluno) => (
@@ -398,23 +437,18 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                             </div>
                           ))}
                         {alunosDisponiveis.filter((aluno) =>
-                          aluno.nome
-                            .toLowerCase()
-                            .includes(searchAluno.toLowerCase())
-                        ).length === 0 && searchAluno && (
-                          <div className="search-result-item empty">
-                            Nenhum aluno encontrado
-                          </div>
-                        )}
+                          aluno.nome.toLowerCase().includes(searchAluno.toLowerCase()),
+                        ).length === 0 &&
+                          searchAluno && (
+                            <div className="search-result-item empty">Nenhum aluno encontrado</div>
+                          )}
                       </div>
                     )}
                   </div>
                 </div>
               </div>
 
-              <div className="lista-alunos-label">
-                Alunos na Aula ({alunosSelecionados.length})
-              </div>
+              <div className="lista-alunos-label">Alunos na Aula ({alunosSelecionados.length})</div>
               {alunosSelecionados.length > 0 ? (
                 <div className="lista-alunos">
                   {alunosSelecionados.map((aluno) => (
@@ -431,7 +465,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                   ))}
                 </div>
               ) : (
-                <p style={{ textAlign: "center", color: "#888", padding: "2rem" }}>
+                <p style={{ textAlign: 'center', color: '#888', padding: '2rem' }}>
                   Nenhum aluno neste agendamento.
                 </p>
               )}
@@ -443,7 +477,9 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                     <textarea
                       className="info-edit-input"
                       value={editFields.observacoes}
-                      onChange={e => setEditFields(fields => ({ ...fields, observacoes: e.target.value }))}
+                      onChange={(e) =>
+                        setEditFields((fields) => ({ ...fields, observacoes: e.target.value }))
+                      }
                       rows={3}
                       placeholder="Ex: Aluno com problemas de mobilidade no joelho direito..."
                     />
@@ -456,7 +492,12 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                       </span>
                       <button
                         className="icon-btn"
-                        onClick={() => setEditFields(fields => ({ ...fields, observacoes: agendamento.observacoes || "" }))}
+                        onClick={() =>
+                          setEditFields((fields) => ({
+                            ...fields,
+                            observacoes: agendamento.observacoes || '',
+                          }))
+                        }
                         title="Editar Observações"
                       >
                         <FiEdit2 size={16} />

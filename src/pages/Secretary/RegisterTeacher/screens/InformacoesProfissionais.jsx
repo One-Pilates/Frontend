@@ -1,5 +1,5 @@
-import Input from "../components/Input";
-import "./informacoesProfissionais.scss";
+import Input from '../components/Input';
+import './informacoesProfissionais.scss';
 
 export default function InformacoesProfissionaisScreen({
   dados,
@@ -33,7 +33,7 @@ export default function InformacoesProfissionaisScreen({
             Especialidades
             <span className="section-required">*</span>
           </label>
-          
+
           {especialidades.length === 0 ? (
             <div className="loading-message">Carregando especialidades...</div>
           ) : (
@@ -51,24 +51,20 @@ export default function InformacoesProfissionaisScreen({
               ))}
             </div>
           )}
-          
-          {erros.especialidades && (
-            <span className="error-message">{erros.especialidades}</span>
-          )}
+
+          {erros.especialidades && <span className="error-message">{erros.especialidades}</span>}
         </div>
 
         <div className="observacoes-section">
           <label className="textarea-label">Observações</label>
           <textarea
             placeholder="Informações adicionais sobre o professor..."
-            value={dados.observacoes || ""}
+            value={dados.observacoes || ''}
             onChange={(e) => atualizar({ observacoes: e.target.value })}
-            className={`textarea-field ${erros.observacoes ? "textarea-error" : ""}`}
+            className={`textarea-field ${erros.observacoes ? 'textarea-error' : ''}`}
             rows={4}
           />
-          {erros.observacoes && (
-            <span className="error-message">{erros.observacoes}</span>
-          )}
+          {erros.observacoes && <span className="error-message">{erros.observacoes}</span>}
         </div>
 
         <div className="checkbox-item">

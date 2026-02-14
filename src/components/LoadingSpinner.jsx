@@ -13,17 +13,14 @@ const LoadingSpinner = ({ delay = 400, message }) => {
   }, [delay]);
 
   return (
-    <div 
+    <div
       className={`
         absolute inset-0 
         flex flex-col items-center justify-center gap-4 
         z-999 
         backdrop-blur-md
         transition-all duration-400 ease-in-out
-        ${show 
-          ? 'opacity-100 pointer-events-auto' 
-          : 'opacity-0 pointer-events-none'
-        }
+        ${show ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
       `}
     >
       <style>{`
@@ -35,22 +32,19 @@ const LoadingSpinner = ({ delay = 400, message }) => {
           animation: spin-border 0.8s linear infinite;
         }
       `}</style>
-      
+
       {message && (
-        <p 
-          className="text-sm font-semibold"
-          style={{ color: 'var(--text-escuro)' }}
-        >
+        <p className="text-sm font-semibold" style={{ color: 'var(--text-escuro)' }}>
           {message}
         </p>
       )}
 
       <div className="relative w-12 h-12">
-        <div 
+        <div
           className="spinner-border absolute inset-0 rounded-full border-4 border-transparent"
-          style={{ 
+          style={{
             borderTopColor: 'var(--laranja-principal)',
-            borderRightColor: 'var(--laranja-principal)'
+            borderRightColor: 'var(--laranja-principal)',
           }}
         />
       </div>

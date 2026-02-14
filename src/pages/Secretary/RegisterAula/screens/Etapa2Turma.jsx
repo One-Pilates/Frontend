@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export default function Etapa2Turma(props) {
   const {
@@ -24,7 +24,7 @@ export default function Etapa2Turma(props) {
           id="especialidade"
           value={especialidade}
           onChange={(e) => setEspecialidade(e.target.value)}
-          className={erros.especialidade ? "input-error" : ""}
+          className={erros.especialidade ? 'input-error' : ''}
         >
           <option value="">Selecione uma especialidade</option>
           {especialidades.map((esp) => (
@@ -33,9 +33,7 @@ export default function Etapa2Turma(props) {
             </option>
           ))}
         </select>
-        {erros.especialidade && (
-          <span className="error-message">{erros.especialidade}</span>
-        )}
+        {erros.especialidade && <span className="error-message">{erros.especialidade}</span>}
       </div>
 
       <div className="form-group">
@@ -44,13 +42,11 @@ export default function Etapa2Turma(props) {
           id="sala"
           value={sala}
           onChange={(e) => setSala(e.target.value)}
-          className={`${erros.sala ? "input-error" : ""} ${!especialidade ? "input-disabled-warning" : ""}`}
+          className={`${erros.sala ? 'input-error' : ''} ${!especialidade ? 'input-disabled-warning' : ''}`}
           disabled={!especialidade}
         >
           <option value="">
-            {!especialidade
-              ? "Selecione uma especialidade primeiro"
-              : "Selecione uma sala"}
+            {!especialidade ? 'Selecione uma especialidade primeiro' : 'Selecione uma sala'}
           </option>
           {salas.map((s) => (
             <option key={s.id} value={s.id}>
@@ -67,15 +63,15 @@ export default function Etapa2Turma(props) {
           id="professor"
           value={professor}
           onChange={(e) => setProfessor(e.target.value)}
-          className={`${erros.professor ? "input-error" : ""} ${!especialidade || !sala ? "input-disabled-warning" : ""}`}
+          className={`${erros.professor ? 'input-error' : ''} ${!especialidade || !sala ? 'input-disabled-warning' : ''}`}
           disabled={!especialidade || !sala}
         >
           <option value="">
             {!especialidade
-              ? "Selecione uma especialidade primeiro"
+              ? 'Selecione uma especialidade primeiro'
               : !sala
-              ? "Selecione uma sala primeiro"
-              : "Selecione um professor"}
+                ? 'Selecione uma sala primeiro'
+                : 'Selecione um professor'}
           </option>
           {professores.map((prof) => (
             <option key={prof.id} value={prof.id}>
@@ -83,9 +79,7 @@ export default function Etapa2Turma(props) {
             </option>
           ))}
         </select>
-        {erros.professor && (
-          <span className="error-message">{erros.professor}</span>
-        )}
+        {erros.professor && <span className="error-message">{erros.professor}</span>}
       </div>
     </div>
   );

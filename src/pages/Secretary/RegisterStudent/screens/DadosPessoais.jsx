@@ -1,14 +1,9 @@
-import Input from "../components/Input";
-import "./dadosPessoais.scss";
+import Input from '../components/Input';
+import './dadosPessoais.scss';
 
-export default function DadosPessoaisScreen({
-  dados,
-  atualizar,
-  erros = {},
-}) {
+export default function DadosPessoaisScreen({ dados, atualizar, erros = {} }) {
   return (
     <div className="dados-pessoais-screen">
-
       <div className="form-grid">
         <div className="full-width">
           <Input

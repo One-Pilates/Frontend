@@ -1,18 +1,12 @@
-import { useState, useEffect } from "react";
-import Input from "../components/Input";
-import "./endereco.scss";
+import { useState, useEffect } from 'react';
+import Input from '../components/Input';
+import './endereco.scss';
 
-export default function EnderecoScreen({
-  dados,
-  atualizar,
-  buscarCep,
-  erros = {},
-}) {
+export default function EnderecoScreen({ dados, atualizar, buscarCep, erros = {} }) {
   const [semNumero, setSemNumero] = useState(false);
 
-  // Verifica se o número é "0" ou "S/N" para marcar o checkbox
   useEffect(() => {
-    if (dados.numero === "0" || dados.numero === "S/N" || dados.numero === "s/n") {
+    if (dados.numero === '0' || dados.numero === 'S/N' || dados.numero === 's/n') {
       setSemNumero(true);
     }
   }, [dados.numero]);
@@ -21,8 +15,8 @@ export default function EnderecoScreen({
     atualizar({ cep: valor });
 
     // Busca o CEP quando tiver 8 dígitos
-    if (valor.replace(/\D/g, "").length === 8) {
-      console.log("🔍 Chamando buscarCep para:", valor);
+    if (valor.replace(/\D/g, '').length === 8) {
+      console.log('🔍 Chamando buscarCep para:', valor);
       buscarCep(valor);
     }
   };
@@ -31,10 +25,10 @@ export default function EnderecoScreen({
     setSemNumero(checked);
     if (checked) {
       console.log("✅ Sem número marcado - enviando '0'");
-      atualizar({ numero: "0" });
+      atualizar({ numero: '0' });
     } else {
-      console.log("❌ Sem número desmarcado - limpando campo");
-      atualizar({ numero: "" });
+      console.log('❌ Sem número desmarcado - limpando campo');
+      atualizar({ numero: '' });
     }
   };
 
@@ -66,7 +60,7 @@ export default function EnderecoScreen({
           <Input
             label="Número"
             placeholder="123"
-            value={semNumero ? "S/N" : dados.numero}
+            value={semNumero ? 'S/N' : dados.numero}
             onChange={(e) => atualizar({ numero: e.target.value })}
             required={!semNumero}
             erro={erros.numero}
@@ -117,10 +111,10 @@ export default function EnderecoScreen({
             UF<span className="select-required">*</span>
           </label>
           <select
-            className={`select-field ${erros.uf ? "select-error" : ""}`}
+            className={`select-field ${erros.uf ? 'select-error' : ''}`}
             value={dados.uf}
             onChange={(e) => {
-              console.log("🔄 UF alterado manualmente para:", e.target.value);
+              console.log('🔄 UF alterado manualmente para:', e.target.value);
               atualizar({ uf: e.target.value, estado: getEstadoNome(e.target.value) });
             }}
             required
@@ -164,33 +158,33 @@ export default function EnderecoScreen({
 // Função helper para converter UF em nome do estado
 function getEstadoNome(uf) {
   const estados = {
-    'AC': 'Acre',
-    'AL': 'Alagoas',
-    'AP': 'Amapá',
-    'AM': 'Amazonas',
-    'BA': 'Bahia',
-    'CE': 'Ceará',
-    'DF': 'Distrito Federal',
-    'ES': 'Espírito Santo',
-    'GO': 'Goiás',
-    'MA': 'Maranhão',
-    'MT': 'Mato Grosso',
-    'MS': 'Mato Grosso do Sul',
-    'MG': 'Minas Gerais',
-    'PA': 'Pará',
-    'PB': 'Paraíba',
-    'PR': 'Paraná',
-    'PE': 'Pernambuco',
-    'PI': 'Piauí',
-    'RJ': 'Rio de Janeiro',
-    'RN': 'Rio Grande do Norte',
-    'RS': 'Rio Grande do Sul',
-    'RO': 'Rondônia',
-    'RR': 'Roraima',
-    'SC': 'Santa Catarina',
-    'SP': 'São Paulo',
-    'SE': 'Sergipe',
-    'TO': 'Tocantins'
+    AC: 'Acre',
+    AL: 'Alagoas',
+    AP: 'Amapá',
+    AM: 'Amazonas',
+    BA: 'Bahia',
+    CE: 'Ceará',
+    DF: 'Distrito Federal',
+    ES: 'Espírito Santo',
+    GO: 'Goiás',
+    MA: 'Maranhão',
+    MT: 'Mato Grosso',
+    MS: 'Mato Grosso do Sul',
+    MG: 'Minas Gerais',
+    PA: 'Pará',
+    PB: 'Paraíba',
+    PR: 'Paraná',
+    PE: 'Pernambuco',
+    PI: 'Piauí',
+    RJ: 'Rio de Janeiro',
+    RN: 'Rio Grande do Norte',
+    RS: 'Rio Grande do Sul',
+    RO: 'Rondônia',
+    RR: 'Roraima',
+    SC: 'Santa Catarina',
+    SP: 'São Paulo',
+    SE: 'Sergipe',
+    TO: 'Tocantins',
   };
   return estados[uf] || '';
 }

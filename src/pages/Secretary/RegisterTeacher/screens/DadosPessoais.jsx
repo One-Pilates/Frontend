@@ -1,13 +1,9 @@
-import { useRef } from "react";
-import { FaCamera } from "react-icons/fa";
-import Input from "../components/Input";
-import "./dadosPessoais.scss";
+import { useRef } from 'react';
+import { FaCamera } from 'react-icons/fa';
+import Input from '../components/Input';
+import './dadosPessoais.scss';
 
-export default function DadosPessoaisScreen({
-  dados,
-  atualizar,
-  erros = {},
-}) {
+export default function DadosPessoaisScreen({ dados, atualizar, erros = {} }) {
   const fileInputRef = useRef(null);
 
   const manipularArquivo = (e) => {
@@ -45,7 +41,7 @@ export default function DadosPessoaisScreen({
           type="file"
           accept="image/*"
           onChange={manipularArquivo}
-          style={{ display: "none" }}
+          style={{ display: 'none' }}
         />
       </div>
 

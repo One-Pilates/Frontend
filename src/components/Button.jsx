@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-function Botao({ cor, icone: Icone, texto, onClick, disabled = false, className = "" }) {
+function Botao({ cor, icone: Icone, texto, onClick, disabled = false, className = '' }) {
   return (
     <button
       onClick={onClick}

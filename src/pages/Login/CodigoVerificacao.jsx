@@ -1,12 +1,12 @@
-import { useState, useRef } from "react";
-import "./CodigoVerificacao.scss";
-import { useLocation, useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
-import api from "../../services/api";
-import BackgroundLogin from "../../components/BackgroundLogin";
+import { useState, useRef } from 'react';
+import './CodigoVerificacao.scss';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import api from '../../services/api';
+import BackgroundLogin from '../../components/BackgroundLogin';
 
 export default function CodigoVerificacao() {
-  const [codigo, setCodigo] = useState(["", "", "", "", ""]);
+  const [codigo, setCodigo] = useState(['', '', '', '', '']);
   const inputsRef = useRef([]);
   const navigate = useNavigate();
   const email = useLocation().state?.email;
@@ -25,26 +25,26 @@ export default function CodigoVerificacao() {
   };
 
   const handleKeyDown = (index, e) => {
-    if (e.key === "Backspace" && !codigo[index] && index > 0) {
+    if (e.key === 'Backspace' && !codigo[index] && index > 0) {
       inputsRef.current[index - 1].focus();
     }
   };
 
   const confirmarCodigo = async () => {
-    const codigoFinal = codigo.join("");
+    const codigoFinal = codigo.join('');
 
     if (!codigoFinal || codigoFinal.length < 5) {
       Swal.fire({
-        icon: "error",
-        title: "Código inválido",
-        text: "Por favor, insira o código completo.",
+        icon: 'error',
+        title: 'Código inválido',
+        text: 'Por favor, insira o código completo.',
       });
       return;
     }
 
     Swal.fire({
-      title: "Validando...",
-      text: "Estamos verificando seu código",
+      title: 'Validando...',
+      text: 'Estamos verificando seu código',
       allowOutsideClick: false,
       didOpen: () => {
         Swal.showLoading();
@@ -52,28 +52,28 @@ export default function CodigoVerificacao() {
     });
 
     try {
-      const response = await api.post("auth/validarCodigo", { email, codigo: codigoFinal });
+      const response = await api.post('auth/validarCodigo', { email, codigo: codigoFinal });
 
-      console.log("Resposta do servidor:", response.data);
+      console.log('Resposta do servidor:', response.data);
 
       Swal.fire({
-        icon: "success",
-        title: "Código válido!",
-        text: "Agora você pode redefinir sua senha.",
+        icon: 'success',
+        title: 'Código válido!',
+        text: 'Agora você pode redefinir sua senha.',
         showConfirmButton: false,
         timer: 2000,
       });
 
       setTimeout(() => {
-        navigate("/nova-senha", { state: { email } });
+        navigate('/nova-senha', { state: { email } });
       }, 2000);
     } catch (error) {
-      console.error("Erro ao validar código:", error);
+      console.error('Erro ao validar código:', error);
 
       Swal.fire({
-        icon: "error",
-        title: "Erro na validação",
-        text: "Código incorreto ou expirado. Tente novamente.",
+        icon: 'error',
+        title: 'Erro na validação',
+        text: 'Código incorreto ou expirado. Tente novamente.',
       });
     }
   };
@@ -81,9 +81,9 @@ export default function CodigoVerificacao() {
   const reenviarCodigo = async () => {
     if (!email) {
       Swal.fire({
-        icon: "error",
-        title: "Erro",
-        text: "Email não encontrado. Por favor, reinicie o processo.",
+        icon: 'error',
+        title: 'Erro',
+        text: 'Email não encontrado. Por favor, reinicie o processo.',
       });
       return;
     }
@@ -91,24 +91,24 @@ export default function CodigoVerificacao() {
     setIsResending(true);
 
     try {
-      await api.post("auth/criarCodigoVerificacao", { email });
+      await api.post('auth/criarCodigoVerificacao', { email });
 
-      setCodigo(["", "", "", "", ""]);
+      setCodigo(['', '', '', '', '']);
       inputsRef.current[0]?.focus();
 
       Swal.fire({
-        icon: "success",
-        title: "Código reenviado!",
-        text: "Verifique seu e-mail novamente.",
+        icon: 'success',
+        title: 'Código reenviado!',
+        text: 'Verifique seu e-mail novamente.',
         timer: 2000,
       });
     } catch (error) {
-      console.error("Erro ao reenviar código:", error);
+      console.error('Erro ao reenviar código:', error);
 
       Swal.fire({
-        icon: "error",
-        title: "Erro ao reenviar",
-        text: "Não foi possível reenviar o código. Tente novamente.",
+        icon: 'error',
+        title: 'Erro ao reenviar',
+        text: 'Não foi possível reenviar o código. Tente novamente.',
       });
     } finally {
       setIsResending(false);
@@ -157,7 +157,7 @@ export default function CodigoVerificacao() {
             className="login__forgot"
             disabled={isResending}
           >
-            {isResending ? "Reenviando..." : "Reenviar código"}
+            {isResending ? 'Reenviando...' : 'Reenviar código'}
           </button>
         </div>
       </div>

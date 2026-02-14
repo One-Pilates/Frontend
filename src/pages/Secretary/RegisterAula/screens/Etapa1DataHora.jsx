@@ -1,11 +1,7 @@
-import React from "react";
+import React from 'react';
 
 export default function Etapa1DataHora(props) {
-  const {
-    dataHora,
-    setDataHora,
-    erros,
-  } = props;
+  const { dataHora, setDataHora, erros } = props;
 
   const handleDataChange = (e) => {
     setDataHora((prev) => ({ ...prev, data: e.target.value }));
@@ -14,15 +10,15 @@ export default function Etapa1DataHora(props) {
   const handleHorarioChange = (e) => {
     const valor = e.target.value;
     if (valor) {
-      const [hora] = valor.split(":");
+      const [hora] = valor.split(':');
       setDataHora((prev) => ({ ...prev, horario: `${hora}:00` }));
     } else {
-      setDataHora((prev) => ({ ...prev, horario: "" }));
+      setDataHora((prev) => ({ ...prev, horario: '' }));
     }
   };
 
   const horasDisponiveis = Array.from({ length: 15 }, (_, i) => {
-    const hora = String(i + 7).padStart(2, "0");
+    const hora = String(i + 7).padStart(2, '0');
     return `${hora}:00`;
   });
 
@@ -37,7 +33,7 @@ export default function Etapa1DataHora(props) {
           id="data"
           value={dataHora.data}
           onChange={handleDataChange}
-          className={erros.data ? "input-error" : ""}
+          className={erros.data ? 'input-error' : ''}
         />
         {erros.data && <span className="error-message">{erros.data}</span>}
       </div>
@@ -48,7 +44,7 @@ export default function Etapa1DataHora(props) {
           id="horario"
           value={dataHora.horario}
           onChange={handleHorarioChange}
-          className={erros.horario ? "input-error" : ""}
+          className={erros.horario ? 'input-error' : ''}
         >
           <option value="">Selecione um horário</option>
           {horasDisponiveis.map((hora) => (

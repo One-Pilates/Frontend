@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import api from "../../../services/api";
-import Swal from "sweetalert2";
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import api from '../../../services/api';
+import Swal from 'sweetalert2';
 import Button from './Components/Button';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import AgendamentoModal from './Components/AulaModal';
@@ -11,48 +11,48 @@ import './styles/Filtros.scss';
 export default function CalendarSecretary() {
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const [salas, setSalas] = useState([]);
   const [professores, setProfessores] = useState([]);
-  const [idSala, setIdSala] = useState("");
-  const [idProfessor, setIdProfessor] = useState("");
+  const [idSala, setIdSala] = useState('');
+  const [idProfessor, setIdProfessor] = useState('');
   const [agendamentos, setAgendamentos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
   const [jaBuscou, setJaBuscou] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [agendamentoSelecionado, setAgendamentoSelecionado] = useState(null);
   const [activeView, setActiveView] = useState('timeGridWeek');
   const [showLoading, setShowLoading] = useState(false);
-  
+
   const calendarRef = useRef(null);
   const calendarInstance = useRef(null);
-  
+
   const especialidadeCores = {
-    Pilates: "#ff6600",
-    Fisioterapia: "#4CAF50",
-    Osteopatia: "#2196F3",
-    RPG: "#009688",
-    Microfisioterapia: "#9C27B0",
-    Shiatsu: "#673AB7",
-    "Drenagem Linfática": "#03A9F4",
-    Acupuntura: "#E91E63",
+    Pilates: '#ff6600',
+    Fisioterapia: '#4CAF50',
+    Osteopatia: '#2196F3',
+    RPG: '#009688',
+    Microfisioterapia: '#9C27B0',
+    Shiatsu: '#673AB7',
+    'Drenagem Linfática': '#03A9F4',
+    Acupuntura: '#E91E63',
   };
 
   const getColorForEspecialidade = (esp) => {
-    const backgroundColor = especialidadeCores[esp] || "#3788d8";
+    const backgroundColor = especialidadeCores[esp] || '#3788d8';
     const textColor = [
-      "#ff6600",
-      "#4CAF50",
-      "#2196F3",
-      "#9C27B0",
-      "#673AB7",
-      "#E91E63",
-      "#009688",
-      "#03A9F4",
+      '#ff6600',
+      '#4CAF50',
+      '#2196F3',
+      '#9C27B0',
+      '#673AB7',
+      '#E91E63',
+      '#009688',
+      '#03A9F4',
     ].includes(backgroundColor)
-      ? "#fff"
-      : "#000";
+      ? '#fff'
+      : '#000';
     return { backgroundColor, textColor };
   };
 
@@ -73,32 +73,32 @@ export default function CalendarSecretary() {
 
   async function fetchFiltros() {
     try {
-      setErrorMessage("");
+      setErrorMessage('');
       const [respSalas, respProfs] = await Promise.all([
-        api.get("/api/salas").catch(() => ({ data: [] })),
-        api.get("/api/professores").catch(() => ({ data: [] })),
+        api.get('/api/salas').catch(() => ({ data: [] })),
+        api.get('/api/professores').catch(() => ({ data: [] })),
       ]);
       setSalas(Array.isArray(respSalas.data) ? respSalas.data : []);
       setProfessores(Array.isArray(respProfs.data) ? respProfs.data : []);
     } catch (err) {
-      console.error("Erro ao carregar filtros:", err);
-      setErrorMessage("Erro ao carregar filtros. Tente novamente.");
+      console.error('Erro ao carregar filtros:', err);
+      setErrorMessage('Erro ao carregar filtros. Tente novamente.');
     }
   }
 
   async function fetchAgendamentosFiltro() {
     if (!idSala && !idProfessor) {
-      setErrorMessage("Selecione pelo menos uma sala ou um professor");
+      setErrorMessage('Selecione pelo menos uma sala ou um professor');
       setJaBuscou(false);
       return;
     }
 
     try {
       setIsLoading(true);
-      setErrorMessage("");
+      setErrorMessage('');
       setJaBuscou(true);
 
-      let url = "";
+      let url = '';
       if (idSala && idProfessor) {
         url = `/api/agendamentos/${idSala}/${idProfessor}`;
       } else if (idProfessor) {
@@ -111,8 +111,8 @@ export default function CalendarSecretary() {
       const dados = Array.isArray(response.data) ? response.data : [];
       setAgendamentos(dados);
     } catch (err) {
-      console.error("Erro ao buscar:", err);
-      setErrorMessage("Erro ao buscar agendamentos.");
+      console.error('Erro ao buscar:', err);
+      setErrorMessage('Erro ao buscar agendamentos.');
       setAgendamentos([]);
     } finally {
       setIsLoading(false);
@@ -120,10 +120,10 @@ export default function CalendarSecretary() {
   }
 
   function limparFiltros() {
-    setIdSala("");
-    setIdProfessor("");
+    setIdSala('');
+    setIdProfessor('');
     setAgendamentos([]);
-    setErrorMessage("");
+    setErrorMessage('');
     setJaBuscou(false);
     setModalOpen(false);
     setAgendamentoSelecionado(null);
@@ -148,17 +148,15 @@ export default function CalendarSecretary() {
     }
 
     const eventos = agendamentos.map((aula) => {
-      const { backgroundColor, textColor } = getColorForEspecialidade(
-        aula.especialidade
-      );
+      const { backgroundColor, textColor } = getColorForEspecialidade(aula.especialidade);
 
       return {
         id: String(aula.id),
-        title: `${aula.especialidade} - ${
-          aula.professorNome || "Professor"
-        } - ${new Date(aula.dataHora).toLocaleTimeString("pt-BR", {
-          hour: "2-digit",
-          minute: "2-digit",
+        title: `${aula.especialidade} - ${aula.professorNome || 'Professor'} - ${new Date(
+          aula.dataHora,
+        ).toLocaleTimeString('pt-BR', {
+          hour: '2-digit',
+          minute: '2-digit',
         })}`,
         start: aula.dataHora,
         end: calcularDuracao(aula.dataHora),
@@ -170,22 +168,22 @@ export default function CalendarSecretary() {
     });
 
     const calendar = new window.FullCalendar.Calendar(calendarRef.current, {
-      initialView: "timeGridWeek",
-      locale: "pt-br",
-      height: "auto",
-      slotMinTime: "07:00:00",
-      slotMaxTime: "22:00:00",
+      initialView: 'timeGridWeek',
+      locale: 'pt-br',
+      height: 'auto',
+      slotMinTime: '07:00:00',
+      slotMaxTime: '22:00:00',
       allDaySlot: false,
       expandRows: true,
-      slotDuration: "00:30:00",
-      headerToolbar: { left: "", center: "title", right: "prev,next" },
+      slotDuration: '00:30:00',
+      headerToolbar: { left: '', center: 'title', right: 'prev,next' },
       events: eventos,
       eventClick: (info) => {
         setAgendamentoSelecionado(info.event.extendedProps);
         setModalOpen(true);
       },
       eventDidMount: (info) => {
-        info.el.style.cursor = "pointer";
+        info.el.style.cursor = 'pointer';
       },
     });
 
@@ -207,24 +205,20 @@ export default function CalendarSecretary() {
   }, [calendarInstance]);
 
   useEffect(() => {
-    const timeout = isLoading
-      ? null
-      : setTimeout(() => setShowLoading(false), 400);
+    const timeout = isLoading ? null : setTimeout(() => setShowLoading(false), 400);
     if (isLoading) setShowLoading(true);
     return () => clearTimeout(timeout);
   }, [isLoading]);
 
   useEffect(() => {
     if (!window.FullCalendar) {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href =
-        "https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css";
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css';
       document.head.appendChild(link);
 
-      const script = document.createElement("script");
-      script.src =
-        "https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js";
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js';
       script.onload = () => fetchFiltros();
       document.body.appendChild(script);
     } else {
@@ -255,7 +249,7 @@ export default function CalendarSecretary() {
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      reverseButtons: true
+      reverseButtons: true,
     });
 
     if (result.isConfirmed) {
@@ -279,7 +273,7 @@ export default function CalendarSecretary() {
     <div className="calendar-container">
       <div className="calendar-header-top">
         <h1 className="text-2xl md:text-3xl">Agenda</h1>
-        <button 
+        <button
           className="btn-criar-aula"
           onClick={() => navigate('/secretaria/agendamento/criar')}
           title="Criar nova aula"
@@ -292,18 +286,24 @@ export default function CalendarSecretary() {
       <main className="calendar-main">
         <div className="calendar-header-info">
           <div className="calendar-view-buttons">
-            <button className={`filter-button ${activeView === 'dayGridMonth' ? 'active' : ''}`}
-                    onClick={() => handleChangeView('dayGridMonth')}>
+            <button
+              className={`filter-button ${activeView === 'dayGridMonth' ? 'active' : ''}`}
+              onClick={() => handleChangeView('dayGridMonth')}
+            >
               <span className="hidden sm:inline">Mês</span>
               <span className="sm:hidden">M</span>
             </button>
-            <button className={`filter-button ${activeView === 'timeGridWeek' ? 'active' : ''}`}
-                    onClick={() => handleChangeView('timeGridWeek')}>
+            <button
+              className={`filter-button ${activeView === 'timeGridWeek' ? 'active' : ''}`}
+              onClick={() => handleChangeView('timeGridWeek')}
+            >
               <span className="hidden sm:inline">Semana</span>
               <span className="sm:hidden">S</span>
             </button>
-            <button className={`filter-button ${activeView === 'timeGridDay' ? 'active' : ''}`}
-                    onClick={() => handleChangeView('timeGridDay')}>
+            <button
+              className={`filter-button ${activeView === 'timeGridDay' ? 'active' : ''}`}
+              onClick={() => handleChangeView('timeGridDay')}
+            >
               <span className="hidden sm:inline">Dia</span>
               <span className="sm:hidden">D</span>
             </button>
@@ -311,28 +311,50 @@ export default function CalendarSecretary() {
 
           <div className="filtros-inline">
             <div className="filtro-item">
-              <label htmlFor="filtro-sala" className="hidden md:inline">Sala:</label>
-              <select id="filtro-sala" value={idSala} onChange={(e) => setIdSala(e.target.value)}
-                      className="filtro-select-inline" disabled={isLoading}>
+              <label htmlFor="filtro-sala" className="hidden md:inline">
+                Sala:
+              </label>
+              <select
+                id="filtro-sala"
+                value={idSala}
+                onChange={(e) => setIdSala(e.target.value)}
+                className="filtro-select-inline"
+                disabled={isLoading}
+              >
                 <option value="">Todas</option>
                 {salas.map((sala) => (
-                  <option key={sala.id} value={sala.id}>{sala.nome}</option>
+                  <option key={sala.id} value={sala.id}>
+                    {sala.nome}
+                  </option>
                 ))}
               </select>
             </div>
 
             <div className="filtro-item">
-              <label htmlFor="filtro-professor" className="hidden md:inline">Professor:</label>
-              <select id="filtro-professor" value={idProfessor} onChange={(e) => setIdProfessor(e.target.value)}
-                      className="filtro-select-inline" disabled={isLoading}>
+              <label htmlFor="filtro-professor" className="hidden md:inline">
+                Professor:
+              </label>
+              <select
+                id="filtro-professor"
+                value={idProfessor}
+                onChange={(e) => setIdProfessor(e.target.value)}
+                className="filtro-select-inline"
+                disabled={isLoading}
+              >
                 <option value="0">Todos</option>
                 {professores.map((prof) => (
-                  <option key={prof.id} value={prof.id}>{prof.nome}</option>
+                  <option key={prof.id} value={prof.id}>
+                    {prof.nome}
+                  </option>
                 ))}
               </select>
             </div>
 
-            <Button onClick={fetchAgendamentosFiltro} disabled={!isFiltroValido || isLoading} className="btn-aplicar">
+            <Button
+              onClick={fetchAgendamentosFiltro}
+              disabled={!isFiltroValido || isLoading}
+              className="btn-aplicar"
+            >
               {isLoading ? 'Carregando...' : 'Aplicar'}
             </Button>
 
@@ -346,13 +368,17 @@ export default function CalendarSecretary() {
 
         {!isFiltroValido && !jaBuscou && (
           <div className="aviso-info">
-            <span className="text-sm md:text-base">Selecione pelo menos uma sala ou um professor</span>
+            <span className="text-sm md:text-base">
+              Selecione pelo menos uma sala ou um professor
+            </span>
           </div>
         )}
 
         {jaBuscou && !hasAgendamentos && !isLoading && (
           <div className="aviso-vazio">
-            <p className="text-sm md:text-base">Nenhum agendamento encontrado para os filtros selecionados.</p>
+            <p className="text-sm md:text-base">
+              Nenhum agendamento encontrado para os filtros selecionados.
+            </p>
           </div>
         )}
 
@@ -361,7 +387,11 @@ export default function CalendarSecretary() {
             <div className={`loading-container ${showLoading ? 'show' : ''}`}>
               <LoadingSpinner message={'Carregando calendário...'} />
             </div>
-            <div ref={calendarRef} className="fullcalendar" style={{ opacity: showLoading ? 0 : 1, transition: 'opacity 0.4s ease' }} />
+            <div
+              ref={calendarRef}
+              className="fullcalendar"
+              style={{ opacity: showLoading ? 0 : 1, transition: 'opacity 0.4s ease' }}
+            />
           </div>
         )}
 
