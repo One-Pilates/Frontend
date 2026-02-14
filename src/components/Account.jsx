@@ -45,7 +45,7 @@ function Account() {
     <div className="relative">
       <button
         onClick={() => setMenuAberto(!menuAberto)}
-        className="flex items-center gap-2 md:gap-3 px-2 py-2 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+        className="flex items-center gap-2 md:gap-3 px-2 py-2 rounded-lg transition-all duration-200 group"
         style={{ 
           color: 'var(--text-escuro)',
         }}
@@ -74,7 +74,7 @@ function Account() {
         </div>
 
         <FaChevronDown 
-          className="hidden sm:block transition-transform text-sm md:text-base"
+          className={`hidden sm:block transition-all duration-300 text-sm md:text-base group-hover:translate-y-0.5 ${menuAberto ? 'rotate-180' : ''}`}
           style={{ color: 'var(--text-cinza)' }}
         />
       </button>

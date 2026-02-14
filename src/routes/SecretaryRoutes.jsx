@@ -1,16 +1,16 @@
 import { Navigate, Routes, Route } from 'react-router-dom';
-import Secretary from '../features/Secretary/Secretary';
-import Dashboard from '../features/Secretary/Dashboard';
-import Profile from '../features/Teacher/Profile';
-import Calendar from '../features/Secretary/Calendar';
-import RegisterTeacher from '../features/Secretary/RegisterTeacher';
-import RegisterStudent from '../features/Secretary/RegisterStudent';
-import RegisterAula from '../features/Secretary/RegisterAula';
+import Secretary from '../pages/Secretary/Secretary';
+import Dashboard from '../pages/Secretary/Dashboard';
+import Profile from '../pages/Teacher/Profile';
+import Calendar from '../pages/Secretary/Calendar';
+import RegisterTeacher from '../pages/Secretary/RegisterTeacher';
+import RegisterStudent from '../pages/Secretary/RegisterStudent';
+import RegisterAula from '../pages/Secretary/RegisterAula';
 import NotFound from './NotFound';
-import GerenciamentoProfessor from '../features/Secretary/GerenciamentoProfessor';
-import GerenciamentoAluno from '../features/Secretary/GerenciamentoAluno';
-import ViewProfile from '../features/Secretary/ProfileView';
-import StudioView from '../features/Secretary/Studio';
+import GerenciamentoProfessor from '../pages/Secretary/GerenciamentoProfessor';
+import GerenciamentoAluno from '../pages/Secretary/GerenciamentoAluno';
+import ViewProfile from '../pages/Secretary/ProfileView';
+import StudioView from '../pages/Secretary/Studio';
 
 
 export default function SecretaryRoutes() {

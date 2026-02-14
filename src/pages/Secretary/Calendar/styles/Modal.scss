@@ -1,0 +1,626 @@
+@use '../../../../variables.scss' as *;
+
+.icon-btn.info-btn-save {
+    background: #4CAF50;
+    color: var(--branco);
+    border-radius: 4px;
+    border: none;
+    padding: 6px 10px;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+.icon-btn.info-btn-save:hover {
+    background: #388e3c;
+}
+.icon-btn.info-btn-cancel {
+    background: #E91E63;
+    color: var(--branco);
+    border-radius: 4px;
+    border: none;
+    padding: 6px 10px;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+.icon-btn.info-btn-cancel:hover {
+    background: #ad1457;
+}
+
+.modal-content {
+    background: var(--branco);
+    border-radius: 12px;
+    max-width: 550px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.ausencia-modal {
+    max-width: 450px;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--cor-borda);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--branco);
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--text-escuro);
+    font-weight: 600;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-cinza);
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-close:hover {
+    background: var(--bg-claro);
+    color: var(--text-cinza);
+}
+
+.btn-delete-aula {
+    background: #dc3545;
+    border: none;
+    cursor: pointer;
+    color: var(--branco);
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-delete-aula:hover {
+    background: #c82333;
+    transform: scale(1.05);
+}
+
+.modal-tabs {
+    display: flex;
+    border-bottom: 2px solid var(--cor-borda);
+    background: var(--branco);
+}
+
+.modal-tab {
+    flex: 1;
+    padding: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.938rem;
+    font-weight: 500;
+    color: var(--text-cinza);
+    transition: all 0.2s;
+    position: relative;
+}
+
+.modal-tab.active {
+    color: var(--laranja-principal);
+}
+
+.modal-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--laranja-principal);
+}
+
+.modal-tab:hover {
+    color: var(--laranja-principal);
+    background: rgba(247, 116, 51, 0.05);
+}
+
+.modal-body {
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.info-section {
+    padding-top: 0;
+    padding-bottom: 1rem;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.info-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: var(--bg-claro);
+    border-radius: 8px;
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--laranja-principal);
+    font-size: 0.875rem;
+}
+
+.info-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.info-value {
+    color: var(--text-escuro);
+    flex: 1;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.edit-container {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    align-items: flex-start;
+
+    &.full-width {
+        flex-direction: column;
+    }
+}
+
+.info-edit-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid var(--cor-borda);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-family: inherit;
+    transition: all 0.2s;
+    min-width: 0;
+    background: var(--branco);
+    color: var(--text-escuro);
+
+    &:focus {
+        outline: none;
+        border-color: var(--laranja-principal);
+        box-shadow: 0 0 0 3px rgba(247, 116, 51, 0.1);
+    }
+}
+
+.edit-buttons {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.icon-btn {
+    background: var(--cor-borda);
+    border: none;
+    border-radius: 4px;
+    padding: 6px 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    color: var(--text-cinza);
+
+    &:hover {
+        background: var(--cor-borda);
+        color: var(--text-escuro);
+    }
+}
+
+// Botões de ação centralizados
+.edit-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 2px solid var(--cor-borda);
+}
+
+.btn-cancel {
+    padding: 10px 24px;
+    background: var(--bg-claro);
+    color: var(--text-cinza);
+    border: 2px solid var(--cor-borda);
+    border-radius: 8px;
+    font-size: 0.938rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+        background: var(--cor-borda);
+        border-color: #d0d0d0;
+    }
+
+    &:disabled {
+        background: #f5f5f5;
+        color: #999;
+        border-color: #ddd;
+        cursor: not-allowed;
+    }
+}
+
+.btn-save {
+    padding: 10px 32px;
+    background: $laranja-principal;
+    color: var(--branco);
+    border: none;
+    border-radius: 8px;
+    font-size: 0.938rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+
+    &:hover:not(:disabled) {
+        background: #e85f2d;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+    }
+
+    &:disabled {
+        background: #ccc;
+        color: #666;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+    }
+}
+
+.ausencia-form {
+    padding: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-escuro);
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--cor-borda);
+    border-radius: 8px;
+    font-size: 0.938rem;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: $laranja-principal;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--cor-borda);
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.form-row .form-group {
+  flex: 1;
+  min-width: 140px;
+}
+
+
+@media (max-width: 768px) {
+    .modal-content {
+        max-width: 100%;
+        margin: 0.5rem;
+        max-height: 95vh;
+    }
+
+    .modal-header h2 {
+        font-size: 1rem;
+    }
+
+    .edit-container {
+        flex-direction: column;
+
+        .info-edit-input {
+            width: 100%;
+        }
+
+        .edit-buttons {
+            align-self: flex-end;
+        }
+    }
+
+    .edit-actions {
+        flex-direction: column;
+
+        .btn-cancel,
+        .btn-save {
+            width: 100%;
+        }
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+}
+
+// Adicione esses estilos ao seu arquivo Modal.scss existente
+
+// Estilos para a seção de adicionar aluno
+.adicionar-aluno-box {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--bg-claro);
+    border-radius: 8px;
+    border: 2px dashed var(--cor-borda);
+}
+
+.adicionar-aluno-label {
+    font-weight: 600;
+    color: var(--text-escuro);
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+}
+
+.adicionar-aluno-form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+}
+
+.aluno-select {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid var(--cor-borda);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-family: inherit;
+    background: var(--branco);
+    transition: all 0.2s;
+
+    &:focus {
+        outline: none;
+        border-color: $laranja-principal;
+        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+    }
+}
+
+.btn-adicionar-aluno {
+    background: #28a745;
+    color: var(--branco);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    white-space: nowrap;
+
+    &:hover:not(:disabled) {
+        background: #218838;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+    }
+
+    &:disabled {
+        background: var(--cor-borda);
+        cursor: not-allowed;
+        color: var(--text-cinza);
+    }
+}
+
+// Estilos para a lista de alunos
+.lista-alunos-label {
+    font-weight: 600;
+    color: var(--text-escuro);
+    margin-bottom: 0.75rem;
+    margin-top: 1rem;
+    font-size: 0.875rem;
+}
+
+.lista-alunos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.aluno-item-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    transition: all 0.2s;
+    position: relative;
+
+    &:hover {
+        .btn-remover-aluno {
+            opacity: 1;
+        }
+    }
+
+    // O AlunoItem original já tem seu próprio estilo
+    .aluno-item {
+        flex: 1;
+        margin-bottom: 0;
+    }
+}
+
+.btn-remover-aluno {
+    background: #dc3545;
+    color: var(--branco);
+    border: none;
+    border-radius: 4px;
+    padding: 8px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    opacity: 0.7;
+
+    &:hover {
+        background: #c82333;
+        transform: scale(1.05);
+        opacity: 1;
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+// Melhorias na seção de alunos
+.alunos-section {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+// Responsividade
+@media (max-width: 768px) {
+    .adicionar-aluno-form {
+        flex-direction: column;
+    }
+
+    .btn-adicionar-aluno {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+// Estilos para o search de alunos
+.search-container {
+    position: relative;
+    flex: 1;
+}
+
+.aluno-search {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid var(--cor-borda);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-family: inherit;
+    background: var(--branco);
+    color: var(--text-escuro);
+    transition: all 0.2s;
+
+    &:focus {
+        outline: none;
+        border-color: $laranja-principal;
+        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+    }
+
+    &::placeholder {
+        color: var(--text-cinza);
+    }
+}
+
+.search-results {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: var(--branco);
+    border: 2px solid var(--cor-borda);
+    border-radius: 6px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1001;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.search-result-item {
+    padding: 12px 12px;
+    border-bottom: 1px solid var(--cor-borda);
+    cursor: pointer;
+    color: var(--text-escuro);
+    font-size: 0.875rem;
+    transition: all 0.2s;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &:hover {
+        background: rgba(247, 116, 51, 0.1);
+        color: $laranja-principal;
+        padding-left: 16px;
+    }
+
+    &.empty {
+        text-align: center;
+        color: var(--text-cinza);
+        cursor: default;
+        padding: 1rem;
+
+        &:hover {
+            background: transparent;
+            padding-left: 12px;
+        }
+    }
+}
+
+

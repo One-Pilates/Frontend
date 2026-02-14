@@ -1,0 +1,176 @@
+
+.register-container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+
+.register-header {
+  max-width: 64rem;
+  margin: 0 auto 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--text-cinza);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  position: absolute;
+  left: 0;
+
+  &:hover {
+    color: var(--text-escuro);
+  }
+}
+
+.main-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-cinza);
+  text-align: center;
+  width: 100%;
+}
+
+
+.register-content {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+
+.subtitle {
+  text-align: center;
+  color: var(--text-cinza);
+  font-size: 0.875rem;
+  margin-bottom: 2rem;
+}
+
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  margin-top: 1rem;
+  > button:only-child {
+    margin-left: 0;
+  }
+}
+
+
+.dados-pessoais-screen,
+.endereco-screen,
+.informacoes-profissionais-screen {
+  background: var(--branco);
+  padding: 2.5rem 3rem;
+  border-radius: 1rem;
+  border: 1px solid var(--cor-borda);
+  min-height: 400px;
+}
+
+.swal2-confirm {
+  background-color: #F77433 !important;
+  color: white !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  padding: 10px 22px !important;
+  border: none !important;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.25) !important;
+}
+
+.swal2-confirm:hover {
+  background-color: #e8643d !important;
+}
+
+.swal2-cancel {
+  background-color: #b0b0b0 !important;
+  color: var(--branco) !important;
+  border-radius: 8px !important;
+  padding: 10px 22px !important;
+}
+
+.swal2-cancel:hover {
+  background-color: #9a9a9a !important;
+}
+
+.swal2-popup {
+  border-radius: 14px !important;
+  padding: 20px !important;
+}
+
+@media (max-width: 768px) {
+  .register-container {
+    padding: 1rem;
+  }
+
+  .register-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .back-button {
+      position: static;
+      margin-bottom: 0.5rem;
+    }
+
+    .main-title {
+      font-size: 1.25rem;
+      text-align: left;
+    }
+  }
+
+  .register-card {
+    padding: 1.5rem;
+  }
+
+  .dados-pessoais-screen,
+  .endereco-screen,
+  .informacoes-profissionais-screen {
+    padding: 1.5rem;
+    min-height: auto;
+  }
+
+  .button-group {
+    flex-direction: column-reverse;
+
+    > button {
+      width: 100%;
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .register-content {
+    max-width: 72rem;
+  }
+
+  .register-header {
+    max-width: 72rem;
+  }
+
+  .register-card {
+    padding: 3rem 4rem;
+  }
+
+  .dados-pessoais-screen,
+  .endereco-screen,
+  .informacoes-profissionais-screen {
+    padding: 3rem 4rem;
+  }
+}
+

@@ -1,0 +1,152 @@
+.confirmacao-aluno-screen {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.success-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.success-icon {
+  margin-bottom: 1.5rem;
+  animation: scaleIn 0.5s ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirm-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-escuro);
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.confirm-message {
+  font-size: 0.875rem;
+  color: var(--text-cinza);
+  text-align: center;
+}
+
+.data-sections {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.data-section {
+  width: 100%;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-escuro);
+  margin-bottom: 1rem;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.875rem;
+  background-color: #f3f4f6;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+
+  &.observacoes-card {
+    grid-column: 1 / -1;
+  }
+}
+
+.card-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-cinza);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.card-value {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-escuro);
+}
+
+.observacoes-text {
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+
+  &.badge-sim {
+    background-color: #fef2f2;
+    color: #dc2626;
+  }
+
+  &.badge-nao {
+    background-color: #f0fdf4;
+    color: #16a34a;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// ==================== RESPONSIVO ====================
+@media (max-width: 768px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.confirm-actions {
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+
+  .btn {
+    min-width: 140px;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column-reverse;
+    align-items: stretch;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}
+
+
