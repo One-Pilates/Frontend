@@ -19,8 +19,8 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
   };
 
   return (
-    <div className="modal-overlay" onClick={handleClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay animate-backdropFadeIn" onClick={handleClose}>
+      <div className="modal-content animate-slideUp" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2>
             {agendamento.especialidade} - {formatTime(agendamento.dataHora)}h

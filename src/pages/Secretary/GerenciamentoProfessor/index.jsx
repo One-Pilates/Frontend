@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { FiSearch, FiPhone, FiMail, FiTrash2, FiCalendar } from 'react-icons/fi';
 import Botao from '../../../components/Button';
 import userIconImg from '/user-icon.png';
+import { getColorForEspecialidade } from '../../../utils/utils';
 
 export default function GerenciamentoProfessor() {
   const navigate = useNavigate();
@@ -90,25 +91,49 @@ export default function GerenciamentoProfessor() {
 
         <div className="relative w-full sm:w-80">
           <FiSearch
-            className="absolute left-3 top-1/2 transform -translate-y-1/2"
-            size={20}
-            style={{ color: 'var(--laranja-principal)' }}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2"
+            size={18}
+            style={{ color: '#f77433', pointerEvents: 'none', opacity: 1, zIndex: 10 }}
           />
           <input
             type="text"
             placeholder="Buscar por nome"
             onChange={filterByNome}
-            className="w-full pl-10 pr-8 py-2.5 md:py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-shadow"
+            className="w-full pl-11 pr-4 py-2.5 rounded-xl focus:outline-none transition-all"
             style={{
-              borderColor: 'var(--cor-borda)',
-              borderWidth: '1px',
-              backgroundColor: 'var(--branco)',
+              background: '#f9fafb',
+              border: '2px solid #e5e7eb',
               color: 'var(--text-escuro)',
+              fontSize: '0.95rem',
+            }}
+            onFocus={(e) => {
+              e.target.style.boxShadow = '0 0 0 4px rgba(247, 116, 51, 0.15)';
+              e.target.style.background = 'var(--branco)';
+              e.target.style.borderColor = '#f77433';
+              e.target.style.transform = 'translateY(-1px)';
+            }}
+            onBlur={(e) => {
+              e.target.style.boxShadow = 'none';
+              e.target.style.background = '#f9fafb';
+              e.target.style.borderColor = '#e5e7eb';
+              e.target.style.transform = 'translateY(0)';
+            }}
+            onMouseEnter={(e) => {
+              if (document.activeElement !== e.target) {
+                e.target.style.borderColor = 'var(--cor-borda)';
+                e.target.style.background = 'var(--branco)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (document.activeElement !== e.target) {
+                e.target.style.borderColor = '#e5e7eb';
+                e.target.style.background = '#f9fafb';
+              }
             }}
           />
         </div>
 
-        <div className="mt-2 w-full h-auto max-h-90 overflow-y-auto pb-4">
+        <div className="mt-2 w-full h-auto pb-4">
           {professores && professores.length > 0 ? (
             professores.map((professor) => (
               <div
@@ -209,18 +234,21 @@ export default function GerenciamentoProfessor() {
 
                     <div className="flex gap-2 flex-wrap">
                       {professor.especialidades && professor.especialidades.length > 0 ? (
-                        professor.especialidades.map((esp) => (
-                          <span
-                            key={esp.id}
-                            className="px-2.5 md:px-3 py-1 rounded-full text-xs md:text-sm font-medium"
-                            style={{
-                              backgroundColor: 'var(--cor-borda)',
-                              color: 'var(--text-escuro)',
-                            }}
-                          >
-                            {esp.nome}
-                          </span>
-                        ))
+                        professor.especialidades.map((esp) => {
+                          const { backgroundColor, textColor } = getColorForEspecialidade(esp.nome);
+                          return (
+                            <span
+                              key={esp.id}
+                              className="px-2.5 md:px-3 py-1 rounded-full text-xs md:text-sm font-medium"
+                              style={{
+                                backgroundColor,
+                                color: textColor,
+                              }}
+                            >
+                              {esp.nome}
+                            </span>
+                          );
+                        })
                       ) : (
                         <span className="text-xs md:text-sm" style={{ color: 'var(--text-cinza)' }}>
                           Sem especialidades

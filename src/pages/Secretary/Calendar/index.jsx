@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import Button from './Components/Button';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import AgendamentoModal from './Components/AulaModal';
+import { getColorForEspecialidade } from '../../../utils/utils';
 import './styles/Calendar.scss';
 import './styles/Filtros.scss';
 
@@ -27,34 +28,6 @@ export default function CalendarSecretary() {
 
   const calendarRef = useRef(null);
   const calendarInstance = useRef(null);
-
-  const especialidadeCores = {
-    Pilates: '#ff6600',
-    Fisioterapia: '#4CAF50',
-    Osteopatia: '#2196F3',
-    RPG: '#009688',
-    Microfisioterapia: '#9C27B0',
-    Shiatsu: '#673AB7',
-    'Drenagem Linfática': '#03A9F4',
-    Acupuntura: '#E91E63',
-  };
-
-  const getColorForEspecialidade = (esp) => {
-    const backgroundColor = especialidadeCores[esp] || '#3788d8';
-    const textColor = [
-      '#ff6600',
-      '#4CAF50',
-      '#2196F3',
-      '#9C27B0',
-      '#673AB7',
-      '#E91E63',
-      '#009688',
-      '#03A9F4',
-    ].includes(backgroundColor)
-      ? '#fff'
-      : '#000';
-    return { backgroundColor, textColor };
-  };
 
   useEffect(() => {
     if (location.state?.idProfessor) {

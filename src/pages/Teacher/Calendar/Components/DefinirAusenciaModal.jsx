@@ -167,8 +167,8 @@ const DefinirAusenciaModal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content ausencia-modal" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay animate-backdropFadeIn" onClick={onClose}>
+      <div className="modal-content ausencia-modal animate-slideUp" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2>Definir Ausência</h2>
           <button className="modal-close" onClick={onClose}>

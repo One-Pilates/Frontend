@@ -162,3 +162,39 @@ export function formatarHora(horaString) {
 export function validarEmails(emails) {
   return emails.map((email) => validacaoEmail(email));
 }
+
+/**
+ * Cores padrão para as especialidades do sistema
+ * Usado em: Calendar, GerenciamentoProfessor, Studio, etc.
+ */
+export const especialidadeCores = {
+  Pilates: '#ff6600',
+  Fisioterapia: '#4CAF50',
+  Osteopatia: '#2196F3',
+  RPG: '#009688',
+  Microfisioterapia: '#9C27B0',
+  Shiatsu: '#673AB7',
+  'Drenagem Linfática': '#03A9F4',
+  Acupuntura: '#E91E63',
+};
+
+/**
+ * Retorna a cor de fundo e texto para uma especialidade
+ * @param {string} especialidade - Nome da especialidade
+ * @returns {Object} { backgroundColor, textColor }
+ */
+export const getColorForEspecialidade = (especialidade) => {
+  const backgroundColor = especialidadeCores[especialidade] || '#3788d8';
+  const coresComTextoClaro = [
+    '#ff6600',
+    '#4CAF50',
+    '#2196F3',
+    '#9C27B0',
+    '#673AB7',
+    '#E91E63',
+    '#009688',
+    '#03A9F4',
+  ];
+  const textColor = coresComTextoClaro.includes(backgroundColor) ? '#fff' : '#000';
+  return { backgroundColor, textColor };
+};

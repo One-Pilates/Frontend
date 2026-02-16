@@ -3,6 +3,7 @@ import { FiEdit2, FiX, FiPlus, FiTrash2 } from 'react-icons/fi';
 import AlunoItem from './AlunoItem';
 import api from '../../../../services/api';
 import Swal from 'sweetalert2';
+import { getColorForEspecialidade } from '../../../../utils/utils';
 import '../Styles/Modal.scss';
 
 const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
@@ -204,11 +205,30 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
 
   const temMudancas = Object.keys(editFields).length > 0 || alunosMudaram;
 
+  if (!isOpen || !agendamento) return null;
+
+  // Obtém a cor da especialidade
+  const modalColor = getColorForEspecialidade(agendamento.especialidade).backgroundColor;
+
   return (
-    <div className="modal-overlay" onClick={handleClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2>
+    <div 
+      className="modal-overlay animate-backdropFadeIn" 
+      onClick={handleClose}
+      style={{
+        backgroundColor: `${modalColor}15`,
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
+      }}
+    >
+      <div 
+        className="modal-content animate-slideUp" 
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          boxShadow: `0 0 60px ${modalColor}40, 0 20px 40px rgba(0,0,0,0.15)`,
+        }}
+      >
+        <div className="modal-header" style={{ borderBottomColor: `${modalColor}30` }}>
+          <h2 style={{ color: modalColor }}>
             {agendamento.especialidade} - {formatTime(agendamento.dataHora)}h
           </h2>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
@@ -229,12 +249,28 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
           <button
             className={`modal-tab ${activeTab === 'informacoes' ? 'active' : ''}`}
             onClick={() => setActiveTab('informacoes')}
+            style={
+              activeTab === 'informacoes'
+                ? {
+                    borderBottomColor: modalColor,
+                    color: modalColor,
+                  }
+                : {}
+            }
           >
             Informações
           </button>
           <button
             className={`modal-tab ${activeTab === 'alunos' ? 'active' : ''}`}
             onClick={() => setActiveTab('alunos')}
+            style={
+              activeTab === 'alunos'
+                ? {
+                    borderBottomColor: modalColor,
+                    color: modalColor,
+                  }
+                : {}
+            }
           >
             Alunos ({alunosSelecionados.length})
           </button>
@@ -254,6 +290,10 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                         onChange={(e) =>
                           setEditFields((fields) => ({ ...fields, professor: e.target.value }))
                         }
+                        style={{
+                          borderColor: modalColor,
+                          accentColor: modalColor,
+                        }}
                       >
                         <option value="">Selecione</option>
                         {professores.map((p) => (
@@ -274,6 +314,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                             }))
                           }
                           title="Editar Professor"
+                          style={{ color: modalColor }}
                         >
                           <FiEdit2 size={16} />
                         </button>
@@ -293,6 +334,10 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                         onChange={(e) =>
                           setEditFields((fields) => ({ ...fields, horario: e.target.value }))
                         }
+                        style={{
+                          borderColor: modalColor,
+                          accentColor: modalColor,
+                        }}
                       />
                     ) : (
                       <>
@@ -308,6 +353,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                             }))
                           }
                           title="Editar Horário"
+                          style={{ color: modalColor }}
                         >
                           <FiEdit2 size={16} />
                         </button>
@@ -326,6 +372,10 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                         onChange={(e) =>
                           setEditFields((fields) => ({ ...fields, sala: e.target.value }))
                         }
+                        style={{
+                          borderColor: modalColor,
+                          accentColor: modalColor,
+                        }}
                       >
                         <option value="">Selecione</option>
                         {salas.map((s) => (
@@ -343,6 +393,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                             setEditFields((fields) => ({ ...fields, sala: agendamento.sala || '' }))
                           }
                           title="Editar Sala"
+                          style={{ color: modalColor }}
                         >
                           <FiEdit2 size={16} />
                         </button>
@@ -361,6 +412,10 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                         onChange={(e) =>
                           setEditFields((fields) => ({ ...fields, especialidade: e.target.value }))
                         }
+                        style={{
+                          borderColor: modalColor,
+                          accentColor: modalColor,
+                        }}
                       >
                         <option value="">Selecione</option>
                         {especialidades.map((e) => (
@@ -381,6 +436,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                             }))
                           }
                           title="Editar Especialidade"
+                          style={{ color: modalColor }}
                         >
                           <FiEdit2 size={16} />
                         </button>
@@ -395,7 +451,12 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                   <button className="btn-cancel" onClick={handleCancel} disabled={carregando}>
                     Cancelar
                   </button>
-                  <button className="btn-save" onClick={handleSave} disabled={carregando}>
+                  <button 
+                    className="btn-save" 
+                    onClick={handleSave} 
+                    disabled={carregando}
+                    style={{ backgroundColor: modalColor }}
+                  >
                     {carregando ? '⏳ Salvando...' : 'Salvar Alteração'}
                   </button>
                 </div>
@@ -419,6 +480,10 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                         setMostrarListaAlunos(true);
                       }}
                       onFocus={() => setMostrarListaAlunos(true)}
+                      style={{
+                        borderColor: modalColor,
+                        accentColor: modalColor,
+                      }}
                     />
                     {mostrarListaAlunos && (
                       <div className="search-results">
@@ -458,6 +523,10 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                         className="btn-remover-aluno"
                         onClick={() => handleRemoverAluno(aluno.id)}
                         title="Remover aluno"
+                        style={{ 
+                          color: modalColor,
+                          borderColor: modalColor,
+                        }}
                       >
                         <FiTrash2 size={14} />
                       </button>
@@ -482,6 +551,10 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                       }
                       rows={3}
                       placeholder="Ex: Aluno com problemas de mobilidade no joelho direito..."
+                      style={{
+                        borderColor: modalColor,
+                        accentColor: modalColor,
+                      }}
                     />
                   ) : (
                     <>
@@ -499,6 +572,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                           }))
                         }
                         title="Editar Observações"
+                        style={{ color: modalColor }}
                       >
                         <FiEdit2 size={16} />
                       </button>
@@ -512,7 +586,12 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                   <button className="btn-cancel" onClick={handleCancel} disabled={carregando}>
                     Cancelar
                   </button>
-                  <button className="btn-save" onClick={handleSave} disabled={carregando}>
+                  <button 
+                    className="btn-save" 
+                    onClick={handleSave} 
+                    disabled={carregando}
+                    style={{ backgroundColor: modalColor }}
+                  >
                     {carregando ? '⏳ Salvando...' : 'Salvar Alteração'}
                   </button>
                 </div>

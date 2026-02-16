@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import SidebarTeacher from '../../components/Sidebar';
 import Navbar from '../../components/Navbar';
 
 export default function Teacher() {
+  const location = useLocation();
   // Inicia fechado em mobile, aberto em desktop
   const [navAberta, setNavAberta] = useState(() => window.innerWidth >= 1024);
 
@@ -31,7 +32,9 @@ export default function Teacher() {
           className="flex-1 p-3 sm:p-4 md:p-6 overflow-auto"
           style={{ backgroundColor: 'var(--bg-claro)', color: 'var(--text-escuro)' }}
         >
-          <Outlet />
+          <div key={location.pathname} className="page-transition">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

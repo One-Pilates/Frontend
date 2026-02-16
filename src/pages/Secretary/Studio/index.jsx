@@ -3,6 +3,7 @@ import { FiEdit, FiTrash2, FiX } from 'react-icons/fi';
 import api from '../../../services/api';
 import Swal from 'sweetalert2';
 import Botao from '../../../components/Button';
+import { getColorForEspecialidade } from '../../../utils/utils';
 
 export default function StudioView() {
   const [activeTab, setActiveTab] = useState('especialidades');
@@ -335,170 +336,302 @@ export default function StudioView() {
   };
 
   return (
-    <div className="flex flex-col gap-4 sm:gap-6 py-4 sm:py-6 px-4 sm:px-6 md:px-8 lg:px-16 h-full mx-auto ml-auto">
-      <div className="flex flex-row w-full items-center">
-        <h1 className="text-2xl sm:text-3xl font-bold dark:text-fontMain">
+    <div className="flex flex-col gap-3 sm:gap-4 py-2 sm:py-3 px-4 sm:px-6 md:px-8 lg:px-16 h-full mx-auto ml-auto">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <h1 className="text-2xl sm:text-3xl font-bold" style={{ color: 'var(--text-escuro)' }}>
           Configurações do Studio
         </h1>
       </div>
-      <div className="bg-white dark:bg-dark-secondary rounded-xl shadow mt-2 sm:mt-4 w-full h-auto py-4 sm:py-6 px-4 sm:px-6 md:px-12 lg:px-24">
-        {/* Tabs */}
-        <div className="border-b-2 dark:border-dark-component">
-          <nav className="flex">
-            <button
-              onClick={() => setActiveTab('especialidades')}
-              className={`px-3 sm:px-6 py-3 sm:py-4 text-sm sm:text-base font-medium border-b-4 transition-colors flex-1 sm:flex-none
-                ${
-                  activeTab === 'especialidades'
-                    ? 'border-orange-500 text-orange-600'
-                    : 'border-transparent text-gray-500 dark:text-fontSec hover:text-gray-700 dark:hover:text-fontMain hover:border-gray-300 dark:hover:border-dark-component'
-                }
-                `}
-            >
-              Especialidades
-            </button>
-            <button
-              onClick={() => setActiveTab('salas')}
-              className={`px-3 sm:px-6 py-3 sm:py-4 text-sm sm:text-base font-medium border-b-4 transition-colors flex-1 sm:flex-none
-                ${
-                  activeTab === 'salas'
-                    ? 'border-orange-500 text-orange-600'
-                    : 'border-transparent text-gray-500 dark:text-fontSec hover:text-gray-700 dark:hover:text-fontMain hover:border-gray-300 dark:hover:border-dark-component'
-                }`}
-            >
-              Salas
-            </button>
-          </nav>
-        </div>
-        {/* Content */}
-        <div className="p-3 sm:p-6 max-h-96 overflow-y-auto pb-4">
-          {activeTab === 'especialidades' ? (
-            <div>
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3">
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-fontMain">
+
+      {/* Tabs Navigation */}
+      <div className="flex gap-2 sm:gap-4 border-b-2" style={{ borderColor: 'var(--cor-borda)' }}>
+        <button
+          onClick={() => setActiveTab('especialidades')}
+          className={`px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold border-b-4 transition-all duration-200 ${
+            activeTab === 'especialidades'
+              ? 'border-orange-500 text-orange-600'
+              : 'border-transparent hover:border-gray-300'
+          }`}
+          style={activeTab !== 'especialidades' ? { color: 'var(--text-cinza)' } : {}}
+        >
+          Especialidades
+        </button>
+        <button
+          onClick={() => setActiveTab('salas')}
+          className={`px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold border-b-4 transition-all duration-200 ${
+            activeTab === 'salas'
+              ? 'border-orange-500 text-orange-600'
+              : 'border-transparent hover:border-gray-300'
+          }`}
+          style={activeTab !== 'salas' ? { color: 'var(--text-cinza)' } : {}}
+        >
+          Salas
+        </button>
+      </div>
+
+      {/* Content */}
+      <div className="w-full">
+        {activeTab === 'especialidades' ? (
+          <div className="flex flex-col gap-4">
+            {/* Header Section */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+              <div>
+                <h2 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--laranja-principal)' }}>
                   Especialidades Cadastradas
                 </h2>
-                <Botao onClick={handleAddEsp} cor="bg-blue-500" texto={'Nova Especialidade'} />
+                <p className="text-sm mt-1" style={{ color: 'var(--text-cinza)' }}>
+                  {especialidades.length} {especialidades.length === 1 ? 'especialidade' : 'especialidades'} {especialidades.length === 1 ? 'cadastrada' : 'cadastradas'}
+                </p>
               </div>
+              <Botao onClick={handleAddEsp} cor="bg-blue-500" texto={'+ Nova Especialidade'} />
+            </div>
 
-              <div className="grid grid-cols-1 gap-3 sm:gap-4">
-                {especialidades.map((esp) => (
-                  <div
-                    key={esp.id}
-                    className="border border-gray-200 dark:border-dark-component rounded-lg p-3 sm:p-4 hover:shadow-md transition-shadow dark:bg-dark-component"
-                  >
-                    <div className="flex justify-between items-center gap-3">
-                      <h3 className="font-medium text-orange-600 text-base sm:text-lg">
-                        {esp.nome}
-                      </h3>
-                      <div className="flex gap-2 shrink-0">
-                        <button className="p-1.5 sm:p-2 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition">
-                          <FiEdit
-                            onClick={() => handleEditEsp(esp)}
-                            size={16}
-                            className="sm:w-4.5 sm:h-4.5"
+            {/* List */}
+            {especialidades.length > 0 ? (
+              <div className="flex flex-col gap-3 sm:gap-4">
+                {especialidades.map((esp) => {
+                  const { backgroundColor, textColor } = getColorForEspecialidade(esp.nome);
+                  return (
+                    <div
+                      key={esp.id}
+                      className="rounded-xl p-4 sm:p-5 shadow-md hover:shadow-lg transition-all duration-300 border"
+                      style={{
+                        backgroundColor: 'var(--branco)',
+                        borderColor: 'var(--cor-borda)',
+                      }}
+                    >
+                      <div className="flex justify-between items-start gap-3">
+                        <div className="flex items-center gap-3 flex-1">
+                          <div
+                            className="w-3 h-3 rounded-full shrink-0"
+                            style={{ backgroundColor }}
                           />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteEspecialidade(esp.id)}
-                          className="p-1.5 sm:p-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition"
-                        >
-                          <FiTrash2 size={16} className="sm:w-4.5 sm:h-4.5" />
-                        </button>
+                          <h3
+                            className="font-semibold text-base sm:text-lg wrap-break-word"
+                            style={{ color: 'var(--text-escuro)' }}
+                          >
+                            {esp.nome}
+                          </h3>
+                        </div>
+                        <div className="flex gap-1.5 shrink-0">
+                          <button
+                            onClick={() => handleEditEsp(esp)}
+                            className="p-2 rounded-lg transition-all hover:scale-110 active:scale-95"
+                            style={{ color: '#3b82f6' }}
+                            title="Editar"
+                          >
+                            <FiEdit size={18} />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteEspecialidade(esp.id)}
+                            className="p-2 rounded-lg transition-all hover:scale-110 active:scale-95"
+                            style={{ color: '#ef4444' }}
+                            title="Deletar"
+                          >
+                            <FiTrash2 size={18} />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
-            </div>
-          ) : (
-            <div>
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3">
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-fontMain">
+            ) : (
+              <div
+                className="rounded-xl p-8 text-center"
+                style={{
+                  backgroundColor: 'var(--branco)',
+                  borderColor: 'var(--cor-borda)',
+                  borderWidth: '1px',
+                  borderStyle: 'dashed',
+                }}
+              >
+                <p className="text-base sm:text-lg" style={{ color: 'var(--text-cinza)' }}>
+                  Nenhuma especialidade cadastrada ainda
+                </p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {/* Header Section */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+              <div>
+                <h2 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--laranja-principal)' }}>
                   Salas Cadastradas
                 </h2>
-                <Botao onClick={handleAddSala} cor="bg-blue-500" texto={'Nova Sala'} />
+                <p className="text-sm mt-1" style={{ color: 'var(--text-cinza)' }}>
+                  {salas.length} {salas.length === 1 ? 'sala cadastrada' : 'salas cadastradas'}
+                </p>
               </div>
+              <Botao onClick={handleAddSala} cor="bg-blue-500" texto={'+ Nova Sala'} />
+            </div>
 
-              <div className="grid grid-cols-1 gap-3 sm:gap-4">
+            {/* List */}
+            {salas.length > 0 ? (
+              <div className="grid grid-cols-1 gap-4">
                 {salas.map((sala) => (
                   <div
                     key={sala.id}
-                    className="border border-gray-200 dark:border-dark-component rounded-lg p-3 sm:p-4 hover:shadow-md transition-shadow dark:bg-dark-component"
+                    className="rounded-xl p-4 sm:p-6 shadow-md hover:shadow-lg transition-all duration-300 border"
+                    style={{
+                      backgroundColor: 'var(--branco)',
+                      borderColor: 'var(--cor-borda)',
+                    }}
                   >
-                    <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
-                      <div className="flex flex-col gap-2 flex-1">
-                        <h3 className="font-medium text-orange-600 text-base sm:text-lg">
+                    <div className="flex flex-col lg:flex-row justify-between items-start gap-4">
+                      <div className="flex flex-col gap-3 flex-1 w-full">
+                        <h3
+                          className="font-bold text-lg sm:text-xl"
+                          style={{ color: 'var(--laranja-principal)' }}
+                        >
                           {sala.nome}
                         </h3>
-                        <p className="text-xs sm:text-sm text-gray-600 dark:text-fontSec">
-                          Capacidade: até{' '}
-                          <span className="font-semibold">{sala.quantidadeMaximaAlunos}</span>{' '}
-                          alunos
-                        </p>
-                        <p className="text-xs sm:text-sm text-gray-600 dark:text-fontSec">
-                          Equipamentos PCD:{' '}
-                          <span className="font-semibold">{sala.quantidadeEquipamentosPCD}</span>
-                        </p>
-                        <div className="flex gap-2 flex-wrap">
-                          {sala.especialidades && sala.especialidades.length > 0 ? (
-                            sala.especialidades.map((esp, index) => (
-                              <span
-                                key={index}
-                                className="px-2 sm:px-3 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 rounded-full text-xs sm:text-sm font-medium"
-                              >
-                                {esp}
-                              </span>
-                            ))
-                          ) : (
-                            <span className="text-xs sm:text-sm text-gray-500 dark:text-fontSec">
-                              Sem especialidades
+                        
+                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                          <div className="flex items-center gap-2">
+                            <span
+                              className="text-xs sm:text-sm font-medium"
+                              style={{ color: 'var(--text-cinza)' }}
+                            >
+                              Capacidade:
                             </span>
-                          )}
+                            <span
+                              className="px-3 py-1 rounded-full text-xs sm:text-sm font-bold"
+                              style={{
+                                backgroundColor: '#e0f2fe',
+                                color: '#0284c7',
+                              }}
+                            >
+                              {sala.quantidadeMaximaAlunos} alunos
+                            </span>
+                          </div>
+                          
+                          <div className="flex items-center gap-2">
+                            <span
+                              className="text-xs sm:text-sm font-medium"
+                              style={{ color: 'var(--text-cinza)' }}
+                            >
+                              Equipamentos PCD:
+                            </span>
+                            <span
+                              className="px-3 py-1 rounded-full text-xs sm:text-sm font-bold"
+                              style={{
+                                backgroundColor: '#ddd6fe',
+                                color: '#7c3aed',
+                              }}
+                            >
+                              {sala.quantidadeEquipamentosPCD}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                          <span
+                            className="text-xs sm:text-sm font-medium"
+                            style={{ color: 'var(--text-cinza)' }}
+                          >
+                            Especialidades:
+                          </span>
+                          <div className="flex gap-2 flex-wrap">
+                            {sala.especialidades && sala.especialidades.length > 0 ? (
+                              sala.especialidades.map((esp, index) => {
+                                const { backgroundColor, textColor } = getColorForEspecialidade(esp);
+                                return (
+                                  <span
+                                    key={index}
+                                    className="px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold shadow-sm"
+                                    style={{
+                                      backgroundColor,
+                                      color: textColor,
+                                    }}
+                                  >
+                                    {esp}
+                                  </span>
+                                );
+                              })
+                            ) : (
+                              <span
+                                className="text-xs sm:text-sm italic"
+                                style={{ color: 'var(--text-cinza)' }}
+                              >
+                                Nenhuma especialidade vinculada
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
-                      <div className="flex gap-2 shrink-0">
-                        <button className="p-1.5 sm:p-2 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition">
-                          <FiEdit
-                            onClick={() => handleEditSala(sala)}
-                            size={16}
-                            className="sm:w-4.5 sm:h-4.5"
-                          />
+
+                      <div className="flex lg:flex-col gap-2 shrink-0">
+                        <button
+                          onClick={() => handleEditSala(sala)}
+                          className="p-2.5 rounded-lg transition-all hover:scale-110 active:scale-95"
+                          style={{ color: '#3b82f6' }}
+                          title="Editar"
+                        >
+                          <FiEdit size={20} />
                         </button>
-                        <button className="p-1.5 sm:p-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition">
-                          <FiTrash2
-                            onClick={() => handleDeleteSala(sala.id)}
-                            size={16}
-                            className="sm:w-4.5 sm:h-4.5"
-                          />
+                        <button
+                          onClick={() => handleDeleteSala(sala.id)}
+                          className="p-2.5 rounded-lg transition-all hover:scale-110 active:scale-95"
+                          style={{ color: '#ef4444' }}
+                          title="Deletar"
+                        >
+                          <FiTrash2 size={20} />
                         </button>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
-          )}
-        </div>
+            ) : (
+              <div
+                className="rounded-xl p-8 text-center"
+                style={{
+                  backgroundColor: 'var(--branco)',
+                  borderColor: 'var(--cor-borda)',
+                  borderWidth: '1px',
+                  borderStyle: 'dashed',
+                }}
+              >
+                <p className="text-base sm:text-lg" style={{ color: 'var(--text-cinza)' }}>
+                  Nenhuma sala cadastrada ainda
+                </p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
       {/* Modal de Especialidade */}
       {showEspModal && (
-        <div className="modal-overlay animate-slideUp">
-          <div className="bg-white dark:bg-dark-secondary rounded-lg max-w-md w-[90%] sm:w-full py-4 sm:py-6 px-4 sm:px-8">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-fontMain">
+        <div 
+          className="fixed inset-0 flex items-center justify-center z-50 p-4 animate-backdropFadeIn"
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+          }}
+        >
+          <div
+            className="rounded-xl max-w-md w-full py-6 px-6 sm:px-8 shadow-2xl animate-slideUp"
+            style={{ backgroundColor: 'var(--branco)' }}
+          >
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--laranja-principal)' }}>
                 {editingEsp ? 'Editar Especialidade' : 'Nova Especialidade'}
               </h3>
               <button
                 onClick={() => setShowEspModal(false)}
-                className="text-gray-400 hover:text-gray-600 dark:text-fontSec dark:hover:text-fontMain"
+                className="p-1 rounded-lg transition-all hover:scale-110 active:scale-95"
+                style={{ color: 'var(--text-cinza)' }}
               >
                 <FiX size={24} />
               </button>
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 dark:text-fontMain mb-2">
+              <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--text-escuro)' }}>
                 Nome da Especialidade <span className="text-red-500">*</span>
               </label>
               <input
@@ -506,7 +639,13 @@ export default function StudioView() {
                 value={formEsp}
                 onChange={(e) => setFormEsp(e.target.value)}
                 placeholder="Ex: Fisioterapia"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-dark-component dark:bg-dark-component dark:text-fontMain rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                style={{
+                  borderColor: 'var(--cor-borda)',
+                  borderWidth: '1px',
+                  backgroundColor: 'var(--branco)',
+                  color: 'var(--text-escuro)',
+                }}
               />
             </div>
 
@@ -517,120 +656,160 @@ export default function StudioView() {
           </div>
         </div>
       )}
-      {/*Modal de Sala */}
+
+      {/* Modal de Sala */}
       {showSalaModal && (
-        <div className="modal-overlay animate-slideUp">
-          <div className="bg-white dark:bg-dark-secondary rounded-lg max-w-lg w-[90%] sm:w-full p-4 sm:p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-fontMain">
+        <div 
+          className="fixed inset-0 flex items-center justify-center z-50 p-4 overflow-y-auto animate-backdropFadeIn"
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+          }}
+        >
+          <div
+            className="rounded-xl max-w-2xl w-full my-8 py-6 px-6 sm:px-8 shadow-2xl animate-slideUp"
+            style={{ backgroundColor: 'var(--branco)' }}
+          >
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--laranja-principal)' }}>
                 {editingSala ? 'Editar Sala' : 'Nova Sala'}
               </h3>
               <button
                 onClick={() => setShowSalaModal(false)}
-                className="text-gray-400 hover:text-gray-600 dark:text-fontSec dark:hover:text-fontMain"
+                className="p-1 rounded-lg transition-all hover:scale-110 active:scale-95"
+                style={{ color: 'var(--text-cinza)' }}
               >
                 <FiX size={24} />
               </button>
             </div>
 
-            <div className="space-y-4 mb-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-fontMain mb-2">
-                  Nome da Sala <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={formSala.nome}
-                  onChange={(e) => setFormSala({ ...formSala, nome: e.target.value })}
-                  placeholder="Ex: Sala Reformer"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-dark-component dark:bg-dark-component dark:text-fontMain rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-5 mb-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-fontMain mb-2">
-                    Capacidade Máxima <span className="text-red-500">*</span>
+                  <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--text-escuro)' }}>
+                    Nome da Sala <span className="text-red-500">*</span>
                   </label>
                   <input
-                    type="number"
-                    min="1"
-                    value={formSala.quantidadeMaximaAlunos}
-                    onChange={(e) =>
-                      setFormSala({ ...formSala, quantidadeMaximaAlunos: e.target.value })
-                    }
-                    placeholder="Ex: 8"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-dark-component dark:bg-dark-component dark:text-fontMain rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    type="text"
+                    value={formSala.nome}
+                    onChange={(e) => setFormSala({ ...formSala, nome: e.target.value })}
+                    placeholder="Ex: Sala Reformer"
+                    className="w-full px-4 py-2.5 rounded-lg focus:outline-none transition-all"
+                    style={{
+                      borderColor: 'var(--cor-borda)',
+                      borderWidth: '1px',
+                      backgroundColor: 'var(--branco)',
+                      color: 'var(--text-escuro)',
+                    }}
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-fontMain mb-2">
-                    Equipamentos PCD <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={formSala.quantidadeEquipamentosPCD}
-                    onChange={(e) =>
-                      setFormSala({ ...formSala, quantidadeEquipamentosPCD: e.target.value })
-                    }
-                    placeholder="Ex: 2"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-dark-component dark:bg-dark-component dark:text-fontMain rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-fontMain mb-3">
-                  Especialidades da Sala
-                </label>
-                <div className="space-y-2 max-h-40 overflow-y-auto p-3 border border-gray-200 dark:border-dark-component rounded-lg bg-gray-50 dark:bg-dark-component">
-                  {especialidades.map((esp) => (
-                    <label
-                      key={esp.id}
-                      className="flex items-center gap-3 p-2 hover:bg-white dark:hover:bg-dark-secondary rounded cursor-pointer transition-colors"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={
-                          formSala.especialidades?.includes(esp.nome) ||
-                          formSala.especialidadesIds?.includes(esp.id) ||
-                          false
-                        }
-                        onChange={(e) => {
-                          const currentNomes = formSala.especialidades || [];
-                          const currentIds = formSala.especialidadesIds || [];
-
-                          if (e.target.checked) {
-                            setFormSala({
-                              ...formSala,
-                              especialidades: [...currentNomes, esp.nome],
-                              especialidadesIds: [...currentIds, esp.id],
-                            });
-                          } else {
-                            setFormSala({
-                              ...formSala,
-                              especialidades: currentNomes.filter((nome) => nome !== esp.nome),
-                              especialidadesIds: currentIds.filter((id) => id !== esp.id),
-                            });
-                          }
-                        }}
-                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                      />
-                      <span className="text-sm text-gray-700 dark:text-fontMain">{esp.nome}</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--text-escuro)' }}>
+                      Capacidade Máxima <span className="text-red-500">*</span>
                     </label>
-                  ))}
-                  {especialidades.length === 0 && (
-                    <p className="text-sm text-gray-500 dark:text-fontSec text-center py-2">
-                      Nenhuma especialidade cadastrada
-                    </p>
-                  )}
+                    <input
+                      type="number"
+                      min="1"
+                      value={formSala.quantidadeMaximaAlunos}
+                      onChange={(e) =>
+                        setFormSala({ ...formSala, quantidadeMaximaAlunos: e.target.value })
+                      }
+                      placeholder="Ex: 8"
+                      className="w-full px-4 py-2.5 rounded-lg focus:outline-none transition-all"
+                      style={{
+                        borderColor: 'var(--cor-borda)',
+                        borderWidth: '1px',
+                        backgroundColor: 'var(--branco)',
+                        color: 'var(--text-escuro)',
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--text-escuro)' }}>
+                      Equipamentos PCD <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={formSala.quantidadeEquipamentosPCD}
+                      onChange={(e) =>
+                        setFormSala({ ...formSala, quantidadeEquipamentosPCD: e.target.value })
+                      }
+                      placeholder="Ex: 2"
+                      className="w-full px-4 py-2.5 rounded-lg focus:outline-none transition-all"
+                      style={{
+                        borderColor: 'var(--cor-borda)',
+                        borderWidth: '1px',
+                        backgroundColor: 'var(--branco)',
+                        color: 'var(--text-escuro)',
+                      }}
+                    />
+                  </div>
                 </div>
-                <p className="text-xs text-center text-orange-600 mt-2">
-                  Selecione as especialidades que podem ser praticadas nesta sala
-                </p>
-              </div>
+
+                <div>
+                  <label className="block text-sm font-semibold mb-3" style={{ color: 'var(--text-escuro)' }}>
+                    Especialidades da Sala <span className="text-red-500">*</span>
+                  </label>
+                  <div
+                    className="space-y-2 max-h-48 overflow-y-auto p-4 rounded-lg"
+                    style={{
+                      borderColor: 'var(--cor-borda)',
+                      borderWidth: '1px',
+                      backgroundColor: '#f9fafb',
+                    }}
+                  >
+                    {especialidades.map((esp) => (
+                      <label
+                        key={esp.id}
+                        className="flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all hover:shadow-sm"
+                        style={{ backgroundColor: 'var(--branco)' }}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={
+                            formSala.especialidades?.includes(esp.nome) ||
+                            formSala.especialidadesIds?.includes(esp.id) ||
+                            false
+                          }
+                          onChange={(e) => {
+                            const currentNomes = formSala.especialidades || [];
+                            const currentIds = formSala.especialidadesIds || [];
+
+                            if (e.target.checked) {
+                              setFormSala({
+                                ...formSala,
+                                especialidades: [...currentNomes, esp.nome],
+                                especialidadesIds: [...currentIds, esp.id],
+                              });
+                            } else {
+                              setFormSala({
+                                ...formSala,
+                                especialidades: currentNomes.filter((nome) => nome !== esp.nome),
+                                especialidadesIds: currentIds.filter((id) => id !== esp.id),
+                              });
+                            }
+                          }}
+                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                        <span className="text-sm font-medium" style={{ color: 'var(--text-escuro)' }}>
+                          {esp.nome}
+                        </span>
+                      </label>
+                    ))}
+                    {especialidades.length === 0 && (
+                      <p className="text-sm text-center py-4" style={{ color: 'var(--text-cinza)' }}>
+                        Nenhuma especialidade cadastrada
+                      </p>
+                    )}
+                  </div>
+                  <p className="text-xs text-center mt-2" style={{ color: 'var(--text-cinza)' }}>
+                    Selecione as especialidades que podem ser praticadas nesta sala
+                  </p>
+                </div>
             </div>
 
             <div className="flex gap-3 justify-end pt-2">

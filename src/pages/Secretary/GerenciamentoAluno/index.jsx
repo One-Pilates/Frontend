@@ -113,20 +113,44 @@ export default function GerenciamentoAluno() {
         <div className="flex flex-col md:flex-row w-full items-stretch md:items-center gap-3 md:gap-4 justify-between">
           <div className="relative w-full md:w-80">
             <FiSearch
-              className="absolute left-3 top-1/2 transform -translate-y-1/2"
-              size={20}
-              style={{ color: 'var(--laranja-principal)' }}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2"
+              size={18}
+              style={{ color: '#f77433', pointerEvents: 'none', opacity: 1, zIndex: 10 }}
             />
             <input
               type="text"
               onChange={(e) => setFilterByNome(e.target.value)}
               placeholder="Buscar por nome"
-              className="w-full pl-10 pr-8 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full pl-11 pr-4 py-2.5 rounded-xl focus:outline-none transition-all"
               style={{
-                borderColor: 'var(--cor-borda)',
-                borderWidth: '1px',
-                backgroundColor: 'var(--branco)',
+                background: '#f9fafb',
+                border: '2px solid #e5e7eb',
                 color: 'var(--text-escuro)',
+                fontSize: '0.95rem',
+              }}
+              onFocus={(e) => {
+                e.target.style.boxShadow = '0 0 0 4px rgba(247, 116, 51, 0.15)';
+                e.target.style.background = 'var(--branco)';
+                e.target.style.borderColor = '#f77433';
+                e.target.style.transform = 'translateY(-1px)';
+              }}
+              onBlur={(e) => {
+                e.target.style.boxShadow = 'none';
+                e.target.style.background = '#f9fafb';
+                e.target.style.borderColor = '#e5e7eb';
+                e.target.style.transform = 'translateY(0)';
+              }}
+              onMouseEnter={(e) => {
+                if (document.activeElement !== e.target) {
+                  e.target.style.borderColor = 'var(--cor-borda)';
+                  e.target.style.background = 'var(--branco)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (document.activeElement !== e.target) {
+                  e.target.style.borderColor = '#e5e7eb';
+                  e.target.style.background = '#f9fafb';
+                }
               }}
             />
           </div>

@@ -20,8 +20,8 @@ export default function ContactAdm({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50 backdrop-blur-sm">
-      <div className="bg-white dark:bg-dark-secondary rounded-2xl shadow-2xl p-6 max-w-sm w-[90%] text-center">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50 backdrop-blur-sm animate-backdropFadeIn">
+      <div className="bg-white dark:bg-dark-secondary rounded-2xl shadow-2xl p-6 max-w-sm w-[90%] text-center animate-slideUp">
         <h2 className="text-lg font-semibold text-gray-800 mb-2">Está com algum problema?</h2>
         <p className="text-gray-600 dark:text-fontSec mb-6 text-sm">
           Deseja contatar o administrador para relatar um problema?
