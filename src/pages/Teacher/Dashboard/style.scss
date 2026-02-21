@@ -120,7 +120,7 @@
         word-break: break-word;
         overflow-wrap: break-word;
       }
-      
+
       .kpi-value--text {
         font-size: clamp(0.9rem, 2vw, 1.25rem);
         font-weight: 700;
@@ -175,7 +175,6 @@
   }
 
   @media (max-width: 640px) {
-
     padding: 1rem;
 
     .chart-body {
@@ -204,8 +203,6 @@
   }
 
   @media (min-width: 1920px) {
-    
-
     .charts-grid {
       grid-template-columns: repeat(2, minmax(40%, 1fr));
       gap: 6vh;

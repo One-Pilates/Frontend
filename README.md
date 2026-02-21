@@ -1,6 +1,7 @@
 # One Pilates — Frontend 🎨
 
 ## 📌 Introdução
+
 O **One Pilates Frontend** é a interface do sistema de gerenciamento de agendamentos do estúdio One Pilates.
 
 A aplicação foi desenvolvida em **React com Vite**, oferecendo uma experiência moderna, intuitiva e responsiva para **administradores, professores e secretárias**.
@@ -8,8 +9,9 @@ A aplicação foi desenvolvida em **React com Vite**, oferecendo uma experiênci
 ---
 
 ## 🛠 Tecnologias
-- React  
-- Vite  
+
+- React
+- Vite
 
 <div align="center">
   <img src="https://skillicons.dev/icons?i=react,vite" alt="Frontend Skills" />
@@ -39,4 +41,3 @@ Aplicação disponível em: http://localhost:5173
 📄 Licença
 
 Este projeto é distribuído sob a licença MIT.
-

@@ -1,10 +1,8 @@
-
 .register-container {
   width: 100%;
   min-height: 100vh;
   padding: 2rem;
 }
-
 
 .register-header {
   max-width: 64rem;
@@ -41,12 +39,10 @@
   width: 100%;
 }
 
-
 .register-content {
   max-width: 64rem;
   margin: 0 auto;
 }
-
 
 .subtitle {
   text-align: center;
@@ -54,7 +50,6 @@
   font-size: 0.875rem;
   margin-bottom: 2rem;
 }
-
 
 .register-form {
   display: flex;
@@ -73,7 +68,6 @@
   }
 }
 
-
 .dados-pessoais-screen,
 .endereco-screen,
 .informacoes-profissionais-screen {
@@ -83,7 +77,6 @@
   border: 1px solid #e5e7eb;
   min-height: 400px;
 }
-
 
 @media (max-width: 768px) {
   .register-container {
@@ -144,4 +137,3 @@
     padding: 3rem 4rem;
   }
 }
-

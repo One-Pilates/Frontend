@@ -377,11 +377,16 @@ export default function StudioView() {
             {/* Header Section */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               <div>
-                <h2 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--laranja-principal)' }}>
+                <h2
+                  className="text-xl sm:text-2xl font-bold"
+                  style={{ color: 'var(--laranja-principal)' }}
+                >
                   Especialidades Cadastradas
                 </h2>
                 <p className="text-sm mt-1" style={{ color: 'var(--text-cinza)' }}>
-                  {especialidades.length} {especialidades.length === 1 ? 'especialidade' : 'especialidades'} {especialidades.length === 1 ? 'cadastrada' : 'cadastradas'}
+                  {especialidades.length}{' '}
+                  {especialidades.length === 1 ? 'especialidade' : 'especialidades'}{' '}
+                  {especialidades.length === 1 ? 'cadastrada' : 'cadastradas'}
                 </p>
               </div>
               <Botao onClick={handleAddEsp} cor="bg-blue-500" texto={'+ Nova Especialidade'} />
@@ -391,7 +396,7 @@ export default function StudioView() {
             {especialidades.length > 0 ? (
               <div className="flex flex-col gap-3 sm:gap-4">
                 {especialidades.map((esp) => {
-                  const { backgroundColor, textColor } = getColorForEspecialidade(esp.nome);
+                  const { backgroundColor } = getColorForEspecialidade(esp.nome);
                   return (
                     <div
                       key={esp.id}
@@ -458,7 +463,10 @@ export default function StudioView() {
             {/* Header Section */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               <div>
-                <h2 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--laranja-principal)' }}>
+                <h2
+                  className="text-xl sm:text-2xl font-bold"
+                  style={{ color: 'var(--laranja-principal)' }}
+                >
                   Salas Cadastradas
                 </h2>
                 <p className="text-sm mt-1" style={{ color: 'var(--text-cinza)' }}>
@@ -488,7 +496,7 @@ export default function StudioView() {
                         >
                           {sala.nome}
                         </h3>
-                        
+
                         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
                           <div className="flex items-center gap-2">
                             <span
@@ -507,7 +515,7 @@ export default function StudioView() {
                               {sala.quantidadeMaximaAlunos} alunos
                             </span>
                           </div>
-                          
+
                           <div className="flex items-center gap-2">
                             <span
                               className="text-xs sm:text-sm font-medium"
@@ -537,7 +545,8 @@ export default function StudioView() {
                           <div className="flex gap-2 flex-wrap">
                             {sala.especialidades && sala.especialidades.length > 0 ? (
                               sala.especialidades.map((esp, index) => {
-                                const { backgroundColor, textColor } = getColorForEspecialidade(esp);
+                                const { backgroundColor, textColor } =
+                                  getColorForEspecialidade(esp);
                                 return (
                                   <span
                                     key={index}
@@ -605,7 +614,7 @@ export default function StudioView() {
       </div>
       {/* Modal de Especialidade */}
       {showEspModal && (
-        <div 
+        <div
           className="fixed inset-0 flex items-center justify-center z-50 p-4 animate-backdropFadeIn"
           style={{
             backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -618,7 +627,10 @@ export default function StudioView() {
             style={{ backgroundColor: 'var(--branco)' }}
           >
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--laranja-principal)' }}>
+              <h3
+                className="text-xl sm:text-2xl font-bold"
+                style={{ color: 'var(--laranja-principal)' }}
+              >
                 {editingEsp ? 'Editar Especialidade' : 'Nova Especialidade'}
               </h3>
               <button
@@ -631,7 +643,10 @@ export default function StudioView() {
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--text-escuro)' }}>
+              <label
+                className="block text-sm font-semibold mb-2"
+                style={{ color: 'var(--text-escuro)' }}
+              >
                 Nome da Especialidade <span className="text-red-500">*</span>
               </label>
               <input
@@ -659,7 +674,7 @@ export default function StudioView() {
 
       {/* Modal de Sala */}
       {showSalaModal && (
-        <div 
+        <div
           className="fixed inset-0 flex items-center justify-center z-50 p-4 overflow-y-auto animate-backdropFadeIn"
           style={{
             backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -672,7 +687,10 @@ export default function StudioView() {
             style={{ backgroundColor: 'var(--branco)' }}
           >
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--laranja-principal)' }}>
+              <h3
+                className="text-xl sm:text-2xl font-bold"
+                style={{ color: 'var(--laranja-principal)' }}
+              >
                 {editingSala ? 'Editar Sala' : 'Nova Sala'}
               </h3>
               <button
@@ -685,15 +703,44 @@ export default function StudioView() {
             </div>
 
             <div className="space-y-5 mb-6">
+              <div>
+                <label
+                  className="block text-sm font-semibold mb-2"
+                  style={{ color: 'var(--text-escuro)' }}
+                >
+                  Nome da Sala <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={formSala.nome}
+                  onChange={(e) => setFormSala({ ...formSala, nome: e.target.value })}
+                  placeholder="Ex: Sala Reformer"
+                  className="w-full px-4 py-2.5 rounded-lg focus:outline-none transition-all"
+                  style={{
+                    borderColor: 'var(--cor-borda)',
+                    borderWidth: '1px',
+                    backgroundColor: 'var(--branco)',
+                    color: 'var(--text-escuro)',
+                  }}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--text-escuro)' }}>
-                    Nome da Sala <span className="text-red-500">*</span>
+                  <label
+                    className="block text-sm font-semibold mb-2"
+                    style={{ color: 'var(--text-escuro)' }}
+                  >
+                    Capacidade Máxima <span className="text-red-500">*</span>
                   </label>
                   <input
-                    type="text"
-                    value={formSala.nome}
-                    onChange={(e) => setFormSala({ ...formSala, nome: e.target.value })}
-                    placeholder="Ex: Sala Reformer"
+                    type="number"
+                    min="1"
+                    value={formSala.quantidadeMaximaAlunos}
+                    onChange={(e) =>
+                      setFormSala({ ...formSala, quantidadeMaximaAlunos: e.target.value })
+                    }
+                    placeholder="Ex: 8"
                     className="w-full px-4 py-2.5 rounded-lg focus:outline-none transition-all"
                     style={{
                       borderColor: 'var(--cor-borda)',
@@ -704,112 +751,95 @@ export default function StudioView() {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--text-escuro)' }}>
-                      Capacidade Máxima <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={formSala.quantidadeMaximaAlunos}
-                      onChange={(e) =>
-                        setFormSala({ ...formSala, quantidadeMaximaAlunos: e.target.value })
-                      }
-                      placeholder="Ex: 8"
-                      className="w-full px-4 py-2.5 rounded-lg focus:outline-none transition-all"
-                      style={{
-                        borderColor: 'var(--cor-borda)',
-                        borderWidth: '1px',
-                        backgroundColor: 'var(--branco)',
-                        color: 'var(--text-escuro)',
-                      }}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--text-escuro)' }}>
-                      Equipamentos PCD <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      value={formSala.quantidadeEquipamentosPCD}
-                      onChange={(e) =>
-                        setFormSala({ ...formSala, quantidadeEquipamentosPCD: e.target.value })
-                      }
-                      placeholder="Ex: 2"
-                      className="w-full px-4 py-2.5 rounded-lg focus:outline-none transition-all"
-                      style={{
-                        borderColor: 'var(--cor-borda)',
-                        borderWidth: '1px',
-                        backgroundColor: 'var(--branco)',
-                        color: 'var(--text-escuro)',
-                      }}
-                    />
-                  </div>
-                </div>
-
                 <div>
-                  <label className="block text-sm font-semibold mb-3" style={{ color: 'var(--text-escuro)' }}>
-                    Especialidades da Sala <span className="text-red-500">*</span>
+                  <label
+                    className="block text-sm font-semibold mb-2"
+                    style={{ color: 'var(--text-escuro)' }}
+                  >
+                    Equipamentos PCD <span className="text-red-500">*</span>
                   </label>
-                  <div
-                    className="space-y-2 max-h-48 overflow-y-auto p-4 rounded-lg"
+                  <input
+                    type="number"
+                    min="0"
+                    value={formSala.quantidadeEquipamentosPCD}
+                    onChange={(e) =>
+                      setFormSala({ ...formSala, quantidadeEquipamentosPCD: e.target.value })
+                    }
+                    placeholder="Ex: 2"
+                    className="w-full px-4 py-2.5 rounded-lg focus:outline-none transition-all"
                     style={{
                       borderColor: 'var(--cor-borda)',
                       borderWidth: '1px',
-                      backgroundColor: '#f9fafb',
+                      backgroundColor: 'var(--branco)',
+                      color: 'var(--text-escuro)',
                     }}
-                  >
-                    {especialidades.map((esp) => (
-                      <label
-                        key={esp.id}
-                        className="flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all hover:shadow-sm"
-                        style={{ backgroundColor: 'var(--branco)' }}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={
-                            formSala.especialidades?.includes(esp.nome) ||
-                            formSala.especialidadesIds?.includes(esp.id) ||
-                            false
-                          }
-                          onChange={(e) => {
-                            const currentNomes = formSala.especialidades || [];
-                            const currentIds = formSala.especialidadesIds || [];
-
-                            if (e.target.checked) {
-                              setFormSala({
-                                ...formSala,
-                                especialidades: [...currentNomes, esp.nome],
-                                especialidadesIds: [...currentIds, esp.id],
-                              });
-                            } else {
-                              setFormSala({
-                                ...formSala,
-                                especialidades: currentNomes.filter((nome) => nome !== esp.nome),
-                                especialidadesIds: currentIds.filter((id) => id !== esp.id),
-                              });
-                            }
-                          }}
-                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                        />
-                        <span className="text-sm font-medium" style={{ color: 'var(--text-escuro)' }}>
-                          {esp.nome}
-                        </span>
-                      </label>
-                    ))}
-                    {especialidades.length === 0 && (
-                      <p className="text-sm text-center py-4" style={{ color: 'var(--text-cinza)' }}>
-                        Nenhuma especialidade cadastrada
-                      </p>
-                    )}
-                  </div>
-                  <p className="text-xs text-center mt-2" style={{ color: 'var(--text-cinza)' }}>
-                    Selecione as especialidades que podem ser praticadas nesta sala
-                  </p>
+                  />
                 </div>
+              </div>
+
+              <div>
+                <label
+                  className="block text-sm font-semibold mb-3"
+                  style={{ color: 'var(--text-escuro)' }}
+                >
+                  Especialidades da Sala <span className="text-red-500">*</span>
+                </label>
+                <div
+                  className="space-y-2 max-h-48 overflow-y-auto p-4 rounded-lg"
+                  style={{
+                    borderColor: 'var(--cor-borda)',
+                    borderWidth: '1px',
+                    backgroundColor: '#f9fafb',
+                  }}
+                >
+                  {especialidades.map((esp) => (
+                    <label
+                      key={esp.id}
+                      className="flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all hover:shadow-sm"
+                      style={{ backgroundColor: 'var(--branco)' }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={
+                          formSala.especialidades?.includes(esp.nome) ||
+                          formSala.especialidadesIds?.includes(esp.id) ||
+                          false
+                        }
+                        onChange={(e) => {
+                          const currentNomes = formSala.especialidades || [];
+                          const currentIds = formSala.especialidadesIds || [];
+
+                          if (e.target.checked) {
+                            setFormSala({
+                              ...formSala,
+                              especialidades: [...currentNomes, esp.nome],
+                              especialidadesIds: [...currentIds, esp.id],
+                            });
+                          } else {
+                            setFormSala({
+                              ...formSala,
+                              especialidades: currentNomes.filter((nome) => nome !== esp.nome),
+                              especialidadesIds: currentIds.filter((id) => id !== esp.id),
+                            });
+                          }
+                        }}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <span className="text-sm font-medium" style={{ color: 'var(--text-escuro)' }}>
+                        {esp.nome}
+                      </span>
+                    </label>
+                  ))}
+                  {especialidades.length === 0 && (
+                    <p className="text-sm text-center py-4" style={{ color: 'var(--text-cinza)' }}>
+                      Nenhuma especialidade cadastrada
+                    </p>
+                  )}
+                </div>
+                <p className="text-xs text-center mt-2" style={{ color: 'var(--text-cinza)' }}>
+                  Selecione as especialidades que podem ser praticadas nesta sala
+                </p>
+              </div>
             </div>
 
             <div className="flex gap-3 justify-end pt-2">

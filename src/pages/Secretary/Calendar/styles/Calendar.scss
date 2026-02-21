@@ -5,12 +5,12 @@
   display: flex;
   flex-direction: column;
   padding: 1.5rem;
-  backgroundColor: 'var(--bg-claro)';
-  
+  backgroundcolor: 'var(--bg-claro)';
+
   @media (min-width: 768px) {
     padding: 1.5rem 2rem;
   }
-  
+
   @media (min-width: 1024px) {
     padding: 1.5rem 4rem;
   }
@@ -59,11 +59,11 @@
   @media (max-width: 768px) {
     flex-direction: row;
     align-items: center;
-    
+
     h1 {
       font-size: 1.5rem;
     }
-    
+
     .btn-criar-aula {
       padding: 0.5rem 1rem;
       font-size: 0.813rem;
@@ -91,7 +91,7 @@
     }
 
     .filtros-inline {
-      margin-left: auto;  // empurra para a direita
+      margin-left: auto; // empurra para a direita
       display: flex;
       align-items: center;
       gap: 15px;
@@ -141,7 +141,7 @@
 .calendar-view-buttons {
   display: flex;
   gap: 0.5rem;
-  
+
   .filter-button {
     padding: 0.5rem 1rem;
     border: none;
@@ -159,7 +159,7 @@
       color: var(--laranja-principal);
       transform: translateY(-1px) scale(1.02);
     }
-    
+
     &:active {
       transform: translateY(0) scale(0.98);
     }
@@ -188,10 +188,10 @@
       cursor: not-allowed;
     }
   }
-  
+
   @media (max-width: 640px) {
     width: 100%;
-    
+
     .filter-button {
       flex: 1;
       padding: 0.5rem 0.5rem;
@@ -310,8 +310,8 @@
 
 /* Ausência: cor cinza mais forte e texto em negrito */
 .fc-event.ausencia-event {
-  background-color: #F3F4F6 !important;
-  border-color: #D1D5DB !important;
+  background-color: #f3f4f6 !important;
+  border-color: #d1d5db !important;
   color: var(--text-escuro) !important;
   font-weight: 700 !important;
 }
@@ -403,7 +403,6 @@
   }
 }
 
-
 .loading-overlay {
   position: absolute;
   inset: 0;
@@ -423,5 +422,3 @@
   opacity: 1;
   pointer-events: all;
 }
-
-

@@ -32,11 +32,11 @@
       }
     }
   }
-  
+
   @media (min-width: 768px) {
     padding: 1.5rem 2rem;
   }
-  
+
   @media (min-width: 1024px) {
     padding: 1.5rem 4rem;
   }
@@ -117,7 +117,7 @@
         color: $texto-titulo;
         line-height: 1.2;
       }
-      
+
       .kpi-value--text {
         font-size: clamp(1rem, 2vw, 1.4rem);
         font-weight: 700;
@@ -180,7 +180,7 @@
     .overview-header {
       flex-direction: column;
       align-items: flex-start;
-      
+
       h1 {
         font-size: 1.5rem;
       }
@@ -191,7 +191,7 @@
     .kpi-grid {
       grid-template-columns: repeat(2, 1fr);
     }
-    
+
     .charts-grid {
       grid-template-columns: 1fr;
       gap: 2rem;

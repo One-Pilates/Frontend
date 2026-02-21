@@ -53,8 +53,6 @@ export default function DashboardSecretary() {
     if (!user || !user.id) return;
 
     const fetchDashboardData = async () => {
-      setLoading(true);
-
       try {
         const dias = selectedPeriod || 30;
         const endpoint = `api/secretarias/qtdUltimosDias/${dias}`;
@@ -164,8 +162,6 @@ export default function DashboardSecretary() {
         setTop3([]);
         setKpis(emptyKpis);
         setHasData(false);
-      } finally {
-        setLoading(false);
       }
     };
 

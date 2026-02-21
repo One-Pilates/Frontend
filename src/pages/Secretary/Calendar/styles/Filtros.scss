@@ -60,13 +60,13 @@
       cursor: pointer;
       border: none;
     }
-    
+
     .btn-aplicar {
       &:hover:not(:disabled) {
         transform: scale(1.02);
         box-shadow: 0 4px 8px rgba(247, 116, 51, 0.3);
       }
-      
+
       &:active:not(:disabled) {
         transform: scale(0.98);
       }
@@ -80,7 +80,7 @@
         transform: scale(1.02);
         box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
       }
-      
+
       &:active:not(:disabled) {
         transform: scale(0.98);
       }
@@ -88,7 +88,6 @@
   }
 }
 
- 
 .aviso-info,
 .aviso-erro,
 .aviso-vazio {
@@ -197,4 +196,3 @@
     padding: 10px 14px;
   }
 }
-

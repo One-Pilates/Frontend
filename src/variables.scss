@@ -1,6 +1,6 @@
 // Cores principais
 // Light mode
-$laranja-principal: #F77433;
+$laranja-principal: #f77433;
 $verde-principal: #2e7d32;
 $azul-principal: #2962ff;
 
@@ -10,7 +10,7 @@ $verde-principal-dark: #388e3c;
 $azul-principal-dark: #1976d2;
 
 // Sidebar
-$bg-barra-lateral: #F77433;
+$bg-barra-lateral: #f77433;
 $ativo-barra-lateral: #ffffff;
 
 // Textos
@@ -39,29 +39,28 @@ $icone-laranja: #fb923c;
 $icone-azul: #60a5fa;
 $icone-amarelo: #fde68a;
 
-
 :root {
-	--laranja-principal: #F77433;
-	--verde-principal: #2e7d32;
-	--azul-principal: #2962ff;
-	--bg-barra-lateral: #F77433;
-	--ativo-barra-lateral: #ffffff;
-	--text-escuro: #1a1a1a;
-	--text-cinza: #757575;
-	--texto-titulo: #111827;
-	--texto-secundario: #6b7280;
-	--bg-claro: #f5f5f5;
-	--branco: #ffffff;
-	--cor-borda: #e0e0e0;
-	--borda-input: #d1d5db;
-	--laranja-hover: #e54646;
-	--laranja-header: #f97316;
-	--icone-roxo: #8b5cf6;
-	--icone-laranja: #fb923c;
-	--icone-azul: #60a5fa;
-	--icone-amarelo: #fde68a;
-	--bg-escuro: #18181b;
-	--preto: #000000;
+  --laranja-principal: #f77433;
+  --verde-principal: #2e7d32;
+  --azul-principal: #2962ff;
+  --bg-barra-lateral: #f77433;
+  --ativo-barra-lateral: #ffffff;
+  --text-escuro: #1a1a1a;
+  --text-cinza: #757575;
+  --texto-titulo: #111827;
+  --texto-secundario: #6b7280;
+  --bg-claro: #f5f5f5;
+  --branco: #ffffff;
+  --cor-borda: #e0e0e0;
+  --borda-input: #d1d5db;
+  --laranja-hover: #e54646;
+  --laranja-header: #f97316;
+  --icone-roxo: #8b5cf6;
+  --icone-laranja: #fb923c;
+  --icone-azul: #60a5fa;
+  --icone-amarelo: #fde68a;
+  --bg-escuro: #18181b;
+  --preto: #000000;
 }
 
 // body.dark, .dark {
@@ -89,6 +88,3 @@ $icone-amarelo: #fde68a;
 // 	--component-bg: #1B1F26;
 // 	--sidebar-dark: #161B22;
 // }
-
-
-

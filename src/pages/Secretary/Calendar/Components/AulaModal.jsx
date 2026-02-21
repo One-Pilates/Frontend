@@ -211,8 +211,8 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
   const modalColor = getColorForEspecialidade(agendamento.especialidade).backgroundColor;
 
   return (
-    <div 
-      className="modal-overlay animate-backdropFadeIn" 
+    <div
+      className="modal-overlay animate-backdropFadeIn"
       onClick={handleClose}
       style={{
         backgroundColor: `${modalColor}15`,
@@ -220,8 +220,8 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
         WebkitBackdropFilter: 'blur(8px)',
       }}
     >
-      <div 
-        className="modal-content animate-slideUp" 
+      <div
+        className="modal-content animate-slideUp"
         onClick={(e) => e.stopPropagation()}
         style={{
           boxShadow: `0 0 60px ${modalColor}40, 0 20px 40px rgba(0,0,0,0.15)`,
@@ -451,9 +451,9 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                   <button className="btn-cancel" onClick={handleCancel} disabled={carregando}>
                     Cancelar
                   </button>
-                  <button 
-                    className="btn-save" 
-                    onClick={handleSave} 
+                  <button
+                    className="btn-save"
+                    onClick={handleSave}
                     disabled={carregando}
                     style={{ backgroundColor: modalColor }}
                   >
@@ -523,7 +523,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                         className="btn-remover-aluno"
                         onClick={() => handleRemoverAluno(aluno.id)}
                         title="Remover aluno"
-                        style={{ 
+                        style={{
                           color: modalColor,
                           borderColor: modalColor,
                         }}
@@ -586,9 +586,9 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                   <button className="btn-cancel" onClick={handleCancel} disabled={carregando}>
                     Cancelar
                   </button>
-                  <button 
-                    className="btn-save" 
-                    onClick={handleSave} 
+                  <button
+                    className="btn-save"
+                    onClick={handleSave}
                     disabled={carregando}
                     style={{ backgroundColor: modalColor }}
                   >
