@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import { toast } from 'sonner';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { BiArrowBack } from 'react-icons/bi';
 import api from '../services/api';
@@ -38,45 +38,23 @@ export default function RedefinirSenha() {
     e.preventDefault();
 
     if (!email) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Email obrigatório',
-        text: 'Por favor, informe seu email.',
-      });
+      toast.error('Por favor, informe seu email.');
       return;
     }
 
     // Validação básica de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Email inválido',
-        text: 'Por favor, informe um email válido.',
-      });
+      toast.error('Por favor, informe um email válido.');
       return;
     }
 
-    Swal.fire({
-      title: 'Enviando...',
-      text: 'Estamos enviando o código de verificação',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      },
-    });
+    const loadingId = toast.loading('Enviando código de verificação...');
 
     try {
       await api.post('/auth/criarCodigoVerificacao', { email });
 
-      await Swal.fire({
-        icon: 'success',
-        title: 'Código enviado!',
-        text: 'Verifique sua caixa de entrada.',
-        timer: 2000,
-        showConfirmButton: false,
-      });
-
+      toast.success('Código enviado! Verifique sua caixa de entrada.', { id: loadingId });
       setCurrentStep(2);
     } catch (error) {
       console.error('Erro ao enviar email:', error);
@@ -84,11 +62,7 @@ export default function RedefinirSenha() {
         error.response?.data?.message ||
         error.response?.data?.erro ||
         'Não foi possível enviar o código. Verifique o email e tente novamente.';
-      Swal.fire({
-        icon: 'error',
-        title: 'Erro ao enviar',
-        text: errorMessage,
-      });
+      toast.error(errorMessage, { id: loadingId });
     }
   };
 
@@ -115,42 +89,20 @@ export default function RedefinirSenha() {
     const codigoFinal = codigo.join('');
 
     if (!codigoFinal || codigoFinal.length < 5) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Código inválido',
-        text: 'Por favor, insira o código completo.',
-      });
+      toast.error('Por favor, insira o código completo.');
       return;
     }
 
-    Swal.fire({
-      title: 'Validando...',
-      text: 'Estamos verificando seu código',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      },
-    });
+    const loadingId = toast.loading('Validando código...');
 
     try {
       await api.post('/auth/validarCodigo', { email, codigo: codigoFinal });
 
-      await Swal.fire({
-        icon: 'success',
-        title: 'Código válido!',
-        text: 'Agora você pode redefinir sua senha.',
-        showConfirmButton: false,
-        timer: 2000,
-      });
-
+      toast.success('Código válido! Agora você pode redefinir sua senha.', { id: loadingId });
       setCurrentStep(3);
     } catch (error) {
       console.error('Erro ao validar código:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Erro na validação',
-        text: 'Código incorreto ou expirado. Tente novamente.',
-      });
+      toast.error('Código incorreto ou expirado. Tente novamente.', { id: loadingId });
     }
   };
 
@@ -163,19 +115,10 @@ export default function RedefinirSenha() {
       setCodigo(['', '', '', '', '']);
       inputsRef.current[0]?.focus();
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Código reenviado!',
-        text: 'Verifique seu e-mail novamente.',
-        timer: 2000,
-      });
+      toast.success('Código reenviado! Verifique seu e-mail novamente.');
     } catch (error) {
       console.error('Erro ao reenviar código:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Erro ao reenviar',
-        text: 'Não foi possível reenviar o código. Tente novamente.',
-      });
+      toast.error('Não foi possível reenviar o código. Tente novamente.');
     } finally {
       setIsResending(false);
     }
@@ -187,31 +130,16 @@ export default function RedefinirSenha() {
 
     const allValid = Object.values(rules).every(Boolean);
     if (!allValid) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Senha inválida',
-        text: 'A senha não atende aos requisitos mínimos.',
-      });
+      toast.error('A senha não atende aos requisitos mínimos.');
       return;
     }
 
     if (password1 !== password2) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Senha inválida',
-        text: 'As senhas devem ser iguais',
-      });
+      toast.error('As senhas devem ser iguais.');
       return;
     }
 
-    Swal.fire({
-      title: 'Redefinindo...',
-      text: 'Estamos atualizando sua senha',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      },
-    });
+    const loadingId = toast.loading('Redefinindo sua senha...');
 
     try {
       await api.post('/auth/alterarSenha', {
@@ -219,14 +147,7 @@ export default function RedefinirSenha() {
         email: email,
       });
 
-      await Swal.fire({
-        icon: 'success',
-        title: 'Senha alterada!',
-        text: 'Sua nova senha foi cadastrada com sucesso',
-        showConfirmButton: false,
-        timer: 2000,
-      });
-
+      toast.success('Senha alterada com sucesso!', { id: loadingId });
       navigate(-1);
     } catch (error) {
       console.error('Erro ao redefinir senha:', error);
@@ -235,14 +156,12 @@ export default function RedefinirSenha() {
         error.response?.data?.erro ||
         error.response?.data ||
         'Não foi possível atualizar sua senha. Tente novamente.';
-      Swal.fire({
-        icon: 'error',
-        title: 'Erro ao redefinir',
-        text:
-          typeof errorMessage === 'string'
-            ? errorMessage
-            : 'Não foi possível atualizar sua senha. Tente novamente.',
-      });
+      toast.error(
+        typeof errorMessage === 'string'
+          ? errorMessage
+          : 'Não foi possível atualizar sua senha. Tente novamente.',
+        { id: loadingId },
+      );
     }
   };
 

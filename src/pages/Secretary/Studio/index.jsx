@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FiEdit, FiTrash2, FiX } from 'react-icons/fi';
 import api from '../../../services/api';
+import { toast } from 'sonner';
 import Swal from 'sweetalert2';
 import Botao from '../../../components/Button';
 import { getColorForEspecialidade } from '../../../utils/utils';
@@ -69,12 +70,7 @@ export default function StudioView() {
 
   const handleSaveEsp = async () => {
     if (!formEsp.trim()) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Atenção',
-        text: 'O nome da especialidade não pode estar vazio.',
-        confirmButtonText: 'OK',
-      });
+      toast.warning('O nome da especialidade não pode estar vazio.');
       return;
     }
 
@@ -88,20 +84,10 @@ export default function StudioView() {
         setEspecialidades(
           especialidades.map((e) => (e.id === editingEsp.id ? { ...e, nome: formEsp } : e)),
         );
-        Swal.fire({
-          icon: 'success',
-          title: 'Atualizado!',
-          text: 'A especialidade foi atualizada com sucesso.',
-          confirmButtonText: 'OK',
-        });
+        toast.success('Especialidade atualizada com sucesso!');
       } catch (error) {
         console.error('Erro ao atualizar especialidade:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: 'Ocorreu um erro ao atualizar a especialidade.',
-          confirmButtonText: 'OK',
-        });
+        toast.error('Ocorreu um erro ao atualizar a especialidade.');
       }
     } else {
       try {
@@ -110,21 +96,11 @@ export default function StudioView() {
         };
         const response = await api.post(`api/especialidades`, newName);
         console.log('Especialidade criada:', response.data);
-        Swal.fire({
-          icon: 'success',
-          title: 'Criado!',
-          text: 'A especialidade foi criada com sucesso.',
-          confirmButtonText: 'OK',
-        });
+        toast.success('Especialidade criada com sucesso!');
         setEspecialidades([...especialidades, response.data]);
       } catch (error) {
         console.error('Erro ao criar especialidade:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: 'Ocorreu um erro ao criar a especialidade.',
-          confirmButtonText: 'OK',
-        });
+        toast.error('Ocorreu um erro ao criar a especialidade.');
       }
     }
     setShowEspModal(false);
@@ -146,20 +122,10 @@ export default function StudioView() {
           const response = await api.delete(`api/especialidades/${id}`);
           console.log('Especialidade deletada:', response.data);
           setEspecialidades(especialidades.filter((esp) => esp.id !== id));
-          Swal.fire({
-            icon: 'success',
-            title: 'Deletado!',
-            text: 'A especialidade foi deletada com sucesso.',
-            confirmButtonText: 'OK',
-          });
+          toast.success('Especialidade deletada com sucesso.');
         } catch (error) {
           console.error('Erro ao deletar especialidade:', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Erro',
-            text: 'Ocorreu um erro ao deletar a especialidade.',
-            confirmButtonText: 'OK',
-          });
+          toast.error('Ocorreu um erro ao deletar a especialidade.');
         }
       }
     });
@@ -200,36 +166,16 @@ export default function StudioView() {
 
   const handleSaveSala = async () => {
     if (!formSala.nome.trim()) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Atenção',
-        text: 'O nome da sala não pode estar vazio.',
-        confirmButtonText: 'OK',
-      });
+      toast.warning('O nome da sala não pode estar vazio.');
       return;
     } else if (!formSala.quantidadeMaximaAlunos || isNaN(formSala.quantidadeMaximaAlunos)) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Atenção',
-        text: 'A quantidade máxima de alunos deve ser um número válido.',
-        confirmButtonText: 'OK',
-      });
+      toast.warning('A quantidade máxima de alunos deve ser um número válido.');
       return;
     } else if (!formSala.quantidadeEquipamentosPCD || isNaN(formSala.quantidadeEquipamentosPCD)) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Atenção',
-        text: 'A quantidade de equipamentos para PCD deve ser um número válido.',
-        confirmButtonText: 'OK',
-      });
+      toast.warning('A quantidade de equipamentos para PCD deve ser um número válido.');
       return;
     } else if (formSala.especialidades.length === 0) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Atenção',
-        text: 'Selecione pelo menos uma especialidade.',
-        confirmButtonText: 'OK',
-      });
+      toast.warning('Selecione pelo menos uma especialidade.');
       return;
     }
 
@@ -246,27 +192,11 @@ export default function StudioView() {
         const response = await api.patch(`api/salas/${editingSala.id}`, salaEdit);
         const data = response.data;
         console.log('sala edidata:', data);
-        Swal.fire({
-          icon: 'success',
-          title: 'Atualizado!',
-          text: 'A sala foi atualizada com sucesso.',
-          confirmButtonText: 'OK',
-        });
+        toast.success('Sala atualizada com sucesso!');
         setSalas(salas.map((s) => (s.id === editingSala.id ? { ...s, ...data } : s)));
-        Swal.fire({
-          icon: 'success',
-          title: 'Atualizado!',
-          text: 'A sala foi atualizada com sucesso.',
-          confirmButtonText: 'OK',
-        });
       } catch (error) {
         console.error('Erro ao atualizar sala:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: 'Ocorreu um erro ao atualizar a sala.',
-          confirmButtonText: 'OK',
-        });
+        toast.error('Ocorreu um erro ao atualizar a sala.');
       }
     } else {
       try {
@@ -280,21 +210,11 @@ export default function StudioView() {
 
         const response = await api.post('api/salas', newSala);
         console.log('Sala criada:', response.data);
-        Swal.fire({
-          icon: 'success',
-          title: 'Criado!',
-          text: 'A sala foi criada com sucesso.',
-          confirmButtonText: 'OK',
-        });
+        toast.success('Sala criada com sucesso!');
         setSalas([...salas, response.data]);
       } catch (error) {
         console.error('Erro ao criar sala:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: 'Ocorreu um erro ao criar a sala.',
-          confirmButtonText: 'OK',
-        });
+        toast.error('Ocorreu um erro ao criar a sala.');
       }
     }
     setShowSalaModal(false);
@@ -316,20 +236,10 @@ export default function StudioView() {
           const response = await api.delete(`api/salas/${id}`);
           console.log('Sala deletada:', response.data);
           setSalas(salas.filter((s) => s.id !== id));
-          Swal.fire({
-            icon: 'success',
-            title: 'Deletado!',
-            text: 'A sala foi deletada com sucesso.',
-            confirmButtonText: 'OK',
-          });
+          toast.success('Sala deletada com sucesso.');
         } catch (error) {
           console.error('Erro ao deletar sala:', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Erro',
-            text: 'Ocorreu um erro ao deletar a sala.',
-            confirmButtonText: 'OK',
-          });
+          toast.error('Ocorreu um erro ao deletar a sala.');
         }
       }
     });
@@ -614,14 +524,7 @@ export default function StudioView() {
       </div>
       {/* Modal de Especialidade */}
       {showEspModal && (
-        <div
-          className="fixed inset-0 flex items-center justify-center z-50 p-4 animate-backdropFadeIn"
-          style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-          }}
-        >
+        <div className="fixed inset-0 flex items-center justify-center z-50 p-4 bg-black/40 backdrop-blur-sm animate-backdropFadeIn">
           <div
             className="rounded-xl max-w-md w-full py-6 px-6 sm:px-8 shadow-2xl animate-slideUp"
             style={{ backgroundColor: 'var(--branco)' }}
@@ -674,14 +577,7 @@ export default function StudioView() {
 
       {/* Modal de Sala */}
       {showSalaModal && (
-        <div
-          className="fixed inset-0 flex items-center justify-center z-50 p-4 overflow-y-auto animate-backdropFadeIn"
-          style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-          }}
-        >
+        <div className="fixed inset-0 flex items-center justify-center z-50 p-4 overflow-y-auto bg-black/40 backdrop-blur-sm animate-backdropFadeIn">
           <div
             className="rounded-xl max-w-2xl w-full my-8 py-6 px-6 sm:px-8 shadow-2xl animate-slideUp"
             style={{ backgroundColor: 'var(--branco)' }}

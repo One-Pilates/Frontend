@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import api from '../../../services/api';
 import Swal from 'sweetalert2';
+import { toast } from 'sonner';
 import Button from './Components/Button';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import AgendamentoModal from './Components/AulaModal';
@@ -228,13 +229,13 @@ export default function CalendarSecretary() {
     if (result.isConfirmed) {
       try {
         await api.delete(`/api/agendamentos/${id}`);
-        Swal.fire('Deletado!', 'A aula foi deletada com sucesso.', 'success');
+        toast.success('Aula deletada com sucesso.');
         setModalOpen(false);
         setAgendamentoSelecionado(null);
         fetchAgendamentosFiltro();
       } catch (error) {
         console.error('Erro ao deletar aula:', error);
-        Swal.fire('Erro!', 'Não foi possível deletar a aula. Tente novamente.', 'error');
+        toast.error('Não foi possível deletar a aula. Tente novamente.');
       }
     }
   }

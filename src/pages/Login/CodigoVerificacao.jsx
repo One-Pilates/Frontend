@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react';
 import './CodigoVerificacao.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import { toast } from 'sonner';
+import { IoArrowBack } from 'react-icons/io5';
 import api from '../../services/api';
 import BackgroundLogin from '../../components/BackgroundLogin';
 
@@ -34,57 +35,27 @@ export default function CodigoVerificacao() {
     const codigoFinal = codigo.join('');
 
     if (!codigoFinal || codigoFinal.length < 5) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Código inválido',
-        text: 'Por favor, insira o código completo.',
-      });
+      toast.error('Por favor, insira o código completo.');
       return;
     }
 
-    Swal.fire({
-      title: 'Validando...',
-      text: 'Estamos verificando seu código',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      },
-    });
+    const loadingId = toast.loading('Validando código...');
 
     try {
       const response = await api.post('auth/validarCodigo', { email, codigo: codigoFinal });
-
       console.log('Resposta do servidor:', response.data);
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Código válido!',
-        text: 'Agora você pode redefinir sua senha.',
-        showConfirmButton: false,
-        timer: 2000,
-      });
-
-      setTimeout(() => {
-        navigate('/nova-senha', { state: { email } });
-      }, 2000);
+      toast.success('Código válido! Agora você pode redefinir sua senha.', { id: loadingId });
+      navigate('/nova-senha', { state: { email } });
     } catch (error) {
       console.error('Erro ao validar código:', error);
-
-      Swal.fire({
-        icon: 'error',
-        title: 'Erro na validação',
-        text: 'Código incorreto ou expirado. Tente novamente.',
-      });
+      toast.error('Código incorreto ou expirado. Tente novamente.', { id: loadingId });
     }
   };
 
   const reenviarCodigo = async () => {
     if (!email) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Erro',
-        text: 'Email não encontrado. Por favor, reinicie o processo.',
-      });
+      toast.error('Email não encontrado. Por favor, reinicie o processo.');
       return;
     }
 
@@ -96,20 +67,10 @@ export default function CodigoVerificacao() {
       setCodigo(['', '', '', '', '']);
       inputsRef.current[0]?.focus();
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Código reenviado!',
-        text: 'Verifique seu e-mail novamente.',
-        timer: 2000,
-      });
+      toast.success('Código reenviado! Verifique seu e-mail novamente.');
     } catch (error) {
       console.error('Erro ao reenviar código:', error);
-
-      Swal.fire({
-        icon: 'error',
-        title: 'Erro ao reenviar',
-        text: 'Não foi possível reenviar o código. Tente novamente.',
-      });
+      toast.error('Não foi possível reenviar o código. Tente novamente.');
     } finally {
       setIsResending(false);
     }
@@ -119,7 +80,7 @@ export default function CodigoVerificacao() {
     <div className="login">
       <div className="login__container">
         <button onClick={() => navigate(-1)} className="botao-voltar">
-          <i className="bi bi-arrow-left-circle-fill"></i>Voltar
+          <IoArrowBack size={18} /> Voltar
         </button>
 
         <div className="login__header">
@@ -146,23 +107,34 @@ export default function CodigoVerificacao() {
           ))}
         </div>
 
-        <button onClick={confirmarCodigo} className="login__button">
-          Confirmar código
-        </button>
-
-        <div className="login__links">
-          <button
-            type="button"
-            onClick={reenviarCodigo}
-            className="login__forgot"
-            disabled={isResending}
-          >
-            {isResending ? 'Reenviando...' : 'Reenviar código'}
+        <div className="login__form">
+          <button onClick={confirmarCodigo} className="login__button">
+            Confirmar código
           </button>
+
+          <div className="login__links">
+            <button
+              type="button"
+              onClick={reenviarCodigo}
+              className="login__forgot"
+              disabled={isResending}
+            >
+              {isResending ? 'Reenviando...' : 'Reenviar código'}
+            </button>
+          </div>
         </div>
+
+        <p className="login__contact">
+          Precisa de acesso? <span>Contate o administrador</span>
+        </p>
       </div>
 
       <BackgroundLogin />
+
+      <p className="login__terms">
+        Ao continuar, você concorda com nossos <span>Termos de Uso</span> e{' '}
+        <span>Política de Privacidade</span>.
+      </p>
     </div>
   );
 }

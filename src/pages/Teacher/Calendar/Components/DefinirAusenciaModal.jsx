@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FiX } from 'react-icons/fi';
 import Button from './Button';
 import api from '../../../../services/api';
+import { toast } from 'sonner';
 import Swal from 'sweetalert2';
 import '../Styles/Modal.scss';
 
@@ -21,12 +22,12 @@ const DefinirAusenciaModal = ({ isOpen, onClose }) => {
     const professorId = user.id;
 
     if (!motivo || !motivo.trim()) {
-      await Swal.fire('Motivo obrigatório', 'Por favor informe o motivo da ausência.', 'warning');
+      toast.warning('Por favor informe o motivo da ausência.');
       return;
     }
 
     if (!dataInicio || !horaInicio || !dataFim || !horaFim) {
-      await Swal.fire('Datas inválidas', 'Preencha data e hora de início e fim.', 'warning');
+      toast.warning('Preencha data e hora de início e fim.');
       return;
     }
 
@@ -52,11 +53,7 @@ const DefinirAusenciaModal = ({ isOpen, onClose }) => {
       fimMinutes < minAllowed ||
       fimMinutes > maxAllowed
     ) {
-      await Swal.fire(
-        'Horário inválido',
-        'As ausências só podem ser definidas entre 07:00 e 22:00.',
-        'warning',
-      );
+      toast.warning('As ausências só podem ser definidas entre 07:00 e 22:00.');
       return;
     }
 
@@ -88,11 +85,7 @@ const DefinirAusenciaModal = ({ isOpen, onClose }) => {
           return !(novoFim <= exInicio || novoInicio >= exFim);
         });
         if (sobrepoe) {
-          await Swal.fire(
-            'Conflito de ausência',
-            'Já existe uma ausência registrada que sobrepõe esse período. Ajuste as datas.',
-            'warning',
-          );
+          toast.warning('Já existe uma ausência registrada que sobrepõe esse período. Ajuste as datas.');
           return;
         }
       } catch (err) {
@@ -129,12 +122,7 @@ const DefinirAusenciaModal = ({ isOpen, onClose }) => {
 
       window.dispatchEvent(new CustomEvent('ausencia:create', { detail: bgEvent }));
 
-      await Swal.fire({
-        title: 'Ausência definida',
-        icon: 'success',
-        timer: 1400,
-        showConfirmButton: false,
-      });
+      toast.success('Ausência definida com sucesso!');
 
       setDataInicio('');
       setHoraInicio('');
@@ -146,22 +134,14 @@ const DefinirAusenciaModal = ({ isOpen, onClose }) => {
     } catch (error) {
       console.error('Erro ao criar ausência:', error);
       if (error.request && !error.response) {
-        Swal.fire(
-          'Erro de conexão',
-          'Não foi possível conectar ao servidor. Verifique se o backend está rodando.',
-          'error',
-        );
+        toast.error('Não foi possível conectar ao servidor. Verifique se o backend está rodando.');
       } else if (error.response) {
         const serverMsg =
           error.response.data &&
           (error.response.data.message || JSON.stringify(error.response.data));
-        Swal.fire(
-          'Erro',
-          serverMsg || 'Erro ao definir ausência. Verifique os dados e tente novamente.',
-          'error',
-        );
+        toast.error(serverMsg || 'Erro ao definir ausência. Verifique os dados e tente novamente.');
       } else {
-        Swal.fire('Erro', 'Erro ao definir ausência. Tente novamente.', 'error');
+        toast.error('Erro ao definir ausência. Tente novamente.');
       }
     }
   };

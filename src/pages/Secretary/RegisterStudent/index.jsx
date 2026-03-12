@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import Swal from 'sweetalert2';
+import { toast } from 'sonner';
 import api from '../../../services/api';
 import StepIndicator from './components/StepIndicator';
 import Button from './components/Button';
@@ -106,11 +106,11 @@ export default function RegisterStudent() {
             estado: data.uf || '',
           });
         } else {
-          Swal.fire('CEP não encontrado!', '', 'warning');
+          toast.warning('CEP não encontrado. Verifique o CEP digitado.');
         }
       } catch (err) {
         console.error('Erro ao buscar CEP:', err);
-        Swal.fire('Erro ao buscar CEP', 'Tente novamente', 'error');
+        toast.error('Erro ao buscar CEP. Tente novamente.');
       }
     }
   };
@@ -183,11 +183,7 @@ export default function RegisterStudent() {
         setEtapaAtual(etapaAtual + 1);
       }
     } else {
-      Swal.fire(
-        'Campos obrigatórios',
-        'Por favor, preencha todos os campos obrigatórios corretamente.',
-        'warning',
-      );
+      toast.warning('Preencha todos os campos obrigatórios corretamente.');
     }
   };
 
@@ -266,11 +262,11 @@ export default function RegisterStudent() {
 
     try {
       await api.post('api/alunos', payload);
-      Swal.fire('Sucesso', 'Aluno cadastrado com sucesso.', 'success');
+      toast.success('Aluno cadastrado com sucesso!');
       navigate('/secretaria/alunos');
     } catch (error) {
       console.error('Erro ao cadastrar aluno:', error);
-      Swal.fire('Erro', 'Não foi possível cadastrar o aluno.', 'error');
+      toast.error('Não foi possível cadastrar o aluno.');
     }
   };
 

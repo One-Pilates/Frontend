@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../../hooks/useAuth';
 import api from '../../../services/api';
+import { toast } from 'sonner';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { formatarTelefone } from '../../../utils/utils';
@@ -100,23 +101,13 @@ const ProfileUser = () => {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Formato inválido',
-        text: 'Por favor, selecione apenas arquivos de imagem (PNG, JPG, JPEG, etc).',
-        confirmButtonText: 'OK',
-      });
+      toast.error('Por favor, selecione apenas arquivos de imagem (PNG, JPG, JPEG, etc).');
       e.target.value = '';
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Arquivo muito grande',
-        text: 'A imagem deve ter no máximo 5MB. Por favor, selecione uma imagem menor.',
-        confirmButtonText: 'OK',
-      });
+      toast.warning('A imagem deve ter no máximo 5MB. Por favor, selecione uma imagem menor.');
       e.target.value = '';
       return;
     }
@@ -198,12 +189,7 @@ const ProfileUser = () => {
           setProfileImage(null);
         } catch (err) {
           console.error('Erro ao fazer upload da foto:', err);
-          Swal.fire({
-            icon: 'error',
-            title: 'Erro ao enviar foto',
-            text: 'Não foi possível fazer upload da imagem. Os outros dados serão salvos.',
-            confirmButtonText: 'OK',
-          });
+          toast.error('Não foi possível fazer upload da imagem. Os outros dados serão salvos.');
         }
       }
 
@@ -249,20 +235,10 @@ const ProfileUser = () => {
         setUser(null);
         navigate('/login');
       } else {
-        Swal.fire({
-          icon: 'success',
-          title: 'Perfil atualizado!',
-          text: 'Seus dados foram atualizados com sucesso.',
-          confirmButtonText: 'OK',
-        });
+        toast.success('Perfil atualizado! Seus dados foram salvos com sucesso.');
       }
     } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Erro ao atualizar perfil',
-        text: 'Ocorreu um erro ao atualizar seus dados. Por favor, tente novamente mais tarde.',
-        confirmButtonText: 'OK',
-      });
+      toast.error('Ocorreu um erro ao atualizar seus dados. Por favor, tente novamente mais tarde.');
       console.error('Erro ao atualizar dados:', error);
     }
   };

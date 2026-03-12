@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
 import api from '../../../services/api';
+import { toast } from 'sonner';
 import Swal from 'sweetalert2';
 import { FiSearch, FiPhone, FiMail, FiTrash2, FiCalendar } from 'react-icons/fi';
 import Botao from '../../../components/Button';
@@ -47,14 +48,10 @@ export default function GerenciamentoProfessor() {
           const response = await api.delete(`api/professores/${professorId}`);
           console.log('Professor deletado:', response.data);
           fetchProfessores();
-          Swal.fire({
-            icon: 'success',
-            title: 'Deletado!',
-            text: 'O professor foi deletado com sucesso.',
-            confirmButtonText: 'OK',
-          });
+          toast.success('Professor deletado com sucesso.');
         } catch (error) {
           console.error('Erro ao deletar professor:', error);
+          toast.error('Não foi possível deletar o professor.');
         }
       }
     });

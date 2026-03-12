@@ -3,6 +3,7 @@ import { FiEdit2, FiX, FiPlus, FiTrash2 } from 'react-icons/fi';
 import AlunoItem from './AlunoItem';
 import api from '../../../../services/api';
 import Swal from 'sweetalert2';
+import { toast } from 'sonner';
 import { getColorForEspecialidade } from '../../../../utils/utils';
 import '../Styles/Modal.scss';
 
@@ -164,7 +165,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
         setCarregando(true);
         await api.patch(`/api/agendamentos/${agendamento.id}`, patchData);
         setEditFields({});
-        Swal.fire('Alteração salva!', '', 'success');
+        toast.success('Alteração salva com sucesso!');
         window.location.reload();
       } catch (e) {
         setCarregando(false);
@@ -175,9 +176,9 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
             e.response.data && typeof e.response.data === 'object'
               ? JSON.stringify(e.response.data)
               : e.response.data;
-          Swal.fire('Erro ao salvar', `Erro do backend: ${errorMsg}`, 'error');
+          toast.error(`Erro ao salvar: ${errorMsg}`);
         } else {
-          Swal.fire('Erro ao salvar', 'Tente novamente', 'error');
+          toast.error('Erro ao salvar. Tente novamente.');
         }
       }
     }
