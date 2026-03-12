@@ -2,9 +2,10 @@ import { useState } from 'react';
 import './Login.scss';
 import './CodigoVerificacao.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import { toast } from 'sonner';
 import api from '../../services/api';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { IoArrowBack } from 'react-icons/io5';
 import BackgroundLogin from '../../components/BackgroundLogin';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -36,31 +37,16 @@ export default function NovaSenha() {
 
     const allValid = Object.values(rules).every(Boolean);
     if (!allValid) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Senha inválida',
-        text: 'A senha não atende aos requisitos mínimos.',
-      });
+      toast.error('A senha não atende aos requisitos mínimos.');
       return;
     }
 
     if (password1 !== password2) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Senha inválida',
-        text: 'As senhas devem ser iguais',
-      });
+      toast.error('As senhas devem ser iguais.');
       return;
     }
 
-    Swal.fire({
-      title: 'Redefinindo...',
-      text: 'Estamos atualizando sua senha',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      },
-    });
+    const loadingId = toast.loading('Redefinindo sua senha...');
 
     try {
       await api.post('auth/alterarSenha', {
@@ -68,30 +54,17 @@ export default function NovaSenha() {
         email: email || user.email,
       });
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Senha cadastrada',
-        text: 'Sua nova senha foi cadastrada com sucesso',
-        showConfirmButton: false,
-        timer: 2000,
-      });
+      toast.success('Nova senha cadastrada com sucesso!', { id: loadingId });
 
-      setTimeout(() => {
-        if (isPrimeiroAcesso) {
-          const route = user.role === 'PROFESSOR' ? '/professora/agenda' : '/secretaria/dashboard';
-          navigate(route);
-        } else {
-          navigate('/login');
-        }
-      }, 2000);
+      if (isPrimeiroAcesso) {
+        const route = user.role === 'PROFESSOR' ? '/professora/agenda' : '/secretaria/dashboard';
+        navigate(route);
+      } else {
+        navigate('/login');
+      }
     } catch (error) {
       console.error('Erro ao redefinir senha:', error);
-
-      Swal.fire({
-        icon: 'error',
-        title: 'Erro ao redefinir',
-        text: 'Não foi possível atualizar sua senha. Tente novamente.',
-      });
+      toast.error('Não foi possível atualizar sua senha. Tente novamente.', { id: loadingId });
     }
   };
 
@@ -104,7 +77,7 @@ export default function NovaSenha() {
       >
         {!isPrimeiroAcesso && (
           <button onClick={() => navigate(-1)} className="botao-voltar">
-            <i className="bi bi-arrow-left-circle-fill"></i>Voltar
+            <IoArrowBack size={18} /> Voltar
           </button>
         )}
 
@@ -187,9 +160,18 @@ export default function NovaSenha() {
             {isPrimeiroAcesso ? 'Definir Senha' : 'Redefinir Senha'}
           </button>
         </form>
+
+        <p className="login__contact">
+          Precisa de acesso? <span>Contate o administrador</span>
+        </p>
       </div>
 
       <BackgroundLogin />
+
+      <p className="login__terms">
+        Ao continuar, você concorda com nossos <span>Termos de Uso</span> e{' '}
+        <span>Política de Privacidade</span>.
+      </p>
     </div>
   );
 }

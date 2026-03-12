@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
+import { toast } from 'sonner';
 import Swal from 'sweetalert2';
 import api from '../../../services/api';
 import StepIndicator from '../../../components/StepIndicator';
@@ -57,7 +58,7 @@ export default function RegisterAula() {
         setTodosAlunos(alunoRes.data || []);
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
-        Swal.fire('Erro', 'Não foi possível carregar os dados. Tente novamente.', 'error');
+        toast.error('Não foi possível carregar os dados. Tente novamente.');
       }
     };
 
@@ -145,11 +146,7 @@ export default function RegisterAula() {
         setEtapaAtual(etapaAtual + 1);
       }
     } else {
-      Swal.fire(
-        'Campos obrigatórios',
-        'Por favor, preencha todos os campos obrigatórios.',
-        'warning',
-      );
+      toast.warning('Preencha todos os campos obrigatórios.');
     }
   };
 
@@ -186,7 +183,7 @@ export default function RegisterAula() {
 
       await api.post('/api/agendamentos', payload);
 
-      Swal.fire('Sucesso!', 'Aula criada com sucesso!', 'success');
+      toast.success('Aula criada com sucesso!');
 
       navigate('/secretaria/agendamento', {
         state: {
@@ -209,12 +206,7 @@ export default function RegisterAula() {
         mensagem = JSON.stringify(error.response.data);
       }
 
-      Swal.fire({
-        icon: 'error',
-        title: 'Erro ao criar aula',
-        text: mensagem,
-        confirmButtonColor: '#FF6B35',
-      });
+      toast.error(mensagem);
       setCarregando(false);
     }
   };

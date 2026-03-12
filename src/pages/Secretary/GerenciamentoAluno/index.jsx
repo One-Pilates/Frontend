@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import Swal from 'sweetalert2';
 import api from '../../../services/api';
 import { useAuth } from '../../../hooks/useAuth';
@@ -69,14 +70,10 @@ export default function GerenciamentoAluno() {
         try {
           await api.delete(`api/alunos/${alunoId}`);
           setAlunos(alunos.filter((aluno) => aluno.id !== alunoId));
-          Swal.fire({
-            icon: 'success',
-            title: 'Deletado!',
-            text: 'O aluno foi deletado com sucesso.',
-            confirmButtonText: 'OK',
-          });
+          toast.success('Aluno deletado com sucesso.');
         } catch (error) {
           console.error('Erro ao deletar aluno:', error);
+          toast.error('Não foi possível deletar o aluno.');
         }
       }
     });

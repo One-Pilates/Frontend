@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import api from '../../../services/api';
+import { toast } from 'sonner';
 import Swal from 'sweetalert2';
 import StepIndicator from './components/StepIndicator';
 import Button from './components/Button';
@@ -80,12 +81,7 @@ export default function RegisterTeacher() {
       setEspecialidades(response.data);
     } catch (error) {
       console.error('❌ Erro ao buscar especialidades:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Erro ao carregar especialidades',
-        text: 'Não foi possível carregar as especialidades. Tente recarregar a página.',
-        confirmButtonColor: '#3b82f6',
-      });
+      toast.error('Não foi possível carregar as especialidades. Tente recarregar a página.');
     }
   };
 
@@ -146,21 +142,11 @@ export default function RegisterTeacher() {
           }));
         } else {
           console.log('❌ CEP não encontrado');
-          Swal.fire({
-            icon: 'warning',
-            title: 'CEP não encontrado',
-            text: 'Verifique o CEP digitado e tente novamente.',
-            confirmButtonColor: '#3b82f6',
-          });
+          toast.warning('CEP não encontrado. Verifique o CEP digitado.');
         }
       } catch (err) {
         console.error('❌ Erro ao buscar CEP:', err);
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro ao buscar CEP',
-          text: 'Não foi possível consultar o CEP. Tente novamente.',
-          confirmButtonColor: '#3b82f6',
-        });
+        toast.error('Não foi possível consultar o CEP. Tente novamente.');
       }
     }
   };
@@ -268,12 +254,7 @@ export default function RegisterTeacher() {
       }
     } else {
       console.log('❌ Validação falhou, mostrando erros');
-      Swal.fire({
-        icon: 'warning',
-        title: 'Campos obrigatórios',
-        text: 'Por favor, preencha todos os campos obrigatórios corretamente.',
-        confirmButtonColor: '#3b82f6',
-      });
+      toast.warning('Preencha todos os campos obrigatórios corretamente.');
     }
   };
 
@@ -306,15 +287,7 @@ export default function RegisterTeacher() {
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     setCadastrando(true);
 
-    Swal.fire({
-      title: 'Cadastrando professor...',
-      html: 'Por favor, aguarde enquanto processamos o cadastro.',
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      didOpen: () => {
-        Swal.showLoading();
-      },
-    });
+    const loadingId = toast.loading('Cadastrando professor...');
 
     try {
       const senhaGerada = Math.floor(100000 + Math.random() * 900000).toString();
@@ -354,10 +327,6 @@ export default function RegisterTeacher() {
       if (dadosPessoais.fotoPerfil && response.data.id) {
         console.log('📸 Iniciando upload de foto...');
 
-        Swal.update({
-          html: 'Professor cadastrado! Enviando foto...',
-        });
-
         try {
           await uploadFoto(response.data.id);
           console.log('✅ Foto enviada com sucesso!');
@@ -366,7 +335,7 @@ export default function RegisterTeacher() {
         }
       }
 
-      Swal.close();
+      toast.dismiss(loadingId);
 
       await Swal.fire({
         icon: 'success',
@@ -391,7 +360,7 @@ export default function RegisterTeacher() {
     } catch (error) {
       console.error('❌ ERRO NO CADASTRO:', error);
 
-      Swal.close();
+      toast.dismiss(loadingId);
 
       let mensagemErro = 'Erro ao cadastrar professor';
       let detalhes = '';
@@ -410,12 +379,7 @@ export default function RegisterTeacher() {
         detalhes = error.message;
       }
 
-      await Swal.fire({
-        icon: 'error',
-        title: mensagemErro,
-        text: detalhes,
-        confirmButtonColor: '#ef4444',
-      });
+      toast.error(detalhes ? `${mensagemErro}: ${detalhes}` : mensagemErro);
     } finally {
       setCadastrando(false);
       console.log('🏁 Processo de cadastro finalizado');

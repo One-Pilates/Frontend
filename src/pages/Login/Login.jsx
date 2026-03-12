@@ -2,10 +2,9 @@ import { useState } from 'react';
 import { validacaoEmail } from '../../utils/utils';
 import { useAuth } from '../../hooks/useAuth';
 import './Login.scss';
-import Swal from 'sweetalert2';
+import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { FcGoogle } from 'react-icons/fc';
 import BackgroundLogin from '../../components/BackgroundLogin';
 
 export default function Login() {
@@ -20,20 +19,12 @@ export default function Login() {
     e.preventDefault();
 
     if (!validacaoEmail(email)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Email inválido',
-        text: 'Por favor, insira um email válido.',
-      });
+      toast.error('Por favor, insira um email válido.');
       return;
     }
 
     if (!password) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Senha inválida',
-        text: 'Por favor, insira uma senha válida.',
-      });
+      toast.error('Por favor, insira uma senha válida.');
       return;
     }
 
@@ -46,15 +37,6 @@ export default function Login() {
         <div className="login__header">
           <h1 className="login__title">Login</h1>
           <p className="login__subtitle">Porque seu corpo é único</p>
-        </div>
-
-        <button type="button" className="login__social-btn">
-          <FcGoogle size={22} />
-          <span>Continuar com Google</span>
-        </button>
-
-        <div className="login__divider">
-          <span>ou</span>
         </div>
 
         <form className="login__form" onSubmit={handleLogin}>

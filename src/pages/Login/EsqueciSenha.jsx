@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import './CodigoVerificacao.scss';
-import { Link, useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import { IoArrowBack } from 'react-icons/io5';
 import api from '../../services/api';
 import BackgroundLogin from '../../components/BackgroundLogin';
 
@@ -9,50 +10,25 @@ export default function EsqueciSenha() {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
 
-  const handleEnviar = async () => {
+  const handleEnviar = async (e) => {
+    e?.preventDefault();
     if (!email) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Email inválido',
-        text: 'Por favor, insira um email válido.',
-      });
+      toast.error('Por favor, insira um email válido.');
       return;
     }
 
-    Swal.fire({
-      title: 'Enviando...',
-      text: 'Estamos processando sua solicitação',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      },
-    });
+    const loadingId = toast.loading('Enviando código de verificação...');
 
     try {
       const response = await api.post('auth/criarCodigoVerificacao', { email });
       console.log('Email enviado para:', email);
-
       console.log('Resposta do servidor:', response.data);
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Código enviado!',
-        text: 'Verifique seu e-mail',
-        showConfirmButton: false,
-        timer: 2000,
-      });
-
-      setTimeout(() => {
-        navigate('/codigo-verificacao', { state: { email } });
-      }, 2000);
+      toast.success('Código enviado! Verifique seu e-mail.', { id: loadingId });
+      navigate('/codigo-verificacao', { state: { email } });
     } catch (error) {
       console.error('Erro ao enviar requisição:', error);
-
-      Swal.fire({
-        icon: 'error',
-        title: 'Erro ao enviar',
-        text: 'Não foi possível enviar o código. Tente novamente.',
-      });
+      toast.error('Não foi possível enviar o código. Tente novamente.', { id: loadingId });
     }
   };
 
@@ -60,7 +36,7 @@ export default function EsqueciSenha() {
     <div className="login">
       <div className="login__container">
         <button onClick={() => navigate(-1)} className="botao-voltar">
-          <i className="bi bi-arrow-left-circle-fill"></i>Voltar
+          <IoArrowBack size={18} /> Voltar
         </button>
 
         <div className="login__header">
@@ -68,28 +44,38 @@ export default function EsqueciSenha() {
           <p className="login__subtitle">Informe seu e-mail para recuperar o acesso.</p>
         </div>
 
-        <div className="login__field">
-          <label htmlFor="email" className="login__label">
-            Email
-          </label>
+        <form className="login__form" onSubmit={handleEnviar}>
+          <div className="login__field">
+            <label htmlFor="email" className="login__label">
+              Email
+            </label>
+            <input
+              placeholder="onepilates@onepilates.com"
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="login__input"
+              required
+            />
+          </div>
+          <button type="submit" className="login__button">
+            Enviar
+          </button>
+        </form>
 
-          <input
-            placeholder="onepilates@onepilates.com"
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="login__input"
-            required
-          />
-        </div>
-        <button onClick={handleEnviar} className="login__button">
-          Enviar
-        </button>
+        <p className="login__contact">
+          Precisa de acesso? <span>Contate o administrador</span>
+        </p>
       </div>
 
       <BackgroundLogin />
+
+      <p className="login__terms">
+        Ao continuar, você concorda com nossos <span>Termos de Uso</span> e{' '}
+        <span>Política de Privacidade</span>.
+      </p>
     </div>
   );
 }

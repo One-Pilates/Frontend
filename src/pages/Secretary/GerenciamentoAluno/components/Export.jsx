@@ -1,3 +1,4 @@
+import { toast } from 'sonner';
 import Swal from 'sweetalert2';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
@@ -28,38 +29,18 @@ export const abrirModalDownload = async (students, calculateAge) => {
   if (result.isConfirmed) {
     try {
       gerarPDF(students, calculateAge);
-      Swal.fire({
-        title: 'Sucesso!',
-        text: 'PDF gerado com sucesso!',
-        icon: 'success',
-        timer: 2000,
-        showConfirmButton: false,
-      });
+      toast.success('PDF gerado com sucesso!');
     } catch (error) {
       console.error('Erro ao gerar PDF:', error);
-      Swal.fire({
-        title: 'Erro!',
-        text: 'Falha ao gerar PDF.',
-        icon: 'error',
-      });
+      toast.error('Falha ao gerar PDF.');
     }
   } else if (result.isDenied) {
     try {
       gerarXLSX(students, calculateAge);
-      Swal.fire({
-        title: 'Sucesso!',
-        text: 'Excel gerado com sucesso!',
-        icon: 'success',
-        timer: 2000,
-        showConfirmButton: false,
-      });
+      toast.success('Excel gerado com sucesso!');
     } catch (error) {
       console.error('Erro ao gerar XLSX:', error);
-      Swal.fire({
-        title: 'Erro!',
-        text: 'Falha ao gerar XLSX.',
-        icon: 'error',
-      });
+      toast.error('Falha ao gerar Excel.');
     }
   }
 };

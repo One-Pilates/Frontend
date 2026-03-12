@@ -1,6 +1,7 @@
 import { AuthContext } from './AuthContext';
 import { useState, useEffect } from 'react';
 import api from '../services/api';
+import { toast } from 'sonner';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
@@ -59,24 +60,12 @@ export function AuthProvider({ children }) {
       }
 
       if (!destino) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Função desconhecida',
-          text: 'Contate o administrador.',
-        });
+        toast.error('Função desconhecida. Contate o administrador.');
         return false;
       }
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Login bem-sucedido',
-        text: destino.msg,
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-      });
-
-      setTimeout(() => navigate(destino.path), 3000);
+      toast.success(destino.msg);
+      navigate(destino.path);
 
       return true;
     } catch (error) {
@@ -86,12 +75,7 @@ export function AuthProvider({ children }) {
           ? 'Email ou senha incorretos.'
           : 'Ocorreu um erro inesperado. Tente novamente mais tarde.';
 
-      Swal.fire({
-        icon: 'error',
-        title: 'Erro ao fazer login',
-        text: msg,
-        confirmButtonColor: '#d33',
-      });
+      toast.error(msg);
       return false;
     } finally {
       setIsLoading(false);
