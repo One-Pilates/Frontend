@@ -37,7 +37,7 @@ export function AuthProvider({ children }) {
 
       const rotas = {
         PROFESSOR: {
-          path: '/professora/agenda',
+          path: '/professor/agenda',
           msg: `Bem-vindo à sua agenda, ${nome}!`,
         },
         SECRETARIA: {
@@ -45,7 +45,7 @@ export function AuthProvider({ children }) {
           msg: `Bem-vindo ao painel da One Pilates, ${nome}!`,
         },
         ADMINISTRADOR: {
-          path: '/secretaria/dashboard',
+          path: '/admin/dashboard',
           msg: `Bem-vindo ao painel da One Pilates, ${nome}!`,
         },
       };

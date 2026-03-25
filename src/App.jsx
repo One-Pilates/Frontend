@@ -23,9 +23,14 @@ function App() {
         }}
       />
       <Routes>
-        <Route element={<PrivateRoutes />}>
-          <Route path="/professora/*" element={<TeacherRoutes />} />
+        <Route element={<PrivateRoutes allowedRoles={['PROFESSOR']} />}>
+          <Route path="/professor/*" element={<TeacherRoutes />} />
+        </Route>
+        <Route element={<PrivateRoutes allowedRoles={['SECRETARIA']} />}>
           <Route path="/secretaria/*" element={<SecretaryRoutes />} />
+        </Route>
+        <Route element={<PrivateRoutes allowedRoles={['ADMINISTRADOR']} />}>
+          <Route path="/admin/*" element={<SecretaryRoutes />} />
         </Route>
         <Route path="/*" element={<PublicRoutes />} />
       </Routes>

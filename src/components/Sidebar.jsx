@@ -72,22 +72,22 @@ export default function SidebarTeacher({ navAberta, setNavAberta }) {
               icon={FaCalendarAlt}
               texto="Agenda"
               navAberta={navAberta}
-              ativo={isActive('/professora/agenda')}
-              onClick={() => handleNavigate('/professora/agenda')}
+              ativo={isActive('/professor/agenda')}
+              onClick={() => handleNavigate('/professor/agenda')}
             />
             <ItemSidebar
               icon={FaChartBar}
               texto="Dashboard"
               navAberta={navAberta}
-              ativo={isActive('/professora/dashboard')}
-              onClick={() => handleNavigate('/professora/dashboard')}
+              ativo={isActive('/professor/dashboard')}
+              onClick={() => handleNavigate('/professor/dashboard')}
             />
             <ItemSidebar
               icon={FaUser}
               texto="Perfil"
               navAberta={navAberta}
-              ativo={isActive('/professora/perfil')}
-              onClick={() => handleNavigate('/professora/perfil')}
+              ativo={isActive('/professor/perfil')}
+              onClick={() => handleNavigate('/professor/perfil')}
             />
           </nav>
         </div>
@@ -112,6 +112,8 @@ export function SidebarSecretary({ navAberta, setNavAberta }) {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const location = useLocation();
+
+  const basePath = user.role === 'ADMINISTRADOR' ? '/admin' : '/secretaria';
 
   const isActive = (path) => location.pathname === path;
 
@@ -167,44 +169,44 @@ export function SidebarSecretary({ navAberta, setNavAberta }) {
               icon={FaChartBar}
               texto="Dashboard"
               navAberta={navAberta}
-              ativo={isActive('/secretaria/dashboard')}
-              onClick={() => handleNavigate('/secretaria/dashboard')}
+              ativo={isActive(`${basePath}/dashboard`)}
+              onClick={() => handleNavigate(`${basePath}/dashboard`)}
             />
             <ItemSidebar
               icon={FaUser}
               texto="Perfil"
               navAberta={navAberta}
-              ativo={isActive('/secretaria/perfil')}
-              onClick={() => handleNavigate('/secretaria/perfil')}
+              ativo={isActive(`${basePath}/perfil`)}
+              onClick={() => handleNavigate(`${basePath}/perfil`)}
             />
             <ItemSidebar
               icon={FaCalendarAlt}
               texto="Agenda"
               navAberta={navAberta}
-              ativo={isActive('/secretaria/agenda')}
-              onClick={() => handleNavigate('/secretaria/agenda')}
+              ativo={isActive(`${basePath}/agenda`)}
+              onClick={() => handleNavigate(`${basePath}/agenda`)}
             />
             <ItemSidebar
               icon={FaChalkboardTeacher}
               texto="Professor"
               navAberta={navAberta}
-              ativo={isActive('/secretaria/professor')}
-              onClick={() => handleNavigate('/secretaria/professor')}
+              ativo={isActive(`${basePath}/professor`)}
+              onClick={() => handleNavigate(`${basePath}/professor`)}
             />
             <ItemSidebar
               icon={FaUsers}
               texto="Alunos"
               navAberta={navAberta}
-              ativo={isActive('/secretaria/alunos')}
-              onClick={() => handleNavigate('/secretaria/alunos')}
+              ativo={isActive(`${basePath}/alunos`)}
+              onClick={() => handleNavigate(`${basePath}/alunos`)}
             />
             {user.role === 'ADMINISTRADOR' && (
               <ItemSidebar
                 icon={FaSlidersH}
                 texto="Studio"
                 navAberta={navAberta}
-                ativo={isActive('/secretaria/studio')}
-                onClick={() => handleNavigate('/secretaria/studio')}
+                ativo={isActive(`${basePath}/studio`)}
+                onClick={() => handleNavigate(`${basePath}/studio`)}
               />
             )}
           </nav>
