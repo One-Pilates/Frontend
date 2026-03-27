@@ -42,8 +42,8 @@
       grid-template-columns: repeat(4, 1fr);
     }
 
-    .kpi-card {
-      background: $branco;
+      .kpi-card {
+      background: var(--branco);
       border-radius: 12px;
       padding: 1.5rem;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -78,19 +78,19 @@
         flex-shrink: 0;
 
         &.purple {
-          background-color: $icone-roxo;
+          background-color: var(--icone-roxo);
         }
 
         &.orange {
-          background-color: $icone-laranja;
+          background-color: var(--icone-laranja);
         }
 
         &.blue {
-          background-color: $icone-azul;
+          background-color: var(--icone-azul);
         }
 
         &.yellow {
-          background-color: $icone-amarelo;
+          background-color: var(--icone-amarelo);
         }
       }
 
@@ -103,7 +103,7 @@
 
       .kpi-title {
         font-size: 0.813rem;
-        color: $texto-secundario;
+        color: var(--texto-secundario);
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -115,7 +115,7 @@
       .kpi-value {
         font-size: clamp(1.5rem, 2.5vw, 2rem);
         font-weight: 700;
-        color: $texto-titulo;
+        color: var(--texto-titulo);
         line-height: 1.2;
         word-break: break-word;
         overflow-wrap: break-word;
@@ -124,7 +124,7 @@
       .kpi-value--text {
         font-size: clamp(0.9rem, 2vw, 1.25rem);
         font-weight: 700;
-        color: $texto-titulo;
+        color: var(--texto-titulo);
         line-height: 1.3;
         word-break: break-word;
         overflow-wrap: break-word;
@@ -132,7 +132,7 @@
 
       .kpi-subtitle {
         font-size: 0.813rem;
-        color: $texto-secundario;
+        color: var(--texto-secundario);
         font-weight: 500;
         word-break: break-word;
         overflow-wrap: break-word;
@@ -149,8 +149,8 @@
     margin: 0 auto;
     box-sizing: border-box;
 
-    .chart-container {
-      background: $branco;
+      .chart-container {
+      background: var(--branco);
       border-radius: 8px;
       box-shadow: 0 0.1vh 0.3vh rgba(0, 0, 0, 0.1);
       overflow: hidden;

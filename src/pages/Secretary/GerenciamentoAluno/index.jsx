@@ -11,13 +11,15 @@ import {
   FiSearch,
   FiTrash2,
   FiDownload,
+  FiEdit2,
 } from 'react-icons/fi';
 import Botao from '../../../components/Button';
 import { abrirModalDownload } from './components/Export';
 
 export default function GerenciamentoAluno() {
   const navigate = useNavigate();
-  const { _user } = useAuth();
+  const { user } = useAuth();
+  const basePath = user?.role === 'ADMINISTRADOR' ? '/admin' : '/secretaria';
   const [alunos, setAlunos] = useState([]);
   const [statusFilter, setStatusFilter] = useState('todos');
   const [filterByNome, setFilterByNome] = useState('');
@@ -101,7 +103,7 @@ export default function GerenciamentoAluno() {
         <div className="flex flex-col sm:flex-row w-full justify-between items-start sm:items-center gap-4">
           <h1 className="text-2xl sm:text-3xl font-bold">Gerenciamento de Aluno</h1>
           <Botao
-            onClick={() => navigate('/secretaria/aluno/cadastrar')}
+            onClick={() => navigate(`${basePath}/aluno/cadastrar`)}
             cor="bg-blue-500"
             texto={'Adicionar Aluno'}
           />
@@ -272,7 +274,7 @@ export default function GerenciamentoAluno() {
                     >
                       <td className="px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm">
                         <button
-                          onClick={() => navigate(`/secretaria/perfil/aluno/${aluno.id}`)}
+                          onClick={() => navigate(`${basePath}/perfil/aluno/${aluno.id}`)}
                           className="text-left hover:underline font-medium"
                         >
                           {aluno.nome}
@@ -316,8 +318,16 @@ export default function GerenciamentoAluno() {
                       <td className="px-3 sm:px-6 py-3 sm:py-4">
                         <div className="flex gap-2 justify-center">
                           <button
+                            onClick={() => navigate(`${basePath}/aluno/editar/${aluno.id}`)}
+                            className="p-1.5 sm:p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition"
+                            title="Editar aluno"
+                          >
+                            <FiEdit2 size={16} className="sm:w-4.5 sm:h-4.5" />
+                          </button>
+                          <button
                             onClick={() => deleteAluno(aluno.id)}
                             className="p-1.5 sm:p-2 text-red-600 hover:bg-red-100 rounded-lg transition"
+                            title="Excluir aluno"
                           >
                             <FiTrash2 size={16} className="sm:w-4.5 sm:h-4.5" />
                           </button>

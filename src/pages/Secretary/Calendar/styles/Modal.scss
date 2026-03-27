@@ -272,9 +272,9 @@
   }
 
   &:disabled {
-    background: #f5f5f5;
-    color: #999;
-    border-color: #ddd;
+    background: var(--bg-claro);
+    color: var(--texto-secundario);
+    border-color: var(--cor-borda);
     cursor: not-allowed;
   }
 }
@@ -298,8 +298,8 @@
   }
 
   &:disabled {
-    background: #ccc;
-    color: #666;
+    background: var(--cor-borda);
+    color: var(--texto-secundario);
     cursor: not-allowed;
     box-shadow: none;
     transform: none;

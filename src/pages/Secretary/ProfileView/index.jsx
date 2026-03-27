@@ -226,7 +226,7 @@ export default function ProfileView() {
               Observações
             </h3>
             <textarea
-              value={dadosUser.observacoes || 'Nenhuma observação registrada'}
+              value={dadosUser.observacao || 'Nenhuma observação registrada'}
               rows={4}
               readOnly
               className="w-full p-4 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) outline-none cursor-default resize-none"

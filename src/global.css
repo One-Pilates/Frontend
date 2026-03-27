@@ -158,3 +158,83 @@ body,
 * {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* ============================================
+   DARK MODE GLOBAL
+   ============================================ */
+
+html.dark body {
+  background-color: #0d1117;
+  color: #fafbfc;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.dark {
+  background-color: #0d1117;
+}
+
+html.dark input,
+html.dark textarea,
+html.dark select {
+  background-color: #1b1f26;
+  color: #fafbfc;
+  border-color: #21262d;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #8b949e;
+}
+
+html.dark .modal,
+html.dark [role='dialog'] {
+  background-color: #161b22;
+  color: #fafbfc;
+}
+
+/* Scrollbar dark mode */
+html.dark ::-webkit-scrollbar-track {
+  background: #0d1117;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #21262d;
+  border-radius: 4px;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #30363d;
+}
+
+/* SweetAlert2 dark mode */
+html.dark .swal2-popup {
+  background-color: #161b22;
+  color: #fafbfc;
+}
+
+html.dark .swal2-title {
+  color: #fafbfc;
+}
+
+html.dark .swal2-html-container {
+  color: #8b949e;
+}
+
+html.dark .swal2-input {
+  background-color: #0d1117;
+  border-color: #21262d;
+  color: #fafbfc;
+}
+
+html.dark .swal2-input::placeholder {
+  color: #8b949e;
+}
+
+html.dark .swal2-confirm {
+  background-color: #f77433 !important;
+}
+
+html.dark .swal2-cancel {
+  background-color: #21262d !important;
+  color: #fafbfc !important;
+}

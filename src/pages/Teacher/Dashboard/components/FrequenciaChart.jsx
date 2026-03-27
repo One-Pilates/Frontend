@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 const FrequenciaChart = ({ title, data = [], period = 30 }) => {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsDark(document.documentElement.classList.contains('dark'));
+    check();
+    const obs = new MutationObserver(check);
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => obs.disconnect();
+  }, []);
+
   const mapDias = {
     Sunday: 'Dom',
     Monday: 'Seg',
@@ -29,19 +39,30 @@ const FrequenciaChart = ({ title, data = [], period = 30 }) => {
       90: 'últimos 90 dias',
     }[period] || `últimos ${period} dias`;
 
+  const labelColor = isDark ? '#FAFBFC' : '#111827';
+  const gridColor = isDark ? '#21262D' : '#e0e0e0';
+
   const chartOptions = {
-    chart: { type: 'column', height: 400 },
+    chart: { type: 'column', height: 400, backgroundColor: 'transparent' },
     title: { text: null },
-    xAxis: { categories: categorias, title: { text: null } }, // ⚡ use `categorias` aqui
+    xAxis: {
+      categories: categorias,
+      title: { text: null },
+      labels: { style: { color: labelColor } },
+      lineColor: gridColor,
+      tickColor: gridColor,
+    },
     yAxis: {
-      title: { text: `Agendamentos (${periodText})` },
+      title: { text: `Agendamentos (${periodText})`, style: { color: labelColor } },
       allowDecimals: false,
+      labels: { style: { color: labelColor } },
+      gridLineColor: gridColor,
     },
     plotOptions: {
       column: {
         borderRadius: 6,
         colorByPoint: true,
-        dataLabels: { enabled: true, format: '{point.y}' },
+        dataLabels: { enabled: true, format: '{point.y}', style: { color: labelColor } },
       },
     },
     legend: { enabled: false },

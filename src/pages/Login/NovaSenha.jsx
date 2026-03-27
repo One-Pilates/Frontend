@@ -57,7 +57,12 @@ export default function NovaSenha() {
       toast.success('Nova senha cadastrada com sucesso!', { id: loadingId });
 
       if (isPrimeiroAcesso) {
-        const route = user.role === 'PROFESSOR' ? '/professor/agenda' : '/secretaria/dashboard';
+        const route =
+          user.role === 'PROFESSOR'
+            ? '/professor/agenda'
+            : user.role === 'ADMINISTRADOR'
+              ? '/admin/dashboard'
+              : '/secretaria/dashboard';
         navigate(route);
       } else {
         navigate('/login');

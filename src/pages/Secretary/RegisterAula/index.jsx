@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../../hooks/useAuth';
 import { FaArrowLeft } from 'react-icons/fa';
 import { toast } from 'sonner';
 import Swal from 'sweetalert2';
@@ -13,19 +14,21 @@ import './style.scss';
 
 export default function RegisterAula() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAuth();
+  const basePath = user?.role === 'ADMINISTRADOR' ? '/admin' : '/secretaria';
   const [etapaAtual, setEtapaAtual] = useState(1);
   const [carregando, setCarregando] = useState(false);
   const [erros, setErros] = useState({});
 
   const [dataHora, setDataHora] = useState({
-    data: '',
-    horario: '',
+    data: location.state?.data || '',
+    horario: location.state?.horario || '',
   });
 
   const [professor, setProfessor] = useState('');
   const [sala, setSala] = useState('');
   const [especialidade, setEspecialidade] = useState('');
-  const [observacoes, setObservacoes] = useState('');
   const [alunos, setAlunos] = useState([]);
   const [searchAluno, setSearchAluno] = useState('');
 
@@ -178,14 +181,13 @@ export default function RegisterAula() {
         salaId: parseInt(sala),
         especialidadeId: parseInt(especialidade),
         alunoIds: alunos.map((a) => a.id),
-        observacoes: observacoes || '',
       };
 
       await api.post('/api/agendamentos', payload);
 
       toast.success('Aula criada com sucesso!');
 
-      navigate('/secretaria/agendamento', {
+      navigate(`${basePath}/agendamento`, {
         state: {
           idProfessor: parseInt(professor),
           idSala: parseInt(sala),
@@ -222,7 +224,7 @@ export default function RegisterAula() {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        navigate('/secretaria/agendamento');
+        navigate(`${basePath}/agendamento`);
       }
     });
   };
@@ -240,8 +242,6 @@ export default function RegisterAula() {
             setSala={setSala}
             especialidade={especialidade}
             setEspecialidade={setEspecialidade}
-            observacoes={observacoes}
-            setObservacoes={setObservacoes}
             professores={professores}
             salas={salas}
             especialidades={especialidades}
@@ -269,11 +269,12 @@ export default function RegisterAula() {
             professor={professor}
             sala={sala}
             especialidade={especialidade}
-            observacoes={observacoes}
             alunos={alunos}
+            todosAlunos={todosAlunos}
             professores={professores}
             salas={salas}
             especialidades={especialidades}
+            irParaEtapa={irParaEtapa}
           />
         );
       default:
@@ -284,7 +285,7 @@ export default function RegisterAula() {
   return (
     <div className="register-container">
       <div className="register-header">
-        <button className="back-button" onClick={() => navigate('/secretaria/agendamento')}>
+        <button className="back-button" onClick={() => navigate(`${basePath}/agendamento`)}>
           <FaArrowLeft />
           <span>Voltar</span>
         </button>

@@ -27,7 +27,7 @@
 }
 
 .modal-content {
-  background: $branco;
+  background: var(--branco);
   border-radius: 12px;
   max-width: 550px;
   width: 100%;
@@ -61,7 +61,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: $branco;
+  background: var(--branco);
 }
 
 .modal-header h2 {
@@ -92,7 +92,7 @@
 .modal-tabs {
   display: flex;
   border-bottom: 2px solid var(--cor-borda);
-  background: $branco;
+  background: var(--branco);
 }
 
 .modal-tab {
@@ -124,7 +124,7 @@
 
 .modal-tab:hover {
   color: $laranja-principal;
-  background: var(--branco) 5f2;
+  background: rgba(247, 116, 51, 0.05);
 }
 
 .modal-body {

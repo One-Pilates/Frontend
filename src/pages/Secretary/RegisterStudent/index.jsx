@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import { toast } from 'sonner';
 import api from '../../../services/api';
@@ -10,11 +10,16 @@ import EnderecoScreen from './screens/Endereco';
 import InformacoesAlunoScreen from './screens/InformacoesAlunos';
 import ConfirmacaoAlunoScreen from './screens/Confirmacao';
 import { validarCPF, validarEmail } from '../../../utils/utils';
+import { useAuth } from '../../../hooks/useAuth';
 import './style.scss';
 
 export default function RegisterStudent() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { id } = useParams();
+  const isEditMode = !!id;
+  const { user } = useAuth();
+  const basePath = user?.role === 'ADMINISTRADOR' ? '/admin' : '/secretaria';
 
   const dadosIniciais = location.state || {};
 
@@ -47,9 +52,44 @@ export default function RegisterStudent() {
   const [informacoesAluno, setInformacoesAluno] = useState(
     dadosIniciais.informacoesAluno || {
       problemasMobilidade: false,
-      observacoes: '',
+      observacao: '',
     },
   );
+
+  useEffect(() => {
+    if (!isEditMode) return;
+    api
+      .get(`api/alunos/${id}`)
+      .then((res) => {
+        const a = res.data;
+        setDadosPessoais({
+          fotoPerfil: a.fotoPerfil || '',
+          nomeCompleto: a.nome || '',
+          email: a.email || '',
+          cpf: a.cpf || '',
+          dataNascimento: a.dataNascimento ? a.dataNascimento.substring(0, 10) : '',
+          telefone: a.tipoContato || '',
+        });
+        setEndereco({
+          cep: a.endereco?.cep || '',
+          logradouro: a.endereco?.rua || '',
+          numero: a.endereco?.numero || '',
+          bairro: a.endereco?.bairro || '',
+          cidade: a.endereco?.cidade || '',
+          estado: a.endereco?.estado || '',
+          uf: a.endereco?.uf || '',
+        });
+        setInformacoesAluno({
+          problemasMobilidade: a.alunoComLimitacoesFisicas ?? false,
+          observacao: a.observacao || '',
+        });
+      })
+      .catch((err) => {
+        console.error('Erro ao carregar aluno para edição:', err);
+        toast.error('Não foi possível carregar os dados do aluno.');
+        navigate(`${basePath}/alunos`);
+      });
+  }, [id]);
 
   const etapas = [
     { label: 'Dados Pessoais' },
@@ -210,30 +250,7 @@ export default function RegisterStudent() {
   };
 
   const cancelarCadastro = () => {
-    setDadosPessoais({
-      nomeCompleto: '',
-      email: '',
-      cpf: '',
-      dataNascimento: '',
-      telefone: '',
-    });
-
-    setEndereco({
-      cep: '',
-      logradouro: '',
-      numero: '',
-      bairro: '',
-      cidade: '',
-      estado: '',
-      uf: '',
-    });
-
-    setInformacoesAluno({
-      problemasMobilidade: false,
-      observacoes: '',
-    });
-
-    navigate('/secretaria/alunos');
+    navigate(`${basePath}/alunos`);
   };
 
   const cadastrarAluno = async () => {
@@ -244,7 +261,7 @@ export default function RegisterStudent() {
       dataNascimento: dadosPessoais.dataNascimento || '',
       status: true,
       alunoComLimitacoesFisicas: !!informacoesAluno.problemasMobilidade,
-      observacoes: informacoesAluno.observacoes || '',
+      observacao: informacoesAluno.observacao || '',
       tipoContato: dadosPessoais.telefone || '',
       notificacaoAtiva: true,
       endereco: {
@@ -258,15 +275,18 @@ export default function RegisterStudent() {
       },
     };
 
-    console.log('📤 Payload para cadastro:', payload);
-
     try {
-      await api.post('api/alunos', payload);
-      toast.success('Aluno cadastrado com sucesso!');
-      navigate('/secretaria/alunos');
+      if (isEditMode) {
+        await api.patch(`api/alunos/${id}`, payload);
+        toast.success('Aluno atualizado com sucesso!');
+      } else {
+        await api.post('api/alunos', payload);
+        toast.success('Aluno cadastrado com sucesso!');
+      }
+      navigate(`${basePath}/alunos`);
     } catch (error) {
-      console.error('Erro ao cadastrar aluno:', error);
-      toast.error('Não foi possível cadastrar o aluno.');
+      console.error('Erro ao salvar aluno:', error);
+      toast.error(isEditMode ? 'Não foi possível atualizar o aluno.' : 'Não foi possível cadastrar o aluno.');
     }
   };
 
@@ -316,11 +336,11 @@ export default function RegisterStudent() {
   return (
     <div className="register-container">
       <div className="register-header">
-        <button className="back-button" onClick={() => navigate('/secretaria/alunos')}>
+        <button className="back-button" onClick={() => navigate(`${basePath}/alunos`)}>
           <FaArrowLeft />
           <span>Voltar</span>
         </button>
-        <h1 className="main-title"> Preencha os dados para criar a conta</h1>
+        <h1 className="main-title">{isEditMode ? 'Editar dados do aluno' : 'Preencha os dados para criar a conta'}</h1>
       </div>
 
       <div className="register-content">
@@ -339,7 +359,7 @@ export default function RegisterStudent() {
                 )}
 
                 <Button variant="primary" onClick={proximaEtapa}>
-                  {etapaAtual === 3 ? 'Cadastrar' : 'Continuar'}
+                  {etapaAtual === 3 ? (isEditMode ? 'Salvar' : 'Cadastrar') : 'Continuar'}
                 </Button>
               </div>
             )}

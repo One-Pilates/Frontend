@@ -45,6 +45,9 @@ const Dashboard = () => {
   const [pie, setPie] = useState([]);
   const [frequencia, setFrequencia] = useState([]);
   const [hasData, setHasData] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [totalAulas, setTotalAulas] = useState(0);
+  const [top3, setTop3] = useState([]);
 
   const { user } = useAuth();
 

@@ -4,12 +4,16 @@ import Button from './Components/Button';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import AgendamentoModal from './Components/AulaModal';
 import DefinirAusenciaModal from './Components/DefinirAusenciaModal';
+import AusenciaModal from './Components/AusenciaModal';
+import { toast } from 'sonner';
 import './Styles/calendar.scss';
 
 const Calendar = () => {
   const [selectedAgendamento, setSelectedAgendamento] = useState(null);
   const [isAgendamentoModalOpen, setIsAgendamentoModalOpen] = useState(false);
   const [isAusenciaModalOpen, setIsAusenciaModalOpen] = useState(false);
+  const [isAusenciaViewModalOpen, setIsAusenciaViewModalOpen] = useState(false);
+  const [selectedAusencia, setSelectedAusencia] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [agendamentos, setAgendamentos] = useState([]);
   const [ausencias, setAusencias] = useState([]);
@@ -103,7 +107,7 @@ const Calendar = () => {
         borderColor: '#000000',
         textColor: '#111827',
         classNames: ['ausencia-event'],
-        extendedProps: { isAusencia: true, motivo: a.motivo },
+        extendedProps: { isAusencia: true, ausenciaId: a.id, motivo: a.motivo, dataInicio: a.dataInicio, dataFim: a.dataFim },
       };
     });
 
@@ -141,6 +145,12 @@ const Calendar = () => {
         return !hasOverlap;
       },
       dateClick: (info) => {
+        const view = calendarInstance.current?.view?.type;
+        if (view === 'dayGridMonth' || view === 'timeGridWeek') {
+          calendarInstance.current.changeView('timeGridDay', info.date);
+          setActiveView('timeGridDay');
+          return;
+        }
         const clickDate = info.date;
         const tinyEnd = new Date(clickDate.getTime() + 1000);
         const blocked = calendar.getEvents().some((ev) => {
@@ -156,7 +166,13 @@ const Calendar = () => {
         const isBlocked =
           info.event.display === 'background' ||
           (info.event.extendedProps && info.event.extendedProps.isAusencia);
-        if (isBlocked) return;
+        if (isBlocked) {
+          if (info.event.extendedProps?.isAusencia) {
+            setSelectedAusencia(info.event.extendedProps);
+            setIsAusenciaViewModalOpen(true);
+          }
+          return;
+        }
         const agendamentoData = info.event.extendedProps;
         if (agendamentoData) {
           setSelectedAgendamento(agendamentoData);
@@ -167,7 +183,7 @@ const Calendar = () => {
         const isBlocked =
           info.event.display === 'background' ||
           (info.event.extendedProps && info.event.extendedProps.isAusencia);
-        info.el.style.cursor = isBlocked ? 'not-allowed' : 'pointer';
+        info.el.style.cursor = isBlocked ? 'pointer' : 'pointer';
       },
     });
 
@@ -227,8 +243,22 @@ const Calendar = () => {
       }
     };
 
+    const handleAusenciaDelete = () => {
+      fetchAgendamentos();
+    };
+
+    const handleAusenciaUpdate = () => {
+      fetchAgendamentos();
+    };
+
     window.addEventListener('ausencia:create', handleAusenciaCreate);
-    return () => window.removeEventListener('ausencia:create', handleAusenciaCreate);
+    window.addEventListener('ausencia:delete', handleAusenciaDelete);
+    window.addEventListener('ausencia:update', handleAusenciaUpdate);
+    return () => {
+      window.removeEventListener('ausencia:create', handleAusenciaCreate);
+      window.removeEventListener('ausencia:delete', handleAusenciaDelete);
+      window.removeEventListener('ausencia:update', handleAusenciaUpdate);
+    };
   }, []);
 
   const [activeView, setActiveView] = useState('timeGridWeek');
@@ -318,6 +348,19 @@ const Calendar = () => {
       <DefinirAusenciaModal
         isOpen={isAusenciaModalOpen}
         onClose={() => setIsAusenciaModalOpen(false)}
+      />
+
+      <AusenciaModal
+        isOpen={isAusenciaViewModalOpen}
+        ausencia={selectedAusencia}
+        onClose={() => {
+          setIsAusenciaViewModalOpen(false);
+          setSelectedAusencia(null);
+        }}
+        onDelete={() => {
+          setIsAusenciaViewModalOpen(false);
+          setSelectedAusencia(null);
+        }}
       />
     </div>
   );

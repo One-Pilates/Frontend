@@ -1,5 +1,6 @@
 import React from 'react';
 import { FiTrash2, FiPlus } from 'react-icons/fi';
+import { FaWheelchair } from 'react-icons/fa';
 
 export default function Etapa3Alunos(props) {
   const {
@@ -64,7 +65,12 @@ export default function Etapa3Alunos(props) {
           <div className="alunos-list">
             {alunos.map((aluno) => (
               <div key={aluno.id} className="aluno-card">
-                <span className="aluno-nome">{aluno.nome}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span className="aluno-nome">{aluno.nome}</span>
+                  {aluno.alunoComLimitacoesFisicas && (
+                    <FaWheelchair size={14} style={{ color: '#0066cc' }} title="Limitação física" />
+                  )}
+                </div>
                 <button
                   className="btn-remove-aluno"
                   onClick={() => handleRemoverAluno(aluno.id)}

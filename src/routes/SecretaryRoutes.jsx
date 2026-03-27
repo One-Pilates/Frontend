@@ -27,6 +27,7 @@ export default function SecretaryRoutes() {
         <Route path="professor" element={<GerenciamentoProfessor />} />
         <Route path="professor/cadastrar" element={<RegisterTeacher />} />
         <Route path="aluno/cadastrar" element={<RegisterStudent />} />
+        <Route path="aluno/editar/:id" element={<RegisterStudent />} />
         <Route path="alunos" element={<GerenciamentoAluno />} />
         <Route path="studio" element={<StudioView />} />
       </Route>

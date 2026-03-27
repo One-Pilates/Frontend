@@ -5,10 +5,12 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { BiArrowBack } from 'react-icons/bi';
 import api from '../services/api';
 import StepIndicator from './StepIndicator';
+import { useAuth } from '../hooks/useAuth';
 
 export default function RedefinirSenha() {
+  const { user } = useAuth() || {};
   const [currentStep, setCurrentStep] = useState(1);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(user?.email || '');
   const [codigo, setCodigo] = useState(['', '', '', '', '']);
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');

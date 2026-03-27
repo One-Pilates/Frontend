@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../../hooks/useAuth';
 import api from '../../../services/api';
 import Swal from 'sweetalert2';
 import { toast } from 'sonner';
-import Button from './Components/Button';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import AgendamentoModal from './Components/AulaModal';
+import AusenciaModal from '../../Teacher/Calendar/Components/AusenciaModal';
+import DefinirAusenciaModal from '../../Teacher/Calendar/Components/DefinirAusenciaModal';
 import { getColorForEspecialidade } from '../../../utils/utils';
 import './styles/Calendar.scss';
 import './styles/Filtros.scss';
@@ -13,37 +15,51 @@ import './styles/Filtros.scss';
 export default function CalendarSecretary() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
+  const basePath = user?.role === 'ADMINISTRADOR' ? '/admin' : '/secretaria';
 
   const [salas, setSalas] = useState([]);
   const [professores, setProfessores] = useState([]);
   const [idSala, setIdSala] = useState('');
-  const [idProfessor, setIdProfessor] = useState('');
+  const [idProfessor, setIdProfessor] = useState('0');
   const [agendamentos, setAgendamentos] = useState([]);
+  const [ausencias, setAusencias] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [jaBuscou, setJaBuscou] = useState(false);
+  const [carregouInicial, setCarregouInicial] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [agendamentoSelecionado, setAgendamentoSelecionado] = useState(null);
   const [activeView, setActiveView] = useState('timeGridWeek');
   const [showLoading, setShowLoading] = useState(false);
+  const [isAusenciaViewModalOpen, setIsAusenciaViewModalOpen] = useState(false);
+  const [selectedAusencia, setSelectedAusencia] = useState(null);
+  const [isAusenciaModalOpen, setIsAusenciaModalOpen] = useState(false);
 
   const calendarRef = useRef(null);
   const calendarInstance = useRef(null);
+  const currentViewRef = useRef('timeGridWeek');
+  const currentDateRef = useRef(null);
 
+  // Apply location.state filters (e.g. from GerenciamentoProfessor "Ver agenda")
   useEffect(() => {
-    if (location.state?.idProfessor) {
-      setIdProfessor(location.state.idProfessor);
+    if (location.state?.idProfessor !== undefined) {
+      setIdProfessor(String(location.state.idProfessor));
     }
-    if (location.state?.idSala) {
-      setIdSala(location.state.idSala);
+    if (location.state?.idSala !== undefined) {
+      setIdSala(String(location.state.idSala));
     }
   }, [location.state]);
 
+  // Debounced auto-fetch whenever filters change after initial load
   useEffect(() => {
-    if ((idProfessor || idSala) && location.state?.autoCarregar) {
-      fetchAgendamentosFiltro();
+    if (carregouInicial) {
+      const timeoutId = setTimeout(() => {
+        fetchAgendamentosFiltro();
+      }, 300);
+      return () => clearTimeout(timeoutId);
     }
-  }, [idProfessor, idSala, location.state?.autoCarregar]);
+  }, [idProfessor, idSala, carregouInicial]);
 
   async function fetchFiltros() {
     try {
@@ -61,11 +77,8 @@ export default function CalendarSecretary() {
   }
 
   async function fetchAgendamentosFiltro() {
-    if (!idSala && !idProfessor) {
-      setErrorMessage('Selecione pelo menos uma sala ou um professor');
-      setJaBuscou(false);
-      return;
-    }
+    const todasSalas = !idSala || idSala === '';
+    const todosProfessores = !idProfessor || idProfessor === '0' || idProfessor === '';
 
     try {
       setIsLoading(true);
@@ -73,38 +86,37 @@ export default function CalendarSecretary() {
       setJaBuscou(true);
 
       let url = '';
-      if (idSala && idProfessor) {
+      if (todasSalas && todosProfessores) {
+        url = '/api/agendamentos';
+      } else if (!todasSalas && !todosProfessores) {
         url = `/api/agendamentos/${idSala}/${idProfessor}`;
-      } else if (idProfessor) {
+      } else if (!todosProfessores) {
         url = `/api/agendamentos/professorId/${idProfessor}`;
-      } else if (idSala) {
+      } else if (!todasSalas) {
         url = `/api/agendamentos/sala/${idSala}`;
       }
 
       const response = await api.get(url);
       const dados = Array.isArray(response.data) ? response.data : [];
       setAgendamentos(dados);
+
+      if (!todosProfessores) {
+        try {
+          const respAus = await api.get(`/api/ausencias/professor/${idProfessor}`);
+          setAusencias(Array.isArray(respAus.data) ? respAus.data : []);
+        } catch {
+          setAusencias([]);
+        }
+      } else {
+        setAusencias([]);
+      }
     } catch (err) {
       console.error('Erro ao buscar:', err);
       setErrorMessage('Erro ao buscar agendamentos.');
       setAgendamentos([]);
+      setAusencias([]);
     } finally {
       setIsLoading(false);
-    }
-  }
-
-  function limparFiltros() {
-    setIdSala('');
-    setIdProfessor('');
-    setAgendamentos([]);
-    setErrorMessage('');
-    setJaBuscou(false);
-    setModalOpen(false);
-    setAgendamentoSelecionado(null);
-
-    if (calendarInstance.current) {
-      calendarInstance.current.destroy();
-      calendarInstance.current = null;
     }
   }
 
@@ -117,21 +129,22 @@ export default function CalendarSecretary() {
   function initCalendar() {
     if (!calendarRef.current) return;
 
-    if (calendarInstance.current) {
+    if (calendarInstance.current?.view) {
+      currentViewRef.current = calendarInstance.current.view.type;
+      const currentDate = calendarInstance.current.view.activeStart;
+      if (currentDate) currentDateRef.current = currentDate;
+      calendarInstance.current.destroy();
+    } else if (calendarInstance.current) {
       calendarInstance.current.destroy();
     }
 
-    const eventos = agendamentos.map((aula) => {
+    const eventosAulas = agendamentos.map((aula) => {
       const { backgroundColor, textColor } = getColorForEspecialidade(aula.especialidade);
-
       return {
         id: String(aula.id),
         title: `${aula.especialidade} - ${aula.professorNome || 'Professor'} - ${new Date(
           aula.dataHora,
-        ).toLocaleTimeString('pt-BR', {
-          hour: '2-digit',
-          minute: '2-digit',
-        })}`,
+        ).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`,
         start: aula.dataHora,
         end: calcularDuracao(aula.dataHora),
         backgroundColor,
@@ -141,8 +154,33 @@ export default function CalendarSecretary() {
       };
     });
 
+    const eventosAusencias = ausencias.map((a) => ({
+      id: `aus-${a.id}`,
+      title: 'Ausência',
+      start: a.dataInicio,
+      end: a.dataFim,
+      backgroundColor: '#9d9d9e',
+      borderColor: '#000000',
+      textColor: '#111827',
+      classNames: ['ausencia-event'],
+      extendedProps: {
+        isAusencia: true,
+        ausenciaId: a.id,
+        motivo: a.motivo,
+        dataInicio: a.dataInicio,
+        dataFim: a.dataFim,
+      },
+    }));
+
+    const eventos = [...eventosAulas, ...eventosAusencias];
+
+    let initialDate = null;
+    if (currentViewRef.current === 'timeGridDay' && currentDateRef.current) {
+      initialDate = currentDateRef.current;
+    }
+
     const calendar = new window.FullCalendar.Calendar(calendarRef.current, {
-      initialView: 'timeGridWeek',
+      initialView: currentViewRef.current || 'timeGridWeek',
       locale: 'pt-br',
       height: 'auto',
       slotMinTime: '07:00:00',
@@ -152,7 +190,40 @@ export default function CalendarSecretary() {
       slotDuration: '00:30:00',
       headerToolbar: { left: '', center: 'title', right: 'prev,next' },
       events: eventos,
+      dateClick: (info) => {
+        const currentView = calendar.view.type;
+        if (currentView === 'dayGridMonth' || currentView === 'timeGridWeek') {
+          calendar.changeView('timeGridDay', info.dateStr);
+          currentViewRef.current = 'timeGridDay';
+          currentDateRef.current = new Date(info.date);
+          window.dispatchEvent(
+            new CustomEvent('calendarViewChanged', { detail: { view: 'timeGridDay' } }),
+          );
+          setTimeout(() => {
+            window.dispatchEvent(
+              new CustomEvent('calendarViewChanged', { detail: { view: 'timeGridDay' } }),
+            );
+          }, 100);
+        } else if (currentView === 'timeGridDay') {
+          const clickedDate = new Date(info.date);
+          let hora = clickedDate.getHours();
+          if (hora < 7) hora = 7;
+          if (hora > 22) hora = 22;
+          navigate(`${basePath}/agendamento/criar`, {
+            state: {
+              data: clickedDate.toISOString().split('T')[0],
+              horario: `${String(hora).padStart(2, '0')}:00`,
+            },
+          });
+        }
+      },
       eventClick: (info) => {
+        const isAusencia = info.event.extendedProps?.isAusencia;
+        if (isAusencia) {
+          setSelectedAusencia(info.event.extendedProps);
+          setIsAusenciaViewModalOpen(true);
+          return;
+        }
         setAgendamentoSelecionado(info.event.extendedProps);
         setModalOpen(true);
       },
@@ -161,8 +232,27 @@ export default function CalendarSecretary() {
       },
     });
 
-    calendar.render();
+    if (initialDate && currentViewRef.current === 'timeGridDay') {
+      calendar.render();
+      calendar.gotoDate(initialDate);
+    } else {
+      calendar.render();
+    }
     calendarInstance.current = calendar;
+
+    // Keep currentViewRef / currentDateRef in sync when user navigates prev/next
+    calendar.on('datesSet', () => {
+      if (calendarInstance.current?.view) {
+        currentViewRef.current = calendarInstance.current.view.type;
+        const d = calendarInstance.current.view.activeStart;
+        if (d) currentDateRef.current = d;
+        window.dispatchEvent(
+          new CustomEvent('calendarViewChanged', {
+            detail: { view: calendarInstance.current.view.type },
+          }),
+        );
+      }
+    });
   }
 
   const handleChangeView = (viewName) => {
@@ -172,10 +262,27 @@ export default function CalendarSecretary() {
     }
   };
 
+  // Sync activeView state when calendarInstance changes
   useEffect(() => {
     if (calendarInstance.current) {
       setActiveView(calendarInstance.current.view?.type || 'timeGridWeek');
     }
+  }, [calendarInstance]);
+
+  // Sync activeView button highlight when dateClick drill-down changes the view
+  useEffect(() => {
+    const handleViewChanged = (e) => {
+      if (e.detail?.view) {
+        setActiveView(e.detail.view);
+        setTimeout(() => {
+          if (calendarInstance.current?.view) {
+            setActiveView(calendarInstance.current.view.type || 'timeGridWeek');
+          }
+        }, 150);
+      }
+    };
+    window.addEventListener('calendarViewChanged', handleViewChanged);
+    return () => window.removeEventListener('calendarViewChanged', handleViewChanged);
   }, [calendarInstance]);
 
   useEffect(() => {
@@ -184,20 +291,35 @@ export default function CalendarSecretary() {
     return () => clearTimeout(timeout);
   }, [isLoading]);
 
+  // Load FullCalendar script and trigger initial fetch
   useEffect(() => {
-    if (!window.FullCalendar) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css';
-      document.head.appendChild(link);
+    const bootstrap = async () => {
+      if (!window.FullCalendar) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css';
+        document.head.appendChild(link);
 
-      const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js';
-      script.onload = () => fetchFiltros();
-      document.body.appendChild(script);
-    } else {
-      fetchFiltros();
-    }
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js';
+        script.onload = async () => {
+          await fetchFiltros();
+          setTimeout(() => {
+            setCarregouInicial(true);
+            fetchAgendamentosFiltro();
+          }, 200);
+        };
+        document.body.appendChild(script);
+      } else {
+        await fetchFiltros();
+        setTimeout(() => {
+          setCarregouInicial(true);
+          fetchAgendamentosFiltro();
+        }, 200);
+      }
+    };
+
+    bootstrap();
 
     return () => {
       if (calendarInstance.current) {
@@ -208,10 +330,24 @@ export default function CalendarSecretary() {
   }, []);
 
   useEffect(() => {
-    if (window.FullCalendar && agendamentos.length > 0) {
+    if (window.FullCalendar && jaBuscou) {
       initCalendar();
     }
-  }, [agendamentos]);
+  }, [agendamentos, ausencias]);
+
+  // Refetch on absence events (create/update/delete)
+  useEffect(() => {
+    if (!idProfessor) return;
+    const handler = () => fetchAgendamentosFiltro();
+    window.addEventListener('ausencia:create', handler);
+    window.addEventListener('ausencia:update', handler);
+    window.addEventListener('ausencia:delete', handler);
+    return () => {
+      window.removeEventListener('ausencia:create', handler);
+      window.removeEventListener('ausencia:update', handler);
+      window.removeEventListener('ausencia:delete', handler);
+    };
+  }, [idProfessor]);
 
   async function deletarAgendamento(id) {
     const result = await Swal.fire({
@@ -240,21 +376,30 @@ export default function CalendarSecretary() {
     }
   }
 
-  const isFiltroValido = idSala || idProfessor;
-  const hasAgendamentos = agendamentos.length > 0;
+  const hasAgendamentos = agendamentos.length > 0 || (jaBuscou && ausencias.length > 0);
 
   return (
     <div className="calendar-container">
       <div className="calendar-header-top">
         <h1 className="text-2xl md:text-3xl">Agenda</h1>
-        <button
-          className="btn-criar-aula"
-          onClick={() => navigate('/secretaria/agendamento/criar')}
-          title="Criar nova aula"
-        >
-          <span className="hidden sm:inline">+ Criar Aula</span>
-          <span className="sm:hidden">+ Aula</span>
-        </button>
+        <div className="flex gap-2">
+          <button
+            className="btn-criar-aula"
+            onClick={() => setIsAusenciaModalOpen(true)}
+            title="Criar ausência de professor"
+          >
+            <span className="hidden sm:inline">+ Criar Ausência</span>
+            <span className="sm:hidden">+ Aus.</span>
+          </button>
+          <button
+            className="btn-criar-aula"
+            onClick={() => navigate(`${basePath}/agendamento/criar`)}
+            title="Criar nova aula"
+          >
+            <span className="hidden sm:inline">+ Criar Aula</span>
+            <span className="sm:hidden">+ Aula</span>
+          </button>
+        </div>
       </div>
 
       <main className="calendar-main">
@@ -323,30 +468,8 @@ export default function CalendarSecretary() {
                 ))}
               </select>
             </div>
-
-            <Button
-              onClick={fetchAgendamentosFiltro}
-              disabled={!isFiltroValido || isLoading}
-              className="btn-aplicar"
-            >
-              {isLoading ? 'Carregando...' : 'Aplicar'}
-            </Button>
-
-            {(hasAgendamentos || errorMessage || jaBuscou) && (
-              <Button onClick={limparFiltros} disabled={isLoading} className="btn-limpar">
-                Limpar
-              </Button>
-            )}
           </div>
         </div>
-
-        {!isFiltroValido && !jaBuscou && (
-          <div className="aviso-info">
-            <span className="text-sm md:text-base">
-              Selecione pelo menos uma sala ou um professor
-            </span>
-          </div>
-        )}
 
         {jaBuscou && !hasAgendamentos && !isLoading && (
           <div className="aviso-vazio">
@@ -356,7 +479,7 @@ export default function CalendarSecretary() {
           </div>
         )}
 
-        {hasAgendamentos && (
+        {jaBuscou && (
           <div className="calendar-wrapper">
             <div className={`loading-container ${showLoading ? 'show' : ''}`}>
               <LoadingSpinner message={'Carregando calendário...'} />
@@ -374,6 +497,27 @@ export default function CalendarSecretary() {
           agendamento={agendamentoSelecionado}
           onClose={() => setModalOpen(false)}
           onDelete={deletarAgendamento}
+        />
+
+        <AusenciaModal
+          isOpen={isAusenciaViewModalOpen}
+          ausencia={selectedAusencia}
+          onClose={() => {
+            setIsAusenciaViewModalOpen(false);
+            setSelectedAusencia(null);
+          }}
+          onDelete={() => {
+            setIsAusenciaViewModalOpen(false);
+            setSelectedAusencia(null);
+            fetchAgendamentosFiltro();
+          }}
+        />
+
+        <DefinirAusenciaModal
+          isOpen={isAusenciaModalOpen}
+          onClose={() => setIsAusenciaModalOpen(false)}
+          isSecretaria={true}
+          professores={professores}
         />
       </main>
     </div>

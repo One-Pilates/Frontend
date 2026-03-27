@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import api from '../../../services/api';
+import { useAuth } from '../../../hooks/useAuth';
 import { toast } from 'sonner';
 import Swal from 'sweetalert2';
 import StepIndicator from './components/StepIndicator';
@@ -15,6 +16,8 @@ import './style.scss';
 
 export default function RegisterTeacher() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const basePath = user?.role === 'ADMINISTRADOR' ? '/admin' : '/secretaria';
   const [etapaAtual, setEtapaAtual] = useState(1);
   const [erros, setErros] = useState({});
   const [especialidades, setEspecialidades] = useState([]);
@@ -361,7 +364,7 @@ export default function RegisterTeacher() {
         width: '600px',
       });
 
-      navigate('/secretaria/professor');
+      navigate(`${basePath}/professor`);
     } catch (error) {
       console.error('❌ ERRO NO CADASTRO:', error);
 
@@ -418,7 +421,7 @@ export default function RegisterTeacher() {
       observacoes: '',
     });
 
-    navigate('/secretaria/professor');
+    navigate(`${basePath}/professor`);
   };
 
   const uploadFoto = async (professorId) => {
@@ -520,7 +523,7 @@ export default function RegisterTeacher() {
   return (
     <div className="register-container">
       <div className="register-header">
-        <button className="back-button" onClick={() => navigate('/secretaria/professor')}>
+        <button className="back-button" onClick={() => navigate(`${basePath}/professor`)}>
           <FaArrowLeft />
           <span>Voltar</span>
         </button>

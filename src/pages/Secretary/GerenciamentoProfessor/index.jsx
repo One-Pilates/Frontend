@@ -12,6 +12,7 @@ import { getColorForEspecialidade } from '../../../utils/utils';
 export default function GerenciamentoProfessor() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const basePath = user?.role === 'ADMINISTRADOR' ? '/admin' : '/secretaria';
   const [professores, setProfessores] = useState([]);
   const [professoresOriginais, setProfessoresOriginais] = useState([]);
 
@@ -79,7 +80,7 @@ export default function GerenciamentoProfessor() {
           <h1 className="text-2xl md:text-3xl font-bold">Gerenciamento de Professor</h1>
           {user && user.role === 'ADMINISTRADOR' && (
             <Botao
-              onClick={() => navigate('/secretaria/professor/cadastrar')}
+              onClick={() => navigate(`${basePath}/professor/cadastrar`)}
               cor="bg-blue-500"
               texto={'Adicionar Professor'}
             ></Botao>
@@ -145,7 +146,7 @@ export default function GerenciamentoProfessor() {
                 <div className="flex flex-col sm:flex-row items-start justify-between mb-4 gap-4">
                   <div className="flex items-center gap-3 md:gap-4 w-full sm:w-auto">
                     <button
-                      onClick={() => navigate(`/secretaria/perfil/professor/${professor.id}`)}
+                      onClick={() => navigate(`${basePath}/perfil/professor/${professor.id}`)}
                       className="group relative shrink-0"
                     >
                       <img
@@ -187,8 +188,8 @@ export default function GerenciamentoProfessor() {
                     className="group flex items-center justify-center gap-2 px-4 md:px-5 py-2.5 md:py-3 text-white rounded-lg md:rounded-xl font-semibold transition-all ease-in-out shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto"
                     style={{ backgroundColor: 'var(--laranja-principal)' }}
                     onClick={() =>
-                      navigate('/secretaria/agenda', {
-                        state: { idProfessor: professor.id, autoCarregar: true },
+                      navigate(`${basePath}/agenda`, {
+                        state: { idProfessor: professor.id, idSala: '', autoCarregar: true },
                       })
                     }
                   >

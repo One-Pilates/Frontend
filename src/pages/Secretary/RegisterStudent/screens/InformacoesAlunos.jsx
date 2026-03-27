@@ -21,12 +21,12 @@ export default function InformacoesAlunoScreen({ dados, atualizar, erros = {} })
           <label className="textarea-label">Observações</label>
           <textarea
             placeholder="Digite observações sobre o aluno..."
-            value={dados.observacoes || ''}
-            onChange={(e) => atualizar({ observacoes: e.target.value })}
-            className={`textarea-field ${erros.observacoes ? 'textarea-error' : ''}`}
+            value={dados.observacao || ''}
+            onChange={(e) => atualizar({ observacao: e.target.value })}
+            className={`textarea-field ${erros.observacao ? 'textarea-error' : ''}`}
             rows={6}
           />
-          {erros.observacoes && <span className="error-message">{erros.observacoes}</span>}
+          {erros.observacao && <span className="error-message">{erros.observacao}</span>}
         </div>
       </div>
     </div>

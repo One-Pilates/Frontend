@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FiEdit2, FiX, FiPlus, FiTrash2 } from 'react-icons/fi';
+import { FiEdit2, FiX, FiTrash2, FiEye, FiEyeOff, FiSave } from 'react-icons/fi';
 import AlunoItem from './AlunoItem';
 import api from '../../../../services/api';
 import Swal from 'sweetalert2';
@@ -18,6 +18,8 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
   const [searchAluno, setSearchAluno] = useState('');
   const [mostrarListaAlunos, setMostrarListaAlunos] = useState(false);
   const [carregando, setCarregando] = useState(false);
+  const [observacoesExpandidas, setObservacoesExpandidas] = useState({});
+  const [observacoesAlunos, setObservacoesAlunos] = useState({});
 
   useEffect(() => {
     if (editFields.professor !== undefined) {
@@ -46,8 +48,15 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
         agendamento.alunos.map((a) => ({
           id: a.id || 0,
           nome: a.nome,
+          observacao: a.observacao || '',
+          alunoComLimitacoesFisicas: a.alunoComLimitacoesFisicas ?? false,
         })),
       );
+      const obsMap = {};
+      agendamento.alunos.forEach((a) => {
+        if (a.observacao) obsMap[a.id] = a.observacao;
+      });
+      setObservacoesAlunos(obsMap);
     }
   }, [agendamento]);
 
@@ -65,10 +74,13 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
       agendamento?.alunos?.map((a) => ({
         id: a.id || 0,
         nome: a.nome,
+        observacao: a.observacao || '',
+        alunoComLimitacoesFisicas: a.alunoComLimitacoesFisicas ?? false,
       })) || [],
     );
     setSearchAluno('');
     setMostrarListaAlunos(false);
+    setObservacoesExpandidas({});
     onClose();
   };
 
@@ -79,10 +91,38 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
         {
           id: aluno.id,
           nome: aluno.nome,
+          observacao: aluno.observacao || '',
+          alunoComLimitacoesFisicas: aluno.alunoComLimitacoesFisicas ?? false,
         },
       ]);
       setSearchAluno('');
       setMostrarListaAlunos(false);
+    }
+  };
+
+  const handleSalvarObservacaoAluno = async (alunoId) => {
+    const observacao = editFields[`observacao_${alunoId}`] || '';
+    try {
+      setCarregando(true);
+      await api.patch(`/api/agendamentos/${agendamento.id}/alunos/${alunoId}/observacao`, {
+        observacao: observacao || null,
+      });
+      setObservacoesAlunos((prev) => ({ ...prev, [alunoId]: observacao || null }));
+      setEditFields((fields) => {
+        const next = { ...fields };
+        delete next[`observacao_${alunoId}`];
+        return next;
+      });
+      setCarregando(false);
+      toast.success('Observação salva com sucesso!');
+    } catch (e) {
+      setCarregando(false);
+      console.error('Erro ao salvar observação:', e);
+      const msg =
+        e.response?.data && typeof e.response.data === 'object'
+          ? JSON.stringify(e.response.data)
+          : e.response?.data || 'Tente novamente.';
+      toast.error(`Erro ao salvar: ${msg}`);
     }
   };
 
@@ -141,10 +181,6 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
         patchData.especialidadeId = agendamento.especialidadeId;
       }
 
-      if (editFields.observacoes !== undefined) {
-        patchData.observacoes = editFields.observacoes;
-      }
-
       const alunosOriginais = agendamento.alunos?.map((a) => a.id) || [];
       const alunosAtuais = alunosSelecionados.map((a) => a.id);
 
@@ -190,6 +226,8 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
       agendamento?.alunos?.map((a) => ({
         id: a.id || 0,
         nome: a.nome,
+        observacao: a.observacao || '',
+        alunoComLimitacoesFisicas: a.alunoComLimitacoesFisicas ?? false,
       })) || [],
     );
     setSearchAluno('');
@@ -204,7 +242,10 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
     (agendamento.alunos?.length || 0) !== alunosSelecionados.length ||
     !agendamento.alunos?.every((a) => alunosSelecionados.find((s) => s.id === a.id));
 
-  const temMudancas = Object.keys(editFields).length > 0 || alunosMudaram;
+  const editFieldsWithoutObs = Object.keys(editFields).filter(
+    (k) => !k.startsWith('observacao_'),
+  );
+  const temMudancas = editFieldsWithoutObs.length > 0 || alunosMudaram;
 
   if (!isOpen || !agendamento) return null;
 
@@ -517,22 +558,126 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
               <div className="lista-alunos-label">Alunos na Aula ({alunosSelecionados.length})</div>
               {alunosSelecionados.length > 0 ? (
                 <div className="lista-alunos">
-                  {alunosSelecionados.map((aluno) => (
-                    <div key={aluno.id} className="aluno-item-wrapper">
-                      <AlunoItem nome={aluno.nome} />
-                      <button
-                        className="btn-remover-aluno"
-                        onClick={() => handleRemoverAluno(aluno.id)}
-                        title="Remover aluno"
+                  {alunosSelecionados.map((aluno) => {
+                    const observacaoAtual =
+                      observacoesAlunos[aluno.id] !== undefined
+                        ? observacoesAlunos[aluno.id]
+                        : aluno.observacao || '';
+                    const editando = editFields[`observacao_${aluno.id}`] !== undefined;
+                    const expandido = observacoesExpandidas[aluno.id] || false;
+
+                    return (
+                      <div
+                        key={aluno.id}
                         style={{
-                          color: modalColor,
-                          borderColor: modalColor,
+                          marginBottom: '0.75rem',
+                          padding: '0.75rem',
+                          border: '1px solid #e0e0e0',
+                          borderRadius: '8px',
                         }}
                       >
-                        <FiTrash2 size={14} />
-                      </button>
-                    </div>
-                  ))}
+                        <div className="aluno-item-wrapper" style={{ marginBottom: expandido ? '0.5rem' : 0 }}>
+                          <AlunoItem
+                            nome={aluno.nome}
+                            alunoComLimitacoesFisicas={aluno.alunoComLimitacoesFisicas}
+                          />
+                          <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                            <button
+                              className="icon-btn"
+                              onClick={() =>
+                                setObservacoesExpandidas((prev) => ({
+                                  ...prev,
+                                  [aluno.id]: !prev[aluno.id],
+                                }))
+                              }
+                              title={expandido ? 'Ocultar observação' : 'Ver observação'}
+                              style={{ color: modalColor }}
+                            >
+                              {expandido ? <FiEyeOff size={15} /> : <FiEye size={15} />}
+                            </button>
+                            <button
+                              className="btn-remover-aluno"
+                              onClick={() => handleRemoverAluno(aluno.id)}
+                              title="Remover aluno"
+                              style={{
+                                color: modalColor,
+                                borderColor: modalColor,
+                              }}
+                            >
+                              <FiTrash2 size={14} />
+                            </button>
+                          </div>
+                        </div>
+
+                        {expandido && (
+                          <div>
+                            {editando ? (
+                              <div>
+                                <textarea
+                                  className="info-edit-input"
+                                  value={editFields[`observacao_${aluno.id}`]}
+                                  onChange={(e) =>
+                                    setEditFields((f) => ({
+                                      ...f,
+                                      [`observacao_${aluno.id}`]: e.target.value,
+                                    }))
+                                  }
+                                  rows={3}
+                                  placeholder="Observação sobre este aluno nesta aula..."
+                                  style={{ width: '100%', borderColor: modalColor }}
+                                />
+                                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                                  <button
+                                    className="icon-btn"
+                                    onClick={() =>
+                                      setEditFields((f) => {
+                                        const next = { ...f };
+                                        delete next[`observacao_${aluno.id}`];
+                                        return next;
+                                      })
+                                    }
+                                    title="Cancelar"
+                                  >
+                                    <FiX size={15} />
+                                  </button>
+                                  <button
+                                    className="icon-btn"
+                                    onClick={() => handleSalvarObservacaoAluno(aluno.id)}
+                                    title="Salvar observação"
+                                    disabled={carregando}
+                                    style={{ color: modalColor }}
+                                  >
+                                    <FiSave size={15} />
+                                  </button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                                <span className="info-value" style={{ flex: 1 }}>
+                                  {observacaoAtual && observacaoAtual.trim() !== ''
+                                    ? observacaoAtual
+                                    : 'Sem observação.'}
+                                </span>
+                                <button
+                                  className="icon-btn"
+                                  onClick={() =>
+                                    setEditFields((f) => ({
+                                      ...f,
+                                      [`observacao_${aluno.id}`]: observacaoAtual || '',
+                                    }))
+                                  }
+                                  title="Editar observação"
+                                  style={{ color: modalColor }}
+                                >
+                                  <FiEdit2 size={15} />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               ) : (
                 <p style={{ textAlign: 'center', color: '#888', padding: '2rem' }}>
@@ -540,49 +685,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                 </p>
               )}
 
-              <div className="info-item" style={{ marginTop: '1.5rem' }}>
-                <span className="info-label">Observações sobre a aula:</span>
-                <div className="info-content">
-                  {editFields.observacoes !== undefined ? (
-                    <textarea
-                      className="info-edit-input"
-                      value={editFields.observacoes}
-                      onChange={(e) =>
-                        setEditFields((fields) => ({ ...fields, observacoes: e.target.value }))
-                      }
-                      rows={3}
-                      placeholder="Ex: Aluno com problemas de mobilidade no joelho direito..."
-                      style={{
-                        borderColor: modalColor,
-                        accentColor: modalColor,
-                      }}
-                    />
-                  ) : (
-                    <>
-                      <span className="info-value">
-                        {agendamento.observacoes && agendamento.observacoes.trim() !== ''
-                          ? agendamento.observacoes
-                          : 'Nenhuma observação registrada.'}
-                      </span>
-                      <button
-                        className="icon-btn"
-                        onClick={() =>
-                          setEditFields((fields) => ({
-                            ...fields,
-                            observacoes: agendamento.observacoes || '',
-                          }))
-                        }
-                        title="Editar Observações"
-                        style={{ color: modalColor }}
-                      >
-                        <FiEdit2 size={16} />
-                      </button>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {(alunosMudaram || editFields.observacoes !== undefined) && (
+              {(alunosMudaram) && (
                 <div className="edit-actions">
                   <button className="btn-cancel" onClick={handleCancel} disabled={carregando}>
                     Cancelar
