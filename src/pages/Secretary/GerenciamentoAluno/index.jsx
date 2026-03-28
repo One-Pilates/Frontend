@@ -20,31 +20,44 @@ export default function GerenciamentoAluno() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const basePath = user?.role === 'ADMINISTRADOR' ? '/admin' : '/secretaria';
-  const [alunos, setAlunos] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(0);
   const [statusFilter, setStatusFilter] = useState('todos');
-  const [filterByNome, setFilterByNome] = useState('');
+  const [nameFilter, setNameFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const alunosPerPage = 7;
+  const studentsPerPage = 10;
 
-  const fetchAlunos = async () => {
+  const fetchStudents = async (page = 1) => {
     try {
-      console.log('Fetching alunos...');
-      const response = await api.get('api/alunos');
-      const data = response.data;
-      console.log('Alunos fetched:', data);
-      setAlunos(data);
+      const pageIndex = Math.max(0, page - 1);
+      const params = {
+        page: pageIndex,
+        size: studentsPerPage,
+        sort: 'id,asc',
+      };
+
+      if (nameFilter.trim()) params.nome = nameFilter.trim();
+      if (statusFilter !== 'todos') params.status = statusFilter === 'ativo';
+
+      const response = await api.get('api/alunos', { params });
+      const data = response.data || {};
+
+      setStudents(data.alunos || []);
+      setTotalPages(data.totalPaginas || 1);
+      setTotalRecords(data.totalRegistros || (data.alunos ? data.alunos.length : 0));
     } catch (error) {
       console.error('Erro ao buscar alunos:', error);
     }
   };
 
   useEffect(() => {
-    fetchAlunos();
-  }, []);
+    fetchStudents(currentPage);
+  }, [currentPage, nameFilter, statusFilter]);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [filterByNome, statusFilter]);
+  }, [nameFilter, statusFilter]);
 
   const calculateAge = (birthDate) => {
     const today = new Date();
@@ -57,7 +70,7 @@ export default function GerenciamentoAluno() {
     return age;
   };
 
-  const deleteAluno = async (alunoId) => {
+  const deleteStudent = async (alunoId) => {
     Swal.fire({
       title: 'Tem certeza?',
       text: 'Essa ação não poderá ser desfeita!',
@@ -71,7 +84,9 @@ export default function GerenciamentoAluno() {
       if (result.isConfirmed) {
         try {
           await api.delete(`api/alunos/${alunoId}`);
-          setAlunos(alunos.filter((aluno) => aluno.id !== alunoId));
+          const nextPage = students.length === 1 && currentPage > 1 ? currentPage - 1 : currentPage;
+          setCurrentPage(nextPage);
+          await fetchStudents(nextPage);
           toast.success('Aluno deletado com sucesso.');
         } catch (error) {
           console.error('Erro ao deletar aluno:', error);
@@ -81,21 +96,8 @@ export default function GerenciamentoAluno() {
     });
   };
 
-  const filteredStudents = alunos.filter((aluno) => {
-    const matchesSearch = aluno.nome.toLowerCase().includes(filterByNome.toLowerCase());
-
-    const matchesStatus =
-      statusFilter === 'todos' ||
-      (statusFilter === 'ativo' && aluno.status) ||
-      (statusFilter === 'inativo' && !aluno.status);
-
-    return matchesSearch && matchesStatus;
-  });
-
-  const totalPages = Math.ceil(filteredStudents.length / alunosPerPage);
-  const startIndex = (currentPage - 1) * alunosPerPage;
-  const endIndex = startIndex + alunosPerPage;
-  const currentStudents = filteredStudents.slice(startIndex, endIndex);
+  const startIndex = (currentPage - 1) * studentsPerPage;
+  const endIndex = Math.min(startIndex + students.length, totalRecords);
 
   return (
     <>
@@ -118,7 +120,7 @@ export default function GerenciamentoAluno() {
             />
             <input
               type="text"
-              onChange={(e) => setFilterByNome(e.target.value)}
+              onChange={(e) => setNameFilter(e.target.value)}
               placeholder="Buscar por nome"
               className="w-full pl-11 pr-4 py-2.5 rounded-xl focus:outline-none transition-all"
               style={{
@@ -156,7 +158,7 @@ export default function GerenciamentoAluno() {
 
           <div className="flex items-center gap-3">
             <button
-              onClick={() => abrirModalDownload(filteredStudents, calculateAge)}
+              onClick={() => abrirModalDownload(students, calculateAge)}
               className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 text-white rounded-lg transition focus:outline-none focus:ring-2 flex-1 sm:flex-none"
               style={{
                 backgroundColor: 'var(--laranja-principal)',
@@ -255,8 +257,8 @@ export default function GerenciamentoAluno() {
               </thead>
 
               <tbody>
-                {currentStudents && currentStudents.length > 0 ? (
-                  currentStudents.map((aluno, index) => (
+                {students && students.length > 0 ? (
+                  students.map((aluno, index) => (
                     <tr
                       key={aluno.id}
                       className="transition-colors duration-150"
@@ -325,7 +327,7 @@ export default function GerenciamentoAluno() {
                             <FiEdit2 size={16} className="sm:w-4.5 sm:h-4.5" />
                           </button>
                           <button
-                            onClick={() => deleteAluno(aluno.id)}
+                            onClick={() => deleteStudent(aluno.id)}
                             className="p-1.5 sm:p-2 text-red-600 hover:bg-red-100 rounded-lg transition"
                             title="Excluir aluno"
                           >
@@ -350,7 +352,7 @@ export default function GerenciamentoAluno() {
             </table>
           </div>
 
-          {filteredStudents && filteredStudents.length > 0 && (
+          {students && students.length > 0 && (
             <div
               className="px-3 sm:px-6 py-3 sm:py-4 border-t flex flex-col sm:flex-row items-center justify-between gap-3"
               style={{
@@ -362,8 +364,7 @@ export default function GerenciamentoAluno() {
                 className="text-xs sm:text-sm order-2 sm:order-1 font-medium"
                 style={{ color: 'var(--text-cinza)' }}
               >
-                Mostrando {startIndex + 1} a {Math.min(endIndex, filteredStudents.length)} de{' '}
-                {filteredStudents.length} alunos
+                Mostrando {startIndex + 1} a {endIndex} de {totalRecords} alunos
               </div>
 
               <div className="flex items-center gap-1 sm:gap-2 order-1 sm:order-2">
@@ -445,7 +446,7 @@ export default function GerenciamentoAluno() {
                 <button
                   onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
-                  className="p-1.5 sm:p-2 rounded-lg transition disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="p-1.5 sm:p-2 rounded-lg transition disabledy:opacity-40 disabled:cursor-not-allowed"
                   style={{
                     backgroundColor: 'var(--branco)',
                     color: currentPage === totalPages ? 'var(--text-cinza)' : 'var(--text-escuro)',
