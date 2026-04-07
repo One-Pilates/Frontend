@@ -6,7 +6,7 @@ import AgendamentoModal from './Components/AulaModal';
 import DefinirAusenciaModal from './Components/DefinirAusenciaModal';
 import AusenciaModal from './Components/AusenciaModal';
 import { toast } from 'sonner';
-import './Styles/calendar.scss';
+import './Styles/Calendar.scss';
 
 const Calendar = () => {
   const [selectedAgendamento, setSelectedAgendamento] = useState(null);
