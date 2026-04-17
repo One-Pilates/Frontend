@@ -65,7 +65,7 @@ export default function NovaSenha() {
               : '/secretaria/dashboard';
         navigate(route);
       } else {
-        navigate('/login');
+        navigate('/');
       }
     } catch (error) {
       console.error('Erro ao redefinir senha:', error);

@@ -40,7 +40,7 @@ export default function GerenciamentoAluno() {
       if (nameFilter.trim()) params.nome = nameFilter.trim();
       if (statusFilter !== 'todos') params.status = statusFilter === 'ativo';
 
-      const response = await api.get('api/alunos', { params });
+      const response = await api.get('api/alunos/paginacao', { params });
       const data = response.data || {};
 
       setStudents(data.alunos || []);

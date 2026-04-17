@@ -38,7 +38,7 @@ export default function GerenciamentoProfessor() {
 
       try {
         console.log('Buscando professores...');
-        const response = await api.get('api/professores', { params });
+        const response = await api.get('api/professores/paginacao', { params });
         const data = response.data;
         const listaProfessores = Array.isArray(data)
           ? data
