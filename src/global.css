@@ -133,6 +133,15 @@ body,
   }
 }
 
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 /* Classes de animação */
 .animate-slideUp {
   animation: modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);

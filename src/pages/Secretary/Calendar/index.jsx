@@ -66,10 +66,16 @@ export default function CalendarSecretary() {
       setErrorMessage('');
       const [respSalas, respProfs] = await Promise.all([
         api.get('/api/salas').catch(() => ({ data: [] })),
-        api.get('/api/professores').catch(() => ({ data: [] })),
+        api.get('api/professores/paginacao?size=1000').catch(() => ({ data: [] })),
       ]);
       setSalas(Array.isArray(respSalas.data) ? respSalas.data : []);
-      setProfessores(Array.isArray(respProfs.data) ? respProfs.data : []);
+      const profData = respProfs.data;
+      const listProfs = Array.isArray(profData)
+        ? profData
+        : Array.isArray(profData?.professores)
+          ? profData.professores
+          : [];
+      setProfessores(listProfs);
     } catch (err) {
       console.error('Erro ao carregar filtros:', err);
       setErrorMessage('Erro ao carregar filtros. Tente novamente.');

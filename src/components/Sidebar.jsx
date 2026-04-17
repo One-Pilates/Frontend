@@ -42,7 +42,7 @@ export default function SidebarTeacher({ navAberta, setNavAberta }) {
           navAberta ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         } ${navAberta ? 'w-60' : 'lg:w-20 w-60'} 
         fixed lg:static inset-y-0 left-0 z-50 lg:z-auto
-        text-white flex flex-col justify-between transition-all duration-300`}
+        text-white flex flex-col justify-between transition-all duration-300 select-none`}
         style={{
           backgroundColor: 'var(--laranja-principal)',
         }}
@@ -95,7 +95,7 @@ export default function SidebarTeacher({ navAberta, setNavAberta }) {
         <div className="mb-4 md:mb-6">
           <div
             onClick={logout}
-            className="flex items-center gap-4 px-4 py-3 cursor-pointer transition-all rounded-lg mx-2 my-2 hover:bg-orange-600 active:bg-orange-700 active:scale-95"
+            className="flex items-center gap-4 px-4 py-3 cursor-pointer transition-all rounded-lg mx-2 my-2 hover:bg-orange-600 active:bg-orange-700 active:scale-95 select-none"
           >
             <FaSignOutAlt size={20} className="w-5 h-5 md:w-5.5 md:h-5.5" />
             {navAberta && <span className="font-medium text-sm md:text-base">Sair</span>}
@@ -145,7 +145,7 @@ export function SidebarSecretary({ navAberta, setNavAberta }) {
           navAberta ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         } ${navAberta ? 'w-60' : 'lg:w-20 w-60'} 
         fixed lg:static inset-y-0 left-0 z-50 lg:z-auto
-        text-white flex flex-col justify-between transition-all duration-300`}
+        text-white flex flex-col justify-between transition-all duration-300 select-none`}
         style={{
           backgroundColor: 'var(--laranja-principal)',
         }}
@@ -220,7 +220,7 @@ export function SidebarSecretary({ navAberta, setNavAberta }) {
         <div className="mb-4 md:mb-6">
           <div
             onClick={logout}
-            className="flex items-center gap-4 px-4 py-3 cursor-pointer transition-all rounded-lg mx-2 my-2 hover:bg-orange-600 active:bg-orange-700 active:scale-95"
+            className="flex items-center gap-4 px-4 py-3 cursor-pointer transition-all rounded-lg mx-2 my-2 hover:bg-orange-600 active:bg-orange-700 active:scale-95 select-none"
           >
             <FaSignOutAlt size={20} className="w-5 h-5 md:w-5.5 md:h-5.5" />
             {navAberta && <span className="font-medium text-sm md:text-base">Sair</span>}

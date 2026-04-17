@@ -54,7 +54,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
       // Buscamos tudo de uma vez para garantir que os dados estejam lá quando o usuário for editar
       Promise.all([
         api.get('/api/alunos').catch(() => ({ data: [] })),
-        api.get('/api/professores').catch(() => ({ data: [] })),
+        api.get('api/professores/paginacao?size=1000').catch(() => ({ data: [] })),
         api.get('/api/salas').catch(() => ({ data: [] })),
         api.get('/api/especialidades').catch(() => ({ data: [] }))
       ]).then(([alunoRes, profRes, salaRes, espRes]) => {

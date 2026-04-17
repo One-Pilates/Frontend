@@ -61,6 +61,7 @@ export default function RegisterAula() {
     if (Array.isArray(payload)) return payload;
     if (Array.isArray(payload?.content)) return payload.content;
     if (Array.isArray(payload?.alunos)) return payload.alunos;
+    if (Array.isArray(payload?.professores)) return payload.professores;
     if (Array.isArray(payload?.data)) return payload.data;
     if (Array.isArray(payload?.results)) return payload.results;
     return [];
@@ -70,7 +71,7 @@ export default function RegisterAula() {
     const carregarDados = async () => {
       try {
         const [profRes, salaRes, espRes, alunoRes] = await Promise.all([
-          api.get('/api/professores'),
+          api.get('api/professores/paginacao?size=1000'),
           api.get('/api/salas'),
           api.get('/api/especialidades'),
           api.get('/api/alunos'),
