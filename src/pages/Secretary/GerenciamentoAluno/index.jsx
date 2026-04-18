@@ -12,7 +12,7 @@ import {
   FiTrash2,
   FiDownload,
   FiEdit2,
-  FiChevronDown
+  FiChevronDown,
 } from 'react-icons/fi';
 import Botao from '../../../components/Button';
 import { abrirModalDownload } from './components/Export';
@@ -103,7 +103,9 @@ export default function GerenciamentoAluno() {
   return (
     <div className="flex flex-col gap-6 py-6 px-4 md:px-8 lg:px-16 h-full mx-auto ml-auto bg-slate-50/20">
       <div className="flex flex-col sm:flex-row w-full justify-between items-start sm:items-center gap-4">
-        <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Gerenciamento de Aluno</h1>
+        <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+          Gerenciamento de Aluno
+        </h1>
         <button
           onClick={() => navigate(`${basePath}/aluno/cadastrar`)}
           className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold shadow-md shadow-blue-100 transition-all hover:scale-[1.02] active:scale-[0.98]"
@@ -167,21 +169,21 @@ export default function GerenciamentoAluno() {
         </div>
       </div>
 
-      <div
-        className="rounded-[2rem] shadow-sm flex flex-col overflow-hidden border border-slate-100 bg-white"
-      >
+      <div className="rounded-[2rem] shadow-sm flex flex-col overflow-hidden border border-slate-100 bg-white">
         <div className="overflow-x-auto flex-1">
           <table className="w-full table-auto min-w-160">
-            <thead
-              className="text-xs font-bold uppercase tracking-widest bg-slate-50/50 border-b border-slate-100"
-            >
+            <thead className="text-xs font-bold uppercase tracking-widest bg-slate-50/50 border-b border-slate-100">
               <tr>
                 <th className="px-6 py-5 text-left text-slate-500">Nome do Aluno</th>
                 <th className="hidden lg:table-cell px-6 py-5 text-left text-slate-500">Email</th>
                 <th className="hidden md:table-cell px-6 py-5 text-left text-slate-500">CPF</th>
-                <th className="hidden sm:table-cell px-6 py-5 text-left text-slate-500 text-center">Idade</th>
+                <th className="hidden sm:table-cell px-6 py-5 text-left text-slate-500 text-center">
+                  Idade
+                </th>
                 <th className="px-6 py-5 text-left text-slate-500">Status</th>
-                <th className="hidden xl:table-cell px-6 py-5 text-left text-slate-500">Limitações</th>
+                <th className="hidden xl:table-cell px-6 py-5 text-left text-slate-500">
+                  Limitações
+                </th>
                 <th className="px-6 py-5 text-center text-slate-500">Ações</th>
               </tr>
             </thead>
@@ -217,7 +219,9 @@ export default function GerenciamentoAluno() {
                     <td className="px-6 py-4">
                       <span
                         className={`inline-flex px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                          aluno.status ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 'bg-rose-50 text-rose-700 border border-rose-100'
+                          aluno.status
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                            : 'bg-rose-50 text-rose-700 border border-rose-100'
                         }`}
                       >
                         {aluno.status ? 'Ativo' : 'Inativo'}
@@ -271,12 +275,8 @@ export default function GerenciamentoAluno() {
         </div>
 
         {students && students.length > 0 && (
-          <div
-            className="px-6 py-5 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white"
-          >
-            <div
-              className="text-xs font-bold text-slate-400 uppercase tracking-widest order-2 sm:order-1"
-            >
+          <div className="px-6 py-5 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white">
+            <div className="text-xs font-bold text-slate-400 uppercase tracking-widest order-2 sm:order-1">
               Mostrando {startIndex + 1} a {endIndex} de {totalRecords} alunos
             </div>
 
@@ -299,8 +299,8 @@ export default function GerenciamentoAluno() {
                       key={p}
                       onClick={() => setCurrentPage(p)}
                       className={`w-10 h-10 rounded-xl text-sm font-bold transition-all border ${
-                        currentPage === p 
-                          ? 'bg-orange-500 border-orange-500 text-white shadow-md shadow-orange-100' 
+                        currentPage === p
+                          ? 'bg-orange-500 border-orange-500 text-white shadow-md shadow-orange-100'
                           : 'bg-white border-slate-100 text-slate-500 hover:border-slate-300'
                       }`}
                     >
@@ -311,7 +311,11 @@ export default function GerenciamentoAluno() {
                   pages.push(renderPage(1));
 
                   if (currentPage > 3) {
-                    pages.push(<span key="dots1" className="px-1 text-slate-300">…</span>);
+                    pages.push(
+                      <span key="dots1" className="px-1 text-slate-300">
+                        …
+                      </span>,
+                    );
                   }
 
                   const start = Math.max(2, currentPage - 1);
@@ -322,7 +326,11 @@ export default function GerenciamentoAluno() {
                   }
 
                   if (currentPage < total - 2) {
-                    pages.push(<span key="dots2" className="px-1 text-slate-300">…</span>);
+                    pages.push(
+                      <span key="dots2" className="px-1 text-slate-300">
+                        …
+                      </span>,
+                    );
                   }
 
                   if (total > 1) pages.push(renderPage(total));
