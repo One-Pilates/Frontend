@@ -25,13 +25,18 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
   const extrairLista = (payload) => {
     if (!payload) return [];
     if (Array.isArray(payload)) return payload;
-    if (Array.isArray(payload.content)) return payload.content;
-    if (Array.isArray(payload.professores)) return payload.professores;
-    if (Array.isArray(payload.salas)) return payload.salas;
-    if (Array.isArray(payload.especialidades)) return payload.especialidades;
-    if (Array.isArray(payload.alunos)) return payload.alunos;
-    if (Array.isArray(payload.data)) return payload.data;
-    if (Array.isArray(payload.results)) return payload.results;
+    
+    // Tenta buscar em 'content', 'professores', 'data', etc.
+    const data = payload.data || payload;
+    if (Array.isArray(data)) return data;
+    
+    if (data.content && Array.isArray(data.content)) return data.content;
+    if (data.professores && Array.isArray(data.professores)) return data.professores;
+    if (data.alunos && Array.isArray(data.alunos)) return data.alunos;
+    if (data.salas && Array.isArray(data.salas)) return data.salas;
+    if (data.especialidades && Array.isArray(data.especialidades)) return data.especialidades;
+    if (data.results && Array.isArray(data.results)) return data.results;
+    
     return [];
   };
 
@@ -54,7 +59,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
       // Buscamos tudo de uma vez para garantir que os dados estejam lá quando o usuário for editar
       Promise.all([
         api.get('/api/alunos').catch(() => ({ data: [] })),
-        api.get('api/professores/paginacao?size=1000').catch(() => ({ data: [] })),
+        api.get('/api/professores/paginacao?size=1000').catch(() => ({ data: [] })),
         api.get('/api/salas').catch(() => ({ data: [] })),
         api.get('/api/especialidades').catch(() => ({ data: [] }))
       ]).then(([alunoRes, profRes, salaRes, espRes]) => {
@@ -63,10 +68,11 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
         const alunNorm = alunRaw.map(normalizarAluno).filter(a => a.id && a.nome);
         setTodosAlunos(alunNorm);
 
-        // Processar Professores (com normalização de nome)
+        // Processar Professores (com normalização de nome e ID)
         const profRaw = extrairLista(profRes.data);
         setProfessores(profRaw.map(p => ({
           ...p,
+          id: p.id || p.idProfessor || p.professorId,
           nome: p.nome || p.nomeCompleto || p.professorNome || 'Professor sem nome'
         })));
 
@@ -182,15 +188,14 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
       const patchData = {};
       
       if (editFields.horario !== undefined) {
-        const dataAtual = new Date(agendamento.dataHora);
-        const [horas, minutos] = editFields.horario.split(':');
-        dataAtual.setHours(parseInt(horas), parseInt(minutos));
-        patchData.dataHora = dataAtual.toISOString();
+        // Pegamos apenas a parte da data (YYYY-MM-DD) e concatenamos com o novo horário local
+        const dataParte = agendamento.dataHora.substring(0, 10);
+        patchData.dataHora = `${dataParte}T${editFields.horario}:00`;
       } else {
         patchData.dataHora = agendamento.dataHora;
       }
 
-      patchData.professorId = editFields.professorId !== undefined ? Number(editFields.professorId) : agendamento.professorId;
+      patchData.professorId = editFields.professorId !== undefined ? Number(editFields.professorId) : (agendamento.professorId || agendamento.idProfessor);
       patchData.salaId = editFields.salaId !== undefined ? Number(editFields.salaId) : agendamento.salaId;
       patchData.especialidadeId = editFields.especialidadeId !== undefined ? Number(editFields.especialidadeId) : agendamento.especialidadeId;
       patchData.alunoIds = alunosSelecionados.map((a) => a.id);
@@ -200,7 +205,11 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
         await api.patch(`/api/agendamentos/${agendamento.id}`, patchData);
         setEditFields({});
         toast.success('Aula atualizada com sucesso!');
-        window.location.reload();
+        
+        // Pequeno delay para o usuário ver o toast antes de recarregar
+        setTimeout(() => {
+          window.location.reload();
+        }, 1200);
       } catch (e) {
         setCarregando(false);
         console.error('Erro ao salvar:', e.response?.data);
@@ -299,7 +308,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                         <button 
                           className="icon-btn" 
                           style={{ color: modalColor }}
-                          onClick={() => setEditFields({ ...editFields, professorId: agendamento.professorId })}
+                          onClick={() => setEditFields({ ...editFields, professorId: agendamento.professorId || agendamento.idProfessor || "" })}
                         >
                           <FiEdit2 size={18} />
                         </button>
@@ -355,7 +364,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                         <button 
                           className="icon-btn" 
                           style={{ color: modalColor }}
-                          onClick={() => setEditFields({ ...editFields, salaId: agendamento.salaId })}
+                          onClick={() => setEditFields({ ...editFields, salaId: agendamento.salaId || "" })}
                         >
                           <FiEdit2 size={18} />
                         </button>
@@ -384,7 +393,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                         <button 
                           className="icon-btn" 
                           style={{ color: modalColor }}
-                          onClick={() => setEditFields({ ...editFields, especialidadeId: agendamento.especialidadeId })}
+                          onClick={() => setEditFields({ ...editFields, especialidadeId: agendamento.especialidadeId || "" })}
                         >
                           <FiEdit2 size={18} />
                         </button>
@@ -426,7 +435,9 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                 >
                   <option value="" disabled>Selecionar aluno...</option>
                   {alunosDisponiveis.map(a => (
-                    <option key={a.id} value={a.id}>{a.nome}</option>
+                    <option key={a.id} value={a.id}>
+                      {a.nome} {a.alunoComLimitacoesFisicas ? '♿ (PCD)' : ''}
+                    </option>
                   ))}
                 </select>
               </div>

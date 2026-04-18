@@ -66,7 +66,7 @@ export default function CalendarSecretary() {
       setErrorMessage('');
       const [respSalas, respProfs] = await Promise.all([
         api.get('/api/salas').catch(() => ({ data: [] })),
-        api.get('api/professores/paginacao?size=1000').catch(() => ({ data: [] })),
+        api.get('/api/professores/paginacao?size=1000').catch(() => ({ data: [] })),
       ]);
       setSalas(Array.isArray(respSalas.data) ? respSalas.data : []);
       const profData = respProfs.data;
