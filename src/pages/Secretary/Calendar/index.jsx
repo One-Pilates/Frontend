@@ -17,11 +17,19 @@ export default function CalendarSecretary() {
   const location = useLocation();
   const { user } = useAuth();
   const basePath = user?.role === 'ADMINISTRADOR' ? '/admin' : '/secretaria';
+  const initialIdSala = location.state?.idSala;
+  const initialIdProfessor = location.state?.idProfessor;
 
   const [salas, setSalas] = useState([]);
   const [professores, setProfessores] = useState([]);
-  const [idSala, setIdSala] = useState('');
-  const [idProfessor, setIdProfessor] = useState('0');
+  const [idSala, setIdSala] = useState(
+    initialIdSala === undefined || initialIdSala === null ? '' : String(initialIdSala),
+  );
+  const [idProfessor, setIdProfessor] = useState(
+    initialIdProfessor === undefined || initialIdProfessor === null
+      ? '0'
+      : String(initialIdProfessor),
+  );
   const [agendamentos, setAgendamentos] = useState([]);
   const [ausencias, setAusencias] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -66,7 +74,7 @@ export default function CalendarSecretary() {
       setErrorMessage('');
       const [respSalas, respProfs] = await Promise.all([
         api.get('/api/salas').catch(() => ({ data: [] })),
-        api.get('/api/professores/paginacao?size=1000').catch(() => ({ data: [] })),
+        api.get('/api/professores').catch(() => ({ data: [] })),
       ]);
       setSalas(Array.isArray(respSalas.data) ? respSalas.data : []);
       const profData = respProfs.data;
@@ -74,7 +82,9 @@ export default function CalendarSecretary() {
         ? profData
         : Array.isArray(profData?.professores)
           ? profData.professores
-          : [];
+          : Array.isArray(profData?.content)
+            ? profData.content
+            : [];
       setProfessores(listProfs);
     } catch (err) {
       console.error('Erro ao carregar filtros:', err);
@@ -313,7 +323,6 @@ export default function CalendarSecretary() {
           await fetchFiltros();
           setTimeout(() => {
             setCarregouInicial(true);
-            fetchAgendamentosFiltro();
           }, 200);
         };
         document.body.appendChild(script);
@@ -321,7 +330,6 @@ export default function CalendarSecretary() {
         await fetchFiltros();
         setTimeout(() => {
           setCarregouInicial(true);
-          fetchAgendamentosFiltro();
         }, 200);
       }
     };

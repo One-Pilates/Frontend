@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  FiEdit2, FiX, FiTrash2, FiEye, FiEyeOff, FiSave, 
-  FiClock, FiUser, FiMapPin, FiBookOpen, FiUserPlus, FiHash
+import {
+  FiEdit2,
+  FiX,
+  FiTrash2,
+  FiEye,
+  FiEyeOff,
+  FiSave,
+  FiClock,
+  FiUser,
+  FiMapPin,
+  FiBookOpen,
+  FiUserPlus,
+  FiHash,
 } from 'react-icons/fi';
 import { FaWheelchair } from 'react-icons/fa';
 import api from '../../../../services/api';
@@ -25,18 +35,18 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
   const extrairLista = (payload) => {
     if (!payload) return [];
     if (Array.isArray(payload)) return payload;
-    
+
     // Tenta buscar em 'content', 'professores', 'data', etc.
     const data = payload.data || payload;
     if (Array.isArray(data)) return data;
-    
+
     if (data.content && Array.isArray(data.content)) return data.content;
     if (data.professores && Array.isArray(data.professores)) return data.professores;
     if (data.alunos && Array.isArray(data.alunos)) return data.alunos;
     if (data.salas && Array.isArray(data.salas)) return data.salas;
     if (data.especialidades && Array.isArray(data.especialidades)) return data.especialidades;
     if (data.results && Array.isArray(data.results)) return data.results;
-    
+
     return [];
   };
 
@@ -55,36 +65,41 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
   useEffect(() => {
     if (isOpen) {
       setCarregando(true);
-      
+
       // Buscamos tudo de uma vez para garantir que os dados estejam lá quando o usuário for editar
       Promise.all([
         api.get('/api/alunos').catch(() => ({ data: [] })),
-        api.get('/api/professores/paginacao?size=1000').catch(() => ({ data: [] })),
+        api.get('/api/professores').catch(() => ({ data: [] })),
         api.get('/api/salas').catch(() => ({ data: [] })),
-        api.get('/api/especialidades').catch(() => ({ data: [] }))
-      ]).then(([alunoRes, profRes, salaRes, espRes]) => {
-        // Processar Alunos
-        const alunRaw = extrairLista(alunoRes.data);
-        const alunNorm = alunRaw.map(normalizarAluno).filter(a => a.id && a.nome);
-        setTodosAlunos(alunNorm);
+        api.get('/api/especialidades').catch(() => ({ data: [] })),
+      ])
+        .then(([alunoRes, profRes, salaRes, espRes]) => {
+          // Processar Alunos
+          const alunRaw = extrairLista(alunoRes.data);
+          const alunNorm = alunRaw.map(normalizarAluno).filter((a) => a.id && a.nome);
+          setTodosAlunos(alunNorm);
 
-        // Processar Professores (com normalização de nome e ID)
-        const profRaw = extrairLista(profRes.data);
-        setProfessores(profRaw.map(p => ({
-          ...p,
-          id: p.id || p.idProfessor || p.professorId,
-          nome: p.nome || p.nomeCompleto || p.professorNome || 'Professor sem nome'
-        })));
+          // Processar Professores (com normalização de nome e ID)
+          const profRaw = extrairLista(profRes.data);
+          setProfessores(
+            profRaw.map((p) => ({
+              ...p,
+              id: p.id || p.idProfessor || p.professorId,
+              nome: p.nome || p.nomeCompleto || p.professorNome || 'Professor sem nome',
+            })),
+          );
 
-        // Processar Salas e Especialidades
-        setSalas(extrairLista(salaRes.data));
-        setEspecialidades(extrairLista(espRes.data));
-      }).catch(err => {
-        console.error('Erro ao carregar dados do modal:', err);
-        toast.error('Erro ao carregar dados. Algumas funções podem estar indisponíveis.');
-      }).finally(() => {
-        setCarregando(false);
-      });
+          // Processar Salas e Especialidades
+          setSalas(extrairLista(salaRes.data));
+          setEspecialidades(extrairLista(espRes.data));
+        })
+        .catch((err) => {
+          console.error('Erro ao carregar dados do modal:', err);
+          toast.error('Erro ao carregar dados. Algumas funções podem estar indisponíveis.');
+        })
+        .finally(() => {
+          setCarregando(false);
+        });
     }
   }, [isOpen]);
 
@@ -163,7 +178,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
       });
       setCarregando(false);
       toast.success('Observação salva!');
-    } catch (e) {
+    } catch {
       setCarregando(false);
       toast.error('Erro ao salvar observação');
     }
@@ -186,7 +201,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
 
     if (result.isConfirmed) {
       const patchData = {};
-      
+
       if (editFields.horario !== undefined) {
         // Pegamos apenas a parte da data (YYYY-MM-DD) e concatenamos com o novo horário local
         const dataParte = agendamento.dataHora.substring(0, 10);
@@ -195,9 +210,16 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
         patchData.dataHora = agendamento.dataHora;
       }
 
-      patchData.professorId = editFields.professorId !== undefined ? Number(editFields.professorId) : (agendamento.professorId || agendamento.idProfessor);
-      patchData.salaId = editFields.salaId !== undefined ? Number(editFields.salaId) : agendamento.salaId;
-      patchData.especialidadeId = editFields.especialidadeId !== undefined ? Number(editFields.especialidadeId) : agendamento.especialidadeId;
+      patchData.professorId =
+        editFields.professorId !== undefined
+          ? Number(editFields.professorId)
+          : agendamento.professorId || agendamento.idProfessor;
+      patchData.salaId =
+        editFields.salaId !== undefined ? Number(editFields.salaId) : agendamento.salaId;
+      patchData.especialidadeId =
+        editFields.especialidadeId !== undefined
+          ? Number(editFields.especialidadeId)
+          : agendamento.especialidadeId;
       patchData.alunoIds = alunosSelecionados.map((a) => a.id);
 
       try {
@@ -205,7 +227,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
         await api.patch(`/api/agendamentos/${agendamento.id}`, patchData);
         setEditFields({});
         toast.success('Aula atualizada com sucesso!');
-        
+
         // Pequeno delay para o usuário ver o toast antes de recarregar
         setTimeout(() => {
           window.location.reload();
@@ -213,7 +235,9 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
       } catch (e) {
         setCarregando(false);
         console.error('Erro ao salvar:', e.response?.data);
-        toast.error(e.response?.data?.message || e.response?.data?.erro || 'Erro ao salvar alterações');
+        toast.error(
+          e.response?.data?.message || e.response?.data?.erro || 'Erro ao salvar alterações',
+        );
       }
     }
   };
@@ -290,25 +314,40 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
               <div className="info-grid">
                 {/* Professor */}
                 <div className="info-item">
-                  <span className="info-label"><FiUser size={14} /> Professor</span>
+                  <span className="info-label">
+                    <FiUser size={14} /> Professor
+                  </span>
                   <div className="info-content">
                     {editFields.professorId !== undefined ? (
                       <select
                         className="info-edit-input"
                         value={editFields.professorId}
-                        onChange={(e) => setEditFields({ ...editFields, professorId: e.target.value })}
+                        onChange={(e) =>
+                          setEditFields({ ...editFields, professorId: e.target.value })
+                        }
                         style={{ borderColor: modalColor }}
                       >
                         <option value="">Selecione</option>
-                        {professores.map((p) => <option key={p.id} value={p.id}>{p.nome}</option>)}
+                        {professores.map((p) => (
+                          <option key={p.id} value={p.id}>
+                            {p.nome}
+                          </option>
+                        ))}
                       </select>
                     ) : (
                       <>
-                        <span className="info-value">{agendamento.professorNome || agendamento.professor || 'Não informado'}</span>
-                        <button 
-                          className="icon-btn" 
+                        <span className="info-value">
+                          {agendamento.professorNome || agendamento.professor || 'Não informado'}
+                        </span>
+                        <button
+                          className="icon-btn"
                           style={{ color: modalColor }}
-                          onClick={() => setEditFields({ ...editFields, professorId: agendamento.professorId || agendamento.idProfessor || "" })}
+                          onClick={() =>
+                            setEditFields({
+                              ...editFields,
+                              professorId: agendamento.professorId || agendamento.idProfessor || '',
+                            })
+                          }
                         >
                           <FiEdit2 size={18} />
                         </button>
@@ -319,7 +358,9 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
 
                 {/* Horário */}
                 <div className="info-item">
-                  <span className="info-label"><FiClock size={14} /> Horário</span>
+                  <span className="info-label">
+                    <FiClock size={14} /> Horário
+                  </span>
                   <div className="info-content">
                     {editFields.horario !== undefined ? (
                       <input
@@ -332,10 +373,15 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                     ) : (
                       <>
                         <span className="info-value">{formatTime(agendamento.dataHora)}h</span>
-                        <button 
-                          className="icon-btn" 
+                        <button
+                          className="icon-btn"
                           style={{ color: modalColor }}
-                          onClick={() => setEditFields({ ...editFields, horario: agendamento.dataHora?.substring(11, 16) || '' })}
+                          onClick={() =>
+                            setEditFields({
+                              ...editFields,
+                              horario: agendamento.dataHora?.substring(11, 16) || '',
+                            })
+                          }
                         >
                           <FiEdit2 size={18} />
                         </button>
@@ -346,7 +392,9 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
 
                 {/* Sala */}
                 <div className="info-item">
-                  <span className="info-label"><FiMapPin size={14} /> Sala</span>
+                  <span className="info-label">
+                    <FiMapPin size={14} /> Sala
+                  </span>
                   <div className="info-content">
                     {editFields.salaId !== undefined ? (
                       <select
@@ -356,15 +404,23 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                         style={{ borderColor: modalColor }}
                       >
                         <option value="">Selecione</option>
-                        {salas.map((s) => <option key={s.id} value={s.id}>{s.nome}</option>)}
+                        {salas.map((s) => (
+                          <option key={s.id} value={s.id}>
+                            {s.nome}
+                          </option>
+                        ))}
                       </select>
                     ) : (
                       <>
-                        <span className="info-value">{agendamento.salaNome || agendamento.sala || 'Não informada'}</span>
-                        <button 
-                          className="icon-btn" 
+                        <span className="info-value">
+                          {agendamento.salaNome || agendamento.sala || 'Não informada'}
+                        </span>
+                        <button
+                          className="icon-btn"
                           style={{ color: modalColor }}
-                          onClick={() => setEditFields({ ...editFields, salaId: agendamento.salaId || "" })}
+                          onClick={() =>
+                            setEditFields({ ...editFields, salaId: agendamento.salaId || '' })
+                          }
                         >
                           <FiEdit2 size={18} />
                         </button>
@@ -375,25 +431,38 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
 
                 {/* Especialidade */}
                 <div className="info-item">
-                  <span className="info-label"><FiHash size={14} /> Especialidade</span>
+                  <span className="info-label">
+                    <FiHash size={14} /> Especialidade
+                  </span>
                   <div className="info-content">
                     {editFields.especialidadeId !== undefined ? (
                       <select
                         className="info-edit-input"
                         value={editFields.especialidadeId}
-                        onChange={(e) => setEditFields({ ...editFields, especialidadeId: e.target.value })}
+                        onChange={(e) =>
+                          setEditFields({ ...editFields, especialidadeId: e.target.value })
+                        }
                         style={{ borderColor: modalColor }}
                       >
                         <option value="">Selecione</option>
-                        {especialidades.map((e) => <option key={e.id} value={e.id}>{e.nome}</option>)}
+                        {especialidades.map((e) => (
+                          <option key={e.id} value={e.id}>
+                            {e.nome}
+                          </option>
+                        ))}
                       </select>
                     ) : (
                       <>
                         <span className="info-value">{agendamento.especialidade}</span>
-                        <button 
-                          className="icon-btn" 
+                        <button
+                          className="icon-btn"
                           style={{ color: modalColor }}
-                          onClick={() => setEditFields({ ...editFields, especialidadeId: agendamento.especialidadeId || "" })}
+                          onClick={() =>
+                            setEditFields({
+                              ...editFields,
+                              especialidadeId: agendamento.especialidadeId || '',
+                            })
+                          }
                         >
                           <FiEdit2 size={18} />
                         </button>
@@ -405,9 +474,11 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
 
               {temMudancas && (
                 <div className="edit-actions">
-                  <button className="btn-cancel" onClick={handleCancel}>Cancelar</button>
-                  <button 
-                    className="btn-save" 
+                  <button className="btn-cancel" onClick={handleCancel}>
+                    Cancelar
+                  </button>
+                  <button
+                    className="btn-save"
                     onClick={handleSave}
                     disabled={carregando}
                     style={{ background: modalColor }}
@@ -429,12 +500,14 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                   className="aluno-select"
                   value=""
                   onChange={(e) => {
-                    const select = todosAlunos.find(a => String(a.id) === e.target.value);
+                    const select = todosAlunos.find((a) => String(a.id) === e.target.value);
                     if (select) handleAdicionarAluno(select);
                   }}
                 >
-                  <option value="" disabled>Selecionar aluno...</option>
-                  {alunosDisponiveis.map(a => (
+                  <option value="" disabled>
+                    Selecionar aluno...
+                  </option>
+                  {alunosDisponiveis.map((a) => (
                     <option key={a.id} value={a.id}>
                       {a.nome} {a.alunoComLimitacoesFisicas ? '♿ (PCD)' : ''}
                     </option>
@@ -452,8 +525,8 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                     <div key={aluno.id} className="aluno-card-wrapper">
                       <div className="aluno-card-premium">
                         <div className="aluno-main-info">
-                          <div 
-                            className="aluno-avatar" 
+                          <div
+                            className="aluno-avatar"
                             style={{ background: getAvatarColor(aluno.nome) }}
                           >
                             {getInitials(aluno.nome)}
@@ -462,19 +535,26 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                             <span className="aluno-nome">{aluno.nome}</span>
                             <div className="aluno-tags">
                               {aluno.alunoComLimitacoesFisicas && (
-                                <span className="tag-pcd"><FaWheelchair size={10} /> PCD</span>
+                                <span className="tag-pcd">
+                                  <FaWheelchair size={10} /> PCD
+                                </span>
                               )}
                             </div>
                           </div>
                         </div>
                         <div className="aluno-actions">
-                          <button 
+                          <button
                             className="btn-action-circle view"
-                            onClick={() => setObservacoesExpandidas({ ...observacoesExpandidas, [aluno.id]: !expandido })}
+                            onClick={() =>
+                              setObservacoesExpandidas({
+                                ...observacoesExpandidas,
+                                [aluno.id]: !expandido,
+                              })
+                            }
                           >
                             {expandido ? <FiEyeOff size={16} /> : <FiEye size={16} />}
                           </button>
-                          <button 
+                          <button
                             className="btn-action-circle delete"
                             onClick={() => handleRemoverAluno(aluno.id)}
                           >
@@ -490,30 +570,55 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
                               <textarea
                                 className="obs-textarea"
                                 value={editFields[`observacao_${aluno.id}`]}
-                                onChange={(e) => setEditFields({ ...editFields, [`observacao_${aluno.id}`]: e.target.value })}
+                                onChange={(e) =>
+                                  setEditFields({
+                                    ...editFields,
+                                    [`observacao_${aluno.id}`]: e.target.value,
+                                  })
+                                }
                                 rows={3}
                                 autoFocus
                               />
                               <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
-                                <button className="icon-btn" onClick={() => {
-                                  let next = { ...editFields };
-                                  delete next[`observacao_${aluno.id}`];
-                                  setEditFields(next);
-                                }}><FiX size={14} /></button>
-                                <button className="icon-btn" onClick={() => handleSalvarObservacaoAluno(aluno.id)} style={{ color: modalColor }}>
+                                <button
+                                  className="icon-btn"
+                                  onClick={() => {
+                                    const next = { ...editFields };
+                                    delete next[`observacao_${aluno.id}`];
+                                    setEditFields(next);
+                                  }}
+                                >
+                                  <FiX size={14} />
+                                </button>
+                                <button
+                                  className="icon-btn"
+                                  onClick={() => handleSalvarObservacaoAluno(aluno.id)}
+                                  style={{ color: modalColor }}
+                                >
                                   <FiSave size={14} />
                                 </button>
                               </div>
                             </>
                           ) : (
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'flex-start',
+                              }}
+                            >
                               <p style={{ fontSize: '0.875rem', color: '#666', margin: 0 }}>
                                 {labelObs || 'Sem observações.'}
                               </p>
-                              <button 
-                                className="icon-btn" 
+                              <button
+                                className="icon-btn"
                                 style={{ color: modalColor, marginTop: '-4px' }}
-                                onClick={() => setEditFields({ ...editFields, [`observacao_${aluno.id}`]: labelObs })}
+                                onClick={() =>
+                                  setEditFields({
+                                    ...editFields,
+                                    [`observacao_${aluno.id}`]: labelObs,
+                                  })
+                                }
                               >
                                 <FiEdit2 size={18} />
                               </button>
@@ -535,9 +640,11 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
 
               {alunosMudaram && activeTab === 'alunos' && (
                 <div className="edit-actions">
-                  <button className="btn-cancel" onClick={handleCancel}>Restaurar</button>
-                  <button 
-                    className="btn-save" 
+                  <button className="btn-cancel" onClick={handleCancel}>
+                    Restaurar
+                  </button>
+                  <button
+                    className="btn-save"
                     onClick={handleSave}
                     disabled={carregando}
                     style={{ background: modalColor }}

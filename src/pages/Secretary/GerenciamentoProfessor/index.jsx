@@ -187,21 +187,15 @@ export default function GerenciamentoProfessor() {
             >
               <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between mb-4 gap-4">
                 <div className="flex items-center gap-6 w-full sm:w-auto">
-                  <button
-                    onClick={() => navigate(`${basePath}/perfil/professor/${professor.id}`)}
-                    className="group relative shrink-0"
-                  >
-                    <img
-                      src={
-                        professor.foto
-                          ? `${api.defaults.baseURL}/api/imagens/${professor.foto}?token=${localStorage.getItem('token')}`
-                          : userIconImg
-                      }
-                      alt={professor.nome}
-                      className="w-20 h-20 md:w-24 md:h-24 rounded-2xl object-cover transition-all duration-300 border-2 border-slate-50"
-                    />
-                  </button>
-
+                  <img
+                    src={
+                      professor.foto
+                        ? `${api.defaults.baseURL}/api/imagens/${professor.foto}?token=${localStorage.getItem('token')}`
+                        : userIconImg
+                    }
+                    alt={professor.nome}
+                    className="w-20 h-20 md:w-24 md:h-24 rounded-2xl object-cover transition-all duration-300 border-2 border-slate-50"
+                  />
                   <div className="flex flex-col gap-1 flex-1">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                       <h2 className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight">

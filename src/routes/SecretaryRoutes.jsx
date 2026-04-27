@@ -19,7 +19,6 @@ export default function SecretaryRoutes() {
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="perfil" element={<Profile />} />
-        <Route path="perfil/professor/:id" element={<ViewProfile />} />
         <Route path="perfil/aluno/:id" element={<ViewProfile />} />
         <Route path="agenda" element={<Calendar />} />
         <Route path="agendamento" element={<Calendar />} />

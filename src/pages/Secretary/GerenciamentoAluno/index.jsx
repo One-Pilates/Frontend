@@ -71,6 +71,36 @@ export default function GerenciamentoAluno() {
     return age;
   };
 
+  const exportStudents = async () => {
+    const result = await Swal.fire({
+      title: 'Exportar todos os alunos?',
+      text: 'Deseja exportar a lista completa de alunos, incluindo os que não estão na página atual?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#1D6F42',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sim, exportar tudo',
+      cancelButtonText: 'Não, apenas esta página',
+    });
+
+    let studentsToExport = [...students];
+
+    if (result.isConfirmed) {
+      try {
+        const response = await api.get('api/alunos');
+        console.log('Resposta da API ao buscar todos os alunos para exportação:', response.data);
+        const data = response.data;
+        studentsToExport = data;
+      } catch (error) {
+        console.error('Erro ao buscar todos os alunos para exportação:', error);
+        toast.error(
+          'Não foi possível buscar todos os alunos para exportação. Exportando apenas a página atual.',
+        );
+      }
+    }
+    abrirModalDownload(studentsToExport, calculateAge);
+  };
+
   const deleteStudent = async (alunoId) => {
     Swal.fire({
       title: 'Tem certeza?',
@@ -139,7 +169,7 @@ export default function GerenciamentoAluno() {
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => abrirModalDownload(students, calculateAge)}
+            onClick={exportStudents}
             className="flex items-center justify-center gap-2 px-6 py-3 text-white rounded-2xl font-bold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm shadow-orange-100"
             style={{
               backgroundColor: 'var(--laranja-principal)',
@@ -176,7 +206,6 @@ export default function GerenciamentoAluno() {
               <tr>
                 <th className="px-6 py-5 text-left text-slate-500">Nome do Aluno</th>
                 <th className="hidden lg:table-cell px-6 py-5 text-left text-slate-500">Email</th>
-                <th className="hidden md:table-cell px-6 py-5 text-left text-slate-500">CPF</th>
                 <th className="hidden sm:table-cell px-6 py-5 text-left text-slate-500 text-center">
                   Idade
                 </th>
@@ -206,10 +235,6 @@ export default function GerenciamentoAluno() {
 
                     <td className="hidden lg:table-cell px-6 py-4 text-sm text-slate-500 font-medium">
                       {aluno.email}
-                    </td>
-
-                    <td className="hidden md:table-cell px-6 py-4 text-sm text-slate-500 font-medium whitespace-nowrap">
-                      {aluno.cpf}
                     </td>
 
                     <td className="hidden sm:table-cell px-6 py-4 text-sm text-slate-500 font-bold text-center">
@@ -263,7 +288,7 @@ export default function GerenciamentoAluno() {
               ) : (
                 <tr>
                   <td
-                    colSpan="7"
+                    colSpan="6"
                     className="px-6 py-12 text-center text-sm font-medium text-slate-400"
                   >
                     Nenhum aluno encontrado.

@@ -238,7 +238,7 @@ const ProfileUser = () => {
         toast.success('Perfil atualizado! Seus dados foram salvos com sucesso.');
       }
     } catch (error) {
-      toast.error('Ocorreu um erro ao atualizar seus dados. Por favor, tente novamente mais tarde.');
+      toast.error('Erro ao atualizar perfil. Por favor, tente novamente.');
       console.error('Erro ao atualizar dados:', error);
     }
   };
