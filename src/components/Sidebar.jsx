@@ -119,7 +119,10 @@ export function SidebarSecretary({ navAberta, setNavAberta }) {
 
   const isAgendaActive = isActive(`${basePath}/agenda`) || isActive(`${basePath}/agendamento`);
 
-  const isProfessorActive = isActive(`${basePath}/professor`);
+  const isColaboradoresActive =
+    isActive(`${basePath}/colaboradores`) ||
+    isActive(`${basePath}/professor`) ||
+    isActive(`${basePath}/secretaria`);
   const isAlunosActive = isActive(`${basePath}/alunos`) || isActive(`${basePath}/aluno`);
 
   const handleNavigate = (path) => {
@@ -192,11 +195,11 @@ export function SidebarSecretary({ navAberta, setNavAberta }) {
               onClick={() => handleNavigate(`${basePath}/agenda`)}
             />
             <ItemSidebar
-              icon={FaChalkboardTeacher}
-              texto="Professor"
+              icon={FaUsers}
+              texto="Colaboradores"
               navAberta={navAberta}
-              ativo={isProfessorActive}
-              onClick={() => handleNavigate(`${basePath}/professor`)}
+              ativo={isColaboradoresActive}
+              onClick={() => handleNavigate(`${basePath}/colaboradores`)}
             />
             <ItemSidebar
               icon={FaUsers}

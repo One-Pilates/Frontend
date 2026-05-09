@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../hooks/useAuth';
-import api from '../../../services/api';
+import { useAuth } from '../../../../hooks/useAuth';
+import api from '../../../../services/api';
 import { toast } from 'sonner';
 import Swal from 'sweetalert2';
 import {
@@ -15,9 +15,9 @@ import {
   FiUserCheck,
   FiUserX,
 } from 'react-icons/fi';
-import Botao from '../../../components/Button';
+import Botao from '../../../../components/Button';
 import userIconImg from '/user-icon.png';
-import { getColorForEspecialidade } from '../../../utils/utils';
+import { getColorForEspecialidade } from '../../../../utils/utils';
 
 export default function GerenciamentoProfessor() {
   const navigate = useNavigate();

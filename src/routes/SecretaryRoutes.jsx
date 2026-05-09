@@ -7,10 +7,12 @@ import RegisterTeacher from '../pages/Secretary/RegisterTeacher';
 import RegisterStudent from '../pages/Secretary/RegisterStudent';
 import RegisterAula from '../pages/Secretary/RegisterAula';
 import NotFound from './NotFound';
-import GerenciamentoProfessor from '../pages/Secretary/GerenciamentoProfessor';
+import GerenciamentoProfessor from '../pages/Secretary/GerenciamentoColaboradores/Professor';
+import GerenciamentoSecretaria from '../pages/Secretary/GerenciamentoColaboradores/Secretaria';
 import GerenciamentoAluno from '../pages/Secretary/GerenciamentoAluno';
 import ViewProfile from '../pages/Secretary/ProfileView';
 import StudioView from '../pages/Secretary/Studio';
+import CardsColaborador from '../pages/Secretary/GerenciamentoColaboradores/cardsColaborador';
 
 export default function SecretaryRoutes() {
   return (
@@ -23,7 +25,9 @@ export default function SecretaryRoutes() {
         <Route path="agenda" element={<Calendar />} />
         <Route path="agendamento" element={<Calendar />} />
         <Route path="agendamento/criar" element={<RegisterAula />} />
+        <Route path="colaboradores" element={<CardsColaborador />} />
         <Route path="professor" element={<GerenciamentoProfessor />} />
+        <Route path="secretaria" element={<GerenciamentoSecretaria />} />
         <Route path="professor/cadastrar" element={<RegisterTeacher />} />
         <Route path="aluno/cadastrar" element={<RegisterStudent />} />
         <Route path="aluno/editar/:id" element={<RegisterStudent />} />

@@ -280,15 +280,6 @@ export default function RegisterTeacher() {
     }
   };
 
-  const voltarEtapa = () => {
-    console.log('⬅️ Voltando etapa (atual:', etapaAtual, ')');
-    if (etapaAtual === 4) {
-      setEtapaAtual(3);
-    } else if (etapaAtual > 1) {
-      setEtapaAtual(etapaAtual - 1);
-    }
-  };
-
   const cadastrarProfessor = async () => {
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log('🚀 INICIANDO CADASTRO DE PROFESSOR');
@@ -533,7 +524,9 @@ export default function RegisterTeacher() {
               <p className="main-subtitle">Preencha as informações abaixo</p>
             </div>
           </div>
-          <span className="header-step-badge">Etapa {etapaAtual} de {etapas.length}</span>
+          <span className="header-step-badge">
+            Etapa {etapaAtual} de {etapas.length}
+          </span>
         </div>
 
         <div className="register-content">
@@ -560,7 +553,13 @@ export default function RegisterTeacher() {
               )}
               {etapaAtual === 4 && (
                 <button className="btn-finish" onClick={cadastrarProfessor} disabled={cadastrando}>
-                  {cadastrando ? '⏳ Cadastrando...' : <><FiCheck size={16} /> Confirmar e Cadastrar</>}
+                  {cadastrando ? (
+                    '⏳ Cadastrando...'
+                  ) : (
+                    <>
+                      <FiCheck size={16} /> Confirmar e Cadastrar
+                    </>
+                  )}
                 </button>
               )}
             </div>
