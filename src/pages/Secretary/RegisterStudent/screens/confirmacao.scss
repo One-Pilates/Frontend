@@ -63,9 +63,9 @@
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.875rem;
-  background-color: #f3f4f6;
+  background-color: var(--surface-2, #f3f4f6);
   border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--cor-borda);
 
   &.observacoes-card {
     grid-column: 1 / -1;
@@ -100,12 +100,12 @@
   text-align: center;
 
   &.badge-sim {
-    background-color: #fef2f2;
+    background-color: rgba(239, 68, 68, 0.1);
     color: #dc2626;
   }
 
   &.badge-nao {
-    background-color: #f0fdf4;
+    background-color: rgba(22, 163, 74, 0.1);
     color: #16a34a;
   }
 }

@@ -33,7 +33,7 @@
   outline: none;
 
   &:checked {
-    background-color: #3b82f6;
+    background-color: var(--laranja-principal);
   }
 
   &::before {
@@ -78,7 +78,7 @@
   font-size: 0.875rem;
   color: var(--text-escuro);
   font-family: inherit;
-  background-color: var(--branco);
+  background-color: var(--surface-input, var(--branco));
   border: 1px solid var(--cor-borda);
   border-radius: 0.5rem;
   transition: all 0.2s ease;
@@ -91,14 +91,14 @@
   }
 
   &:focus {
-    background-color: var(--branco);
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background-color: var(--surface-1);
+    border-color: var(--laranja-principal);
+    box-shadow: 0 0 0 3px var(--laranja-glow, rgba(247, 116, 51, 0.1));
   }
 
   &.textarea-error {
     border-color: #ef4444;
-    background-color: #fef2f2;
+    background-color: rgba(239, 68, 68, 0.05);
   }
 }
 

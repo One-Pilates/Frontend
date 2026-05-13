@@ -122,11 +122,10 @@ function Account() {
             <div className="py-2">
               <button
                 onClick={openAdminModal}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left transition-colors flex items-center gap-3 hover:bg-gray-50 active:bg-gray-100"
-                style={{
-                  backgroundColor: 'var(--branco)',
-                  color: 'var(--text-escuro)',
-                }}
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left transition-colors flex items-center gap-3"
+                style={{ backgroundColor: 'var(--branco)', color: 'var(--text-escuro)' }}
+                onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--surface-3)'}
+                onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--branco)'}
               >
                 <FaCog className="text-base" style={{ color: 'var(--text-cinza)' }} />
                 <span className="text-sm sm:text-base">Configurações</span>
@@ -134,11 +133,10 @@ function Account() {
 
               <button
                 onClick={() => navigate('/redefinir-senha')}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left transition-colors flex items-center gap-3 hover:bg-gray-50 active:bg-gray-100"
-                style={{
-                  backgroundColor: 'var(--branco)',
-                  color: 'var(--text-escuro)',
-                }}
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left transition-colors flex items-center gap-3"
+                style={{ backgroundColor: 'var(--branco)', color: 'var(--text-escuro)' }}
+                onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--surface-3)'}
+                onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--branco)'}
               >
                 <FaKey className="text-base" style={{ color: 'var(--text-cinza)' }} />
                 <span className="text-sm sm:text-base">Senhas</span>
@@ -146,11 +144,10 @@ function Account() {
 
               <button
                 onClick={toggleModoEscuro}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left transition-colors flex items-center justify-between hover:bg-gray-50 active:bg-gray-100"
-                style={{
-                  backgroundColor: 'var(--branco)',
-                  color: 'var(--text-escuro)',
-                }}
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left transition-colors flex items-center justify-between"
+                style={{ backgroundColor: 'var(--branco)', color: 'var(--text-escuro)' }}
+                onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--surface-3)'}
+                onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--branco)'}
               >
                 <div className="flex items-center gap-3">
                   {modoEscuro ? (

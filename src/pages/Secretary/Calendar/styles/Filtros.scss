@@ -24,7 +24,7 @@
         border: 2px solid var(--cor-borda);
         border-radius: 6px;
         font-size: 0.95rem;
-        background: var(--branco);
+        background: var(--surface-input, var(--branco));
         color: var(--text-escuro);
         cursor: pointer;
         transition: all 0.3s ease;
@@ -37,11 +37,11 @@
         &:focus {
           outline: none;
           border-color: var(--laranja-principal);
-          box-shadow: 0 0 0 3px rgba(247, 116, 51, 0.1);
+          box-shadow: 0 0 0 3px var(--laranja-glow, rgba(247, 116, 51, 0.1));
         }
 
         &:disabled {
-          background: var(--bg-claro);
+          background: var(--surface-2, var(--bg-claro));
           cursor: not-allowed;
           opacity: 0.6;
         }
@@ -88,6 +88,9 @@
   }
 }
 
+/* ─────────────────────────────────────
+   Avisos de status
+───────────────────────────────────── */
 .aviso-info,
 .aviso-erro,
 .aviso-vazio {
@@ -107,26 +110,38 @@
 }
 
 .aviso-info {
-  background: #e3f2fd;
-  border: 1px solid #90caf9;
+  background: rgba(33, 150, 243, 0.10);
+  border: 1px solid rgba(33, 150, 243, 0.30);
   color: #1565c0;
-  box-shadow: 0 2px 4px rgba(33, 150, 243, 0.1);
+  box-shadow: 0 2px 4px rgba(33, 150, 243, 0.08);
+}
+
+html.dark .aviso-info {
+  background: rgba(77, 158, 255, 0.10);
+  border-color: rgba(77, 158, 255, 0.25);
+  color: #60a5fa;
 }
 
 .aviso-erro {
-  background: #ffebee;
-  border: 1px solid #ef9a9a;
+  background: rgba(244, 67, 54, 0.08);
+  border: 1px solid rgba(244, 67, 54, 0.25);
   color: #c62828;
-  box-shadow: 0 2px 4px rgba(244, 67, 54, 0.1);
+  box-shadow: 0 2px 4px rgba(244, 67, 54, 0.08);
+}
+
+html.dark .aviso-erro {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.25);
+  color: #f87171;
 }
 
 .aviso-vazio {
-  background: var(--branco);
+  background: var(--surface-1, var(--branco));
   border: 1px solid var(--cor-borda);
   color: var(--text-cinza);
   text-align: center;
   padding: 40px 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card, 0 2px 4px rgba(0, 0, 0, 0.05));
 
   p {
     justify-content: center;
