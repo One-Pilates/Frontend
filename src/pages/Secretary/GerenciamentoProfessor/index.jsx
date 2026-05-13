@@ -79,15 +79,41 @@ export default function GerenciamentoProfessor() {
   }, [fetchProfessores, termoBusca]);
 
   const deletarProfessor = async (professorId) => {
+    let tempoRestante = 6;
+    let intervaloContagem;
+
     Swal.fire({
-      title: 'Tem certeza?',
-      text: 'Essa ação não poderá ser desfeita!',
+      title: 'Excluir professor?',
+      text: 'Ao excluir este professor, todos os agendamentos (passados e futuros) vinculados a ele também serão removidos.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sim, deletar!',
+      confirmButtonText: `Excluir (${tempoRestante}s)`,
       cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+      didOpen: () => {
+        const botaoConfirmar = Swal.getConfirmButton();
+        if (!botaoConfirmar) return;
+
+        botaoConfirmar.disabled = true;
+
+        intervaloContagem = setInterval(() => {
+          tempoRestante -= 1;
+
+          if (tempoRestante > 0) {
+            botaoConfirmar.textContent = `Excluir (${tempoRestante}s)`;
+            return;
+          }
+
+          botaoConfirmar.disabled = false;
+          botaoConfirmar.textContent = 'Excluir';
+          clearInterval(intervaloContagem);
+        }, 1000);
+      },
+      willClose: () => {
+        if (intervaloContagem) clearInterval(intervaloContagem);
+      },
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
