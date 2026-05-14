@@ -53,6 +53,7 @@ export default function RegisterStudent() {
   const [informacoesAluno, setInformacoesAluno] = useState(
     dadosIniciais.informacoesAluno || {
       problemasMobilidade: false,
+      notificacaoAtiva: true,
       observacao: '',
     },
   );
@@ -82,6 +83,7 @@ export default function RegisterStudent() {
         });
         setInformacoesAluno({
           problemasMobilidade: a.alunoComLimitacoesFisicas ?? false,
+          notificacaoAtiva: a.notificacaoAtiva ?? true,
           observacao: a.observacao || '',
         });
       })
@@ -265,7 +267,7 @@ export default function RegisterStudent() {
       alunoComLimitacoesFisicas: !!informacoesAluno.problemasMobilidade,
       observacao: informacoesAluno.observacao || '',
       tipoContato: dadosPessoais.telefone || '',
-      notificacaoAtiva: true,
+      notificacaoAtiva: !!informacoesAluno.notificacaoAtiva,
       endereco: {
         rua: endereco.logradouro || '',
         numero: endereco.numero || '',

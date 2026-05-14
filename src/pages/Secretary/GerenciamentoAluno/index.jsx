@@ -127,6 +127,20 @@ export default function GerenciamentoAluno() {
     });
   };
 
+  const toggleNotification = async (studentId, currentStatus) => {
+    const novoStatus = !currentStatus;
+    try {
+      await api.patch(`api/alunos/${studentId}`, { notificacaoAtiva: novoStatus });
+      setStudents((prev) =>
+        prev.map((s) => (s.id === studentId ? { ...s, notificacaoAtiva: novoStatus } : s)),
+      );
+      toast.success(`Notificações ${novoStatus ? 'ativadas' : 'desativadas'} com sucesso!`);
+    } catch (error) {
+      console.error('Erro ao atualizar notificação:', error);
+      toast.error('Erro ao atualizar preferência de notificação.');
+    }
+  };
+
   const startIndex = (currentPage - 1) * studentsPerPage;
   const endIndex = Math.min(startIndex + students.length, totalRecords);
 
@@ -210,6 +224,7 @@ export default function GerenciamentoAluno() {
                   Idade
                 </th>
                 <th className="px-6 py-5 text-left text-slate-500">Status</th>
+                <th className="px-6 py-5 text-center text-slate-500">Notificações</th>
                 <th className="hidden xl:table-cell px-6 py-5 text-left text-slate-500">
                   Limitações
                 </th>
@@ -251,6 +266,20 @@ export default function GerenciamentoAluno() {
                       >
                         {aluno.status ? 'Ativo' : 'Inativo'}
                       </span>
+                    </td>
+
+                    <td className="px-6 py-4">
+                      <div className="flex justify-center">
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            className="sr-only peer"
+                            checked={aluno.notificacaoAtiva ?? true}
+                            onChange={() => toggleNotification(aluno.id, aluno.notificacaoAtiva ?? true)}
+                          />
+                          <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
+                        </label>
+                      </div>
                     </td>
 
                     <td className="hidden xl:table-cell px-6 py-4">

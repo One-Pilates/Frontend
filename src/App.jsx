@@ -10,15 +10,11 @@ import { useAuth } from './hooks/useAuth';
 
 function App() {
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, isCheckingAuth } = useAuth();
 
   useEffect(() => {
-    // Se o usuário não está logado, forçamos o modo claro SEMPRE
-    if (!user) {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-      return;
-    }
+    // Não fazemos nada enquanto o sistema ainda está verificando se o usuário está logado
+    if (isCheckingAuth) return;
 
     // Lista de caminhos públicos onde o modo escuro NUNCA deve estar ativo
     const publicPaths = [
@@ -32,11 +28,20 @@ function App() {
       '/politica-de-privacidade'
     ];
 
-    // Se estiver em uma rota pública, removemos a classe dark obrigatoriamente
-    if (publicPaths.includes(location.pathname)) {
+    const isPublicPath = publicPaths.includes(location.pathname);
+    const savedTheme = localStorage.getItem('theme');
+
+    // Se estiver em rota pública OU se realmente não houver usuário logado, força o CLARO
+    if (isPublicPath || !user) {
+      document.documentElement.classList.remove('dark');
+    } 
+    // Caso contrário (está logado e em rota privada), respeita o tema salvo
+    else if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
       document.documentElement.classList.remove('dark');
     }
-  }, [location.pathname]);
+  }, [location.pathname, user, isCheckingAuth]);
 
   return (
     <>
