@@ -118,6 +118,9 @@ export function AuthProvider({ children }) {
       if (result.isConfirmed) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        // Sempre volta para modo claro ao deslogar
+        localStorage.removeItem('theme');
+        document.documentElement.classList.remove('dark');
         setUser(null);
         navigate('/login');
       }

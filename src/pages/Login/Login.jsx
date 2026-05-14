@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { validacaoEmail } from '../../utils/utils';
 import { useAuth } from '../../hooks/useAuth';
 import './Login.scss';
@@ -14,6 +14,12 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+
+  useEffect(() => {
+    // Garantia extra: Login sempre modo claro
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();

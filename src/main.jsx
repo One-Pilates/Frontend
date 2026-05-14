@@ -6,8 +6,16 @@ import './variables.scss';
 import './global.css';
 import App from './App.jsx';
 
-if (localStorage.getItem('theme') === 'dark') {
+// Tema: padrão é sempre CLARO. Modo escuro só se o usuário ativou explicitamente.
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') {
   document.documentElement.classList.add('dark');
+} else {
+  document.documentElement.classList.remove('dark');
+  // Se não houver tema salvo, garantimos que comece no light
+  if (savedTheme !== 'light') {
+    localStorage.setItem('theme', 'light');
+  }
 }
 
 // Desativa logs em produção para segurança e performance
