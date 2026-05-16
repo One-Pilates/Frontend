@@ -33,7 +33,7 @@ export default function InformacoesProfissionaisScreen({
       <div className="professional-content">
         <Input
           label="Cargo"
-          placeholder="Ex: Fisioterapeuta, Professor de Pilates"
+          placeholder="Ex: Fisioterapeuta, Professor de Pilates, Secretária..."
           value={dados.cargo}
           onChange={(e) => atualizar({ cargo: e.target.value })}
           required

@@ -18,6 +18,7 @@ import {
 import Botao from '../../../../components/Button';
 import userIconImg from '/user-icon.png';
 import { getColorForEspecialidade } from '../../../../utils/utils';
+import Back from '../../../../components/Back';
 
 export default function GerenciamentoProfessor() {
   const navigate = useNavigate();
@@ -168,6 +169,9 @@ export default function GerenciamentoProfessor() {
 
   return (
     <div className="flex flex-col gap-6 py-6 px-4 md:px-8 lg:px-16 h-full mx-auto ml-auto bg-slate-50/20">
+      <div>
+        <Back onClick={() => navigate(`${basePath}/colaboradores`)} />
+      </div>
       <div className="flex flex-col sm:flex-row w-full justify-between items-start sm:items-center gap-4">
         <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
           Gerenciamento de Professores
