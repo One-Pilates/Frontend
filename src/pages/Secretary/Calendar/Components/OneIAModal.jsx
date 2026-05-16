@@ -44,9 +44,7 @@ function IaBubble({ text, animate }) {
       <div className="oneia-chat-avatar ia-avatar">✨</div>
       <div className="oneia-chat-text">
         {displayed}
-        {animate && displayed.length < text.length && (
-          <span className="oneia-cursor">|</span>
-        )}
+        {animate && displayed.length < text.length && <span className="oneia-cursor">|</span>}
       </div>
     </div>
   );
@@ -72,7 +70,9 @@ function IaTypingIndicator() {
     <div className="oneia-chat-bubble ia">
       <div className="oneia-chat-avatar ia-avatar">✨</div>
       <div className="oneia-typing-dots">
-        <span /><span /><span />
+        <span />
+        <span />
+        <span />
       </div>
     </div>
   );
@@ -121,10 +121,7 @@ const OneIAModal = ({
     const texto = inputValue.trim();
     if (!texto || !podeResponder) return;
 
-    const novasMensagens = [
-      ...mensagens,
-      { role: 'usuario', text: texto },
-    ];
+    const novasMensagens = [...mensagens, { role: 'usuario', text: texto }];
     setMensagens(novasMensagens);
     setInputValue('');
     setRespostasUsuario((n) => n + 1);
@@ -148,20 +145,14 @@ const OneIAModal = ({
       const resposta =
         response.data?.recomendacao || 'Não consegui gerar uma resposta. Tente novamente.';
 
-      setMensagens((prev) => [
-        ...prev,
-        { role: 'ia', text: resposta, animate: true },
-      ]);
+      setMensagens((prev) => [...prev, { role: 'ia', text: resposta, animate: true }]);
     } catch (err) {
       console.error('Erro IA Chat (Backend):', err);
-      
+
       // Simulação de resposta no chat
       const simulationReply = `Entendi seu ponto sobre "${texto}". Para o aluno ${nomeAluno}, recomendo ajustar a intensidade e focar na progressão gradual. (Nota: Esta é uma resposta simulada pois o backend está offline).`;
-      
-      setMensagens((prev) => [
-        ...prev,
-        { role: 'ia', text: simulationReply, animate: true },
-      ]);
+
+      setMensagens((prev) => [...prev, { role: 'ia', text: simulationReply, animate: true }]);
     } finally {
       setCarregando(false);
     }
@@ -179,7 +170,6 @@ const OneIAModal = ({
   return (
     <div className="oneia-modal-overlay" onClick={onBack}>
       <div className="oneia-modal-content" onClick={(e) => e.stopPropagation()}>
-
         {/* Header */}
         <div className="oneia-modal-header">
           <button className="oneia-back-btn" onClick={onBack} title="Voltar para a aula">
@@ -241,7 +231,8 @@ const OneIAModal = ({
                 </button>
               </div>
               <span className="oneia-counter">
-                {restantes} pergunta{restantes !== 1 ? 's' : ''} restante{restantes !== 1 ? 's' : ''}
+                {restantes} pergunta{restantes !== 1 ? 's' : ''} restante
+                {restantes !== 1 ? 's' : ''}
               </span>
             </>
           )}

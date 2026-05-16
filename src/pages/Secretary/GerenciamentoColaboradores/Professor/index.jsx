@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../hooks/useAuth';
-import api from '../../../services/api';
+import { useAuth } from '../../../../hooks/useAuth';
+import api from '../../../../services/api';
 import { toast } from 'sonner';
 import Swal from 'sweetalert2';
 import {
@@ -15,9 +15,10 @@ import {
   FiUserCheck,
   FiUserX,
 } from 'react-icons/fi';
-import Botao from '../../../components/Button';
+import Botao from '../../../../components/Button';
 import userIconImg from '/user-icon.png';
-import { getColorForEspecialidade } from '../../../utils/utils';
+import { getColorForEspecialidade } from '../../../../utils/utils';
+import Back from '../../../../components/Back';
 
 export default function GerenciamentoProfessor() {
   const navigate = useNavigate();
@@ -168,14 +169,17 @@ export default function GerenciamentoProfessor() {
 
   return (
     <div className="flex flex-col gap-6 py-6 px-4 md:px-8 lg:px-16 h-full mx-auto ml-auto bg-slate-50/20">
+      <div>
+        <Back onClick={() => navigate(`${basePath}/colaboradores`)} />
+      </div>
       <div className="flex flex-col sm:flex-row w-full justify-between items-start sm:items-center gap-4">
         <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
           Gerenciamento de Professores
         </h1>
         {user && user.role === 'ADMINISTRADOR' && (
           <button
-            onClick={() => navigate(`${basePath}/professor/cadastrar`)}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold shadow-md shadow-blue-100 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            onClick={() => navigate(`${basePath}/colaborador/cadastrar/PROFESSOR`)}
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold shadow-md shadow-blue-100 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
           >
             + Adicionar Professor
           </button>

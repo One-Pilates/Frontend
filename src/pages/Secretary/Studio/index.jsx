@@ -157,7 +157,10 @@ export default function StudioView() {
     } else if (!formSala.quantidadeMaximaAlunos || isNaN(formSala.quantidadeMaximaAlunos)) {
       toast.warning('A quantidade máxima de alunos deve ser um número válido.');
       return;
-    } else if (formSala.quantidadeEquipamentosPCD === '' || isNaN(formSala.quantidadeEquipamentosPCD)) {
+    } else if (
+      formSala.quantidadeEquipamentosPCD === '' ||
+      isNaN(formSala.quantidadeEquipamentosPCD)
+    ) {
       toast.warning('A quantidade de equipamentos para PCD deve ser um número válido.');
       return;
     } else if (formSala.especialidades.length === 0) {
@@ -231,19 +234,21 @@ export default function StudioView() {
       <div className="flex gap-4 border-b-2 border-slate-100/60 pb-1">
         <button
           onClick={() => setActiveTab('especialidades')}
-          className={`px-6 py-4 text-base font-bold transition-all duration-300 border-b-4 -mb-[2px] ${activeTab === 'especialidades'
+          className={`px-6 py-4 text-base font-bold transition-all duration-300 border-b-4 -mb-[2px] ${
+            activeTab === 'especialidades'
               ? 'border-orange-500 text-orange-600'
               : 'border-transparent text-slate-400 hover:text-slate-600'
-            }`}
+          }`}
         >
           Especialidades
         </button>
         <button
           onClick={() => setActiveTab('salas')}
-          className={`px-6 py-4 text-base font-bold transition-all duration-300 border-b-4 -mb-[2px] ${activeTab === 'salas'
+          className={`px-6 py-4 text-base font-bold transition-all duration-300 border-b-4 -mb-[2px] ${
+            activeTab === 'salas'
               ? 'border-orange-500 text-orange-600'
               : 'border-transparent text-slate-400 hover:text-slate-600'
-            }`}
+          }`}
         >
           Salas
         </button>
@@ -255,9 +260,12 @@ export default function StudioView() {
           <div className="flex flex-col gap-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-2">
               <div>
-                <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight">Especialidades Cadastradas</h2>
+                <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight">
+                  Especialidades Cadastradas
+                </h2>
                 <p className="text-sm font-medium text-slate-400 mt-1">
-                  {especialidades.length} {especialidades.length === 1 ? 'especialidade' : 'especialidades'} encontrada(s)
+                  {especialidades.length}{' '}
+                  {especialidades.length === 1 ? 'especialidade' : 'especialidades'} encontrada(s)
                 </p>
               </div>
               <button
@@ -283,9 +291,7 @@ export default function StudioView() {
                             className="w-3 h-10 rounded-full shrink-0"
                             style={{ backgroundColor }}
                           />
-                          <h3 className="font-bold text-lg text-slate-700">
-                            {esp.nome}
-                          </h3>
+                          <h3 className="font-bold text-lg text-slate-700">{esp.nome}</h3>
                         </div>
                         <div className="flex gap-2 shrink-0">
                           <button
@@ -309,7 +315,9 @@ export default function StudioView() {
                 })
               ) : (
                 <div className="rounded-[2rem] p-12 text-center border-2 border-dashed border-slate-100">
-                  <p className="text-slate-400 font-medium">Nenhuma especialidade cadastrada ainda</p>
+                  <p className="text-slate-400 font-medium">
+                    Nenhuma especialidade cadastrada ainda
+                  </p>
                 </div>
               )}
             </div>
@@ -318,9 +326,12 @@ export default function StudioView() {
           <div className="flex flex-col gap-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-2">
               <div>
-                <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight">Salas Cadastradas</h2>
+                <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight">
+                  Salas Cadastradas
+                </h2>
                 <p className="text-sm font-medium text-slate-400 mt-1">
-                  {salas.length} {salas.length === 1 ? 'sala pesquisada' : 'salas pesquisadas'} encontrada(s)
+                  {salas.length} {salas.length === 1 ? 'sala pesquisada' : 'salas pesquisadas'}{' '}
+                  encontrada(s)
                 </p>
               </div>
               <button
@@ -346,14 +357,18 @@ export default function StudioView() {
 
                         <div className="flex flex-wrap gap-6">
                           <div className="flex items-center gap-3">
-                            <span className="text-sm font-bold text-slate-400 uppercase tracking-widest">Capacidade:</span>
+                            <span className="text-sm font-bold text-slate-400 uppercase tracking-widest">
+                              Capacidade:
+                            </span>
                             <span className="px-4 py-1.5 rounded-xl text-sm font-bold bg-blue-50 text-blue-700 border border-blue-100">
                               {sala.quantidadeMaximaAlunos} alunos
                             </span>
                           </div>
 
                           <div className="flex items-center gap-3">
-                            <span className="text-sm font-bold text-slate-400 uppercase tracking-widest">PCD:</span>
+                            <span className="text-sm font-bold text-slate-400 uppercase tracking-widest">
+                              PCD:
+                            </span>
                             <span className="px-4 py-1.5 rounded-xl text-sm font-bold bg-violet-50 text-violet-700 border border-violet-100">
                               {sala.quantidadeEquipamentosPCD} unidades
                             </span>
@@ -361,12 +376,15 @@ export default function StudioView() {
                         </div>
 
                         <div className="flex flex-col gap-3">
-                          <span className="text-sm font-bold text-slate-400 uppercase tracking-widest">Especialidades Vinculadas:</span>
+                          <span className="text-sm font-bold text-slate-400 uppercase tracking-widest">
+                            Especialidades Vinculadas:
+                          </span>
                           <div className="flex gap-2 flex-wrap">
                             {sala.especialidades && sala.especialidades.length > 0 ? (
                               sala.especialidades.map((esp, index) => {
                                 const espNome = typeof esp === 'string' ? esp : esp.nome;
-                                const { backgroundColor, textColor } = getColorForEspecialidade(espNome);
+                                const { backgroundColor, textColor } =
+                                  getColorForEspecialidade(espNome);
                                 return (
                                   <span
                                     key={index}
@@ -378,7 +396,9 @@ export default function StudioView() {
                                 );
                               })
                             ) : (
-                              <span className="text-sm text-slate-300 italic">Nenhuma especialidade vinculada</span>
+                              <span className="text-sm text-slate-300 italic">
+                                Nenhuma especialidade vinculada
+                              </span>
                             )}
                           </div>
                         </div>
@@ -501,7 +521,9 @@ export default function StudioView() {
                     type="number"
                     min="1"
                     value={formSala.quantidadeMaximaAlunos}
-                    onChange={(e) => setFormSala({ ...formSala, quantidadeMaximaAlunos: e.target.value })}
+                    onChange={(e) =>
+                      setFormSala({ ...formSala, quantidadeMaximaAlunos: e.target.value })
+                    }
                     className="w-full px-6 py-4 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-50 transition-all border-2 border-slate-100 font-bold"
                   />
                 </div>
@@ -514,7 +536,9 @@ export default function StudioView() {
                     type="number"
                     min="0"
                     value={formSala.quantidadeEquipamentosPCD}
-                    onChange={(e) => setFormSala({ ...formSala, quantidadeEquipamentosPCD: e.target.value })}
+                    onChange={(e) =>
+                      setFormSala({ ...formSala, quantidadeEquipamentosPCD: e.target.value })
+                    }
                     className="w-full px-6 py-4 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-50 transition-all border-2 border-slate-100 font-bold"
                   />
                 </div>

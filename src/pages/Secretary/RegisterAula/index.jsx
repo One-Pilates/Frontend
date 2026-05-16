@@ -11,6 +11,7 @@ import Etapa2Turma from './screens/Etapa2Turma';
 import Etapa3Alunos from './screens/Etapa3Alunos';
 import Etapa4Confirmacao from './screens/Etapa4Confirmacao';
 import './style.scss';
+import Back from '../../../components/Back';
 
 export default function RegisterAula() {
   const navigate = useNavigate();
@@ -341,10 +342,7 @@ export default function RegisterAula() {
   return (
     <div className="register-container register-aula-page">
       <div className="register-header">
-        <button className="back-button" onClick={() => navigate(`${basePath}/agendamento`)}>
-          <FiArrowLeftIcon size={14} />
-          <span>Voltar</span>
-        </button>
+        <Back />
         <div className="header-title-group">
           <div className="header-icon" aria-hidden="true">
             <FiCalendar size={20} />
@@ -354,7 +352,9 @@ export default function RegisterAula() {
             <p className="main-subtitle">Preencha as informações abaixo</p>
           </div>
         </div>
-        <span className="header-step-badge">Etapa {etapaAtual} de {etapas.length}</span>
+        <span className="header-step-badge">
+          Etapa {etapaAtual} de {etapas.length}
+        </span>
       </div>
 
       <div className="register-content">
@@ -381,7 +381,13 @@ export default function RegisterAula() {
             )}
             {etapaAtual === 4 && (
               <button className="btn-finish" onClick={criarAula} disabled={carregando}>
-                {carregando ? '⏳ Criando...' : <><FiCheck size={16} /> Confirmar e Criar</>}
+                {carregando ? (
+                  '⏳ Criando...'
+                ) : (
+                  <>
+                    <FiCheck size={16} /> Confirmar e Criar
+                  </>
+                )}
               </button>
             )}
           </div>

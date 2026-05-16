@@ -2,9 +2,9 @@ import { useState, useRef } from 'react';
 import './CodigoVerificacao.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { IoArrowBack } from 'react-icons/io5';
 import api from '../../services/api';
 import BackgroundLogin from '../../components/BackgroundLogin';
+import Back from '../../components/Back';
 
 export default function CodigoVerificacao() {
   const [codigo, setCodigo] = useState(['', '', '', '', '']);
@@ -79,9 +79,7 @@ export default function CodigoVerificacao() {
   return (
     <div className="login">
       <div className="login__container">
-        <button onClick={() => navigate(-1)} className="botao-voltar">
-          <IoArrowBack size={18} /> Voltar
-        </button>
+        <Back wrapperClassName="absolute left-[30px] top-[30px]" />
 
         <div className="login__header">
           <h1 className="login__title">Código de verificação</h1>

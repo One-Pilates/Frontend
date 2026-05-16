@@ -41,7 +41,7 @@ export default function EnderecoScreen({ dados, atualizar, buscarCep, erros = {}
         </div>
         <div className="etapa-title-group">
           <h2>Endereço</h2>
-          <p>Local de residência do professor</p>
+          <p>Local de residência do colaborador</p>
         </div>
       </div>
       <div className="address-grid">

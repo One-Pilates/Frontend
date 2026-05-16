@@ -25,7 +25,7 @@ export default function DadosPessoaisScreen({ dados, atualizar, erros = {} }) {
         </div>
         <div className="etapa-title-group">
           <h2>Dados Pessoais</h2>
-          <p>Informações básicas do professor</p>
+          <p>Informações básicas do colaborador</p>
         </div>
       </div>
       <div className="photo-section">
