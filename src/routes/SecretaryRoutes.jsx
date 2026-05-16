@@ -3,7 +3,7 @@ import Secretary from '../pages/Secretary/Secretary';
 import Dashboard from '../pages/Secretary/Dashboard';
 import Profile from '../pages/Teacher/Profile';
 import Calendar from '../pages/Secretary/Calendar';
-import RegisterTeacher from '../pages/Secretary/RegisterTeacher';
+import RegisterCollaborator from '../pages/Secretary/RegisterCollaborator';
 import RegisterStudent from '../pages/Secretary/RegisterStudent';
 import RegisterAula from '../pages/Secretary/RegisterAula';
 import NotFound from './NotFound';
@@ -28,7 +28,7 @@ export default function SecretaryRoutes() {
         <Route path="colaboradores" element={<CardsColaborador />} />
         <Route path="professor" element={<GerenciamentoProfessor />} />
         <Route path="secretaria" element={<GerenciamentoSecretaria />} />
-        <Route path="professor/cadastrar" element={<RegisterTeacher />} />
+        <Route path="colaborador/cadastrar/:role" element={<RegisterCollaborator />} />
         <Route path="aluno/cadastrar" element={<RegisterStudent />} />
         <Route path="aluno/editar/:id" element={<RegisterStudent />} />
         <Route path="alunos" element={<GerenciamentoAluno />} />

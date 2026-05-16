@@ -8,6 +8,7 @@ import {
   FaUsers,
   FaSlidersH,
   FaTimes,
+  FaIdBadge,
 } from 'react-icons/fa';
 import ItemSidebar from './ItemSidebar';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -195,7 +196,7 @@ export function SidebarSecretary({ navAberta, setNavAberta }) {
               onClick={() => handleNavigate(`${basePath}/agenda`)}
             />
             <ItemSidebar
-              icon={FaUsers}
+              icon={FaIdBadge}
               texto="Colaboradores"
               navAberta={navAberta}
               ativo={isColaboradoresActive}

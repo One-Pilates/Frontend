@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { FaDumbbell, FaUserTie } from 'react-icons/fa';
+import { LiaDumbbellSolid } from 'react-icons/lia';
 import { useAuth } from '../../../hooks/useAuth';
 
 const cards = [
   {
     key: 'professores',
-    Icon: FaDumbbell,
+    Icon: LiaDumbbellSolid,
     badge: 'Colaboradores',
     title: 'Professores',
     meta: 'Lista completa cadastrada no estúdio',
@@ -17,10 +18,10 @@ const cards = [
     key: 'secretarios',
     Icon: FaUserTie,
     badge: 'Colaboradores',
-    title: 'Secretários',
+    title: 'Secretárias',
     meta: 'Lista completa cadastrada no estúdio',
-    description: 'Visualize e gerencie todos os secretários ativos registrados.',
-    label: 'Ver secretários',
+    description: 'Visualize e gerencie todos os secretárias ativos registrados.',
+    label: 'Ver secretárias',
     getPath: (base) => `${base}/secretaria`,
   },
 ];
@@ -37,7 +38,7 @@ export default function CardsColaborador() {
         </p>
       </header>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:gap-8">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:gap-8 ">
         {cards.map(({ key, Icon, badge, title, meta, description, label, getPath }) => (
           <div
             key={key}
@@ -74,7 +75,7 @@ export default function CardsColaborador() {
 
             <button
               type="button"
-              className="inline-flex items-center justify-center rounded-2xl px-6 py-3 text-sm font-bold text-white transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm shadow-orange-100"
+              className="inline-flex items-center justify-center rounded-2xl px-6 py-3 text-sm font-bold text-white transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer shadow-sm shadow-orange-100"
               style={{ backgroundColor: 'var(--laranja-principal)' }}
               onClick={() => navigate(getPath(basePath))}
             >

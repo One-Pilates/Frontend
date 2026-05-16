@@ -174,8 +174,8 @@ export default function GerenciamentoProfessor() {
         </h1>
         {user && user.role === 'ADMINISTRADOR' && (
           <button
-            onClick={() => navigate(`${basePath}/professor/cadastrar`)}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold shadow-md shadow-blue-100 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            onClick={() => navigate(`${basePath}/colaborador/cadastrar/PROFESSOR`)}
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold shadow-md shadow-blue-100 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
           >
             + Adicionar Professor
           </button>

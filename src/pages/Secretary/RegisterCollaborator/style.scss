@@ -1,6 +1,6 @@
 @use '../../../variables.scss' as *;
 
-.register-teacher-page {
+.register-collaborator-page {
 
 // ─── Container ────────────────────────────────────────────────────────────────
 .register-container {
@@ -28,29 +28,6 @@
   justify-content: space-between;
   gap: 0.75rem;
   flex-wrap: wrap;
-
-  .back-button {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    background: transparent;
-    border: 1px solid var(--cor-borda);
-    color: var(--text-escuro);
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.8rem;
-    transition: all 0.22s ease;
-    padding: 0.48rem 0.92rem;
-    border-radius: 30px;
-    flex-shrink: 0;
-
-    &:hover {
-      border-color: rgba($laranja-principal, 0.45);
-      color: $laranja-principal;
-      background: rgba($laranja-principal, 0.06);
-      transform: translateX(-2px);
-    }
-  }
 
   .header-title-group {
     display: flex;

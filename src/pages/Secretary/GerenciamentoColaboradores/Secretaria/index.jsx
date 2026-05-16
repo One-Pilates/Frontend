@@ -52,7 +52,7 @@ export default function GerenciamentoSecretaria() {
 
     Swal.fire({
       title: 'Excluir secretaria?',
-      text: 'Ao excluir esta secretaria, todos os agendamentos (passados e futuros) vinculados a ela também serão removidos.',
+      text: 'Ao excluir esta secretaria, ela será removida permanentemente do sistema. Esta ação não pode ser desfeita.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -141,8 +141,8 @@ export default function GerenciamentoSecretaria() {
         </h1>
         {user && user.role === 'ADMINISTRADOR' && (
           <button
-            onClick={() => navigate(`${basePath}/secretaria/cadastrar`)}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold shadow-md shadow-blue-100 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            onClick={() => navigate(`${basePath}/colaborador/cadastrar/SECRETARIA`)}
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold shadow-md shadow-blue-100 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
           >
             + Adicionar Secretaria
           </button>

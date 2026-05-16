@@ -8,12 +8,14 @@ const CardInfo = ({ label, valor }) => (
   </div>
 );
 
-export default function ConfirmacaoProfessorScreen({
+export default function ConfirmacaoScreen({
   dadosPessoais = {},
   endereco = {},
   informacoesProfissionais = {},
   especialidades = [],
+  role,
 }) {
+  const isProfessor = role === 'PROFESSOR';
   const especialidadesNomes =
     informacoesProfissionais.especialidades
       ?.map((id) => especialidades.find((e) => e.id === id)?.nome)
@@ -60,7 +62,7 @@ export default function ConfirmacaoProfessorScreen({
           <h3 className="section-title">Informações Profissionais</h3>
           <div className="card-grid">
             <CardInfo label="Cargo" valor={informacoesProfissionais.cargo} />
-            <CardInfo label="Especialidades" valor={especialidadesNomes} />
+            {isProfessor && <CardInfo label="Especialidades" valor={especialidadesNomes} />}
 
             <div className="card-info">
               <span className="card-label">Notificações</span>

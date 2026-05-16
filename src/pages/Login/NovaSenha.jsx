@@ -5,9 +5,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import api from '../../services/api';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { IoArrowBack } from 'react-icons/io5';
 import BackgroundLogin from '../../components/BackgroundLogin';
 import { useAuth } from '../../hooks/useAuth';
+import Back from '../../components/Back';
 
 export default function NovaSenha() {
   const [password1, setPassword1] = useState('');
@@ -80,11 +80,7 @@ export default function NovaSenha() {
         role="region"
         aria-label="Formulário de redefinição de senha"
       >
-        {!isPrimeiroAcesso && (
-          <button onClick={() => navigate(-1)} className="botao-voltar">
-            <IoArrowBack size={18} /> Voltar
-          </button>
-        )}
+        {!isPrimeiroAcesso && <Back wrapperClassName="absolute left-[30px] top-[30px]" />}
 
         <div className="login__header">
           <h1 id="login-title" className="login__title">
