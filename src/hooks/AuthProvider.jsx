@@ -92,11 +92,9 @@ export function AuthProvider({ children }) {
 
       return true;
     } catch (error) {
-      const status = error.response?.status;
-      const msg =
-        status === 401
-          ? 'Email ou senha incorretos.'
-          : 'Ocorreu um erro inesperado. Tente novamente mais tarde.';
+      const msg = error
+        ? 'Email ou senha incorretos.'
+        : 'Ocorreu um erro inesperado. Tente novamente mais tarde.';
 
       toast.error(msg);
       return false;

@@ -13,7 +13,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  // const [rememberMe, setRememberMe] = useState(false);
 
   useEffect(() => {
     // Garantia extra: Login sempre modo claro
@@ -89,7 +89,7 @@ export default function Login() {
           </div>
 
           <div className="login__bottom-row">
-            <div className="login__checkbox">
+            {/* <div className="login__checkbox">
               <input
                 type="checkbox"
                 id="remember"
@@ -97,7 +97,7 @@ export default function Login() {
                 onChange={(e) => setRememberMe(e.target.checked)}
               />
               <label htmlFor="remember">Lembrar senha</label>
-            </div>
+            </div> */}
             <button
               type="button"
               onClick={() => navigate('/esqueci-senha')}
@@ -119,11 +119,16 @@ export default function Login() {
 
       <BackgroundLogin />
 
-
       <p className="login__terms">
         Ao continuar, você concorda com nossos{' '}
-        <Link to="/termos-de-uso" className="login__terms-link">Termos de Uso</Link> e{' '}
-        <Link to="/politica-de-privacidade" className="login__terms-link">Política de Privacidade</Link>.
+        <Link to="/termos-de-uso" className="login__terms-link">
+          Termos de Uso
+        </Link>{' '}
+        e{' '}
+        <Link to="/politica-de-privacidade" className="login__terms-link">
+          Política de Privacidade
+        </Link>
+        .
       </p>
     </div>
   );

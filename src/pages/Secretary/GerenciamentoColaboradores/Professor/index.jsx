@@ -228,7 +228,14 @@ export default function GerenciamentoProfessor() {
                   />
                   <div className="flex flex-col gap-1 flex-1">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                      <h2 className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight">
+                      <h2
+                        onClick={() =>
+                          navigate(`${basePath}/perfilView/professor/${professor.id}`, {
+                            state: 'professores',
+                          })
+                        }
+                        className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight cursor-pointer hover:text-orange-500 transition-colors"
+                      >
                         {professor.nome}
                       </h2>
                       <span

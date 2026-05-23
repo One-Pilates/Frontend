@@ -12,6 +12,8 @@ import {
   FiAward,
   FiAlertCircle,
   FiFileText,
+  FiHome,
+  FiMapPin,
 } from 'react-icons/fi';
 import '../../../pages/Teacher/Profile/style.scss';
 
@@ -21,13 +23,22 @@ export default function ProfileView() {
   const [dadosUser, setDadosUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const tipo = location.pathname.includes('/professor') ? 'professor' : 'aluno';
+  const tipo = location.pathname.includes('/professor')
+    ? 'professor'
+    : location.pathname.includes('/secretaria')
+      ? 'secretaria'
+      : 'aluno';
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         setLoading(true);
-        const endpoint = tipo === 'professor' ? `api/professores/${id}` : `api/alunos/${id}`;
+        const endpoint =
+          tipo === 'professor'
+            ? `api/professores/${id}`
+            : tipo === 'secretaria'
+              ? `api/secretarias/${id}`
+              : `api/alunos/${id}`;
         const response = await api.get(endpoint);
         const data = response.data;
 
@@ -68,15 +79,22 @@ export default function ProfileView() {
   const inputClass =
     'w-full pl-12 pr-4 py-3 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) outline-none cursor-default';
 
+  const endereco = dadosUser.endereco || {};
+  const numeroVisivel = endereco.numero && endereco.numero !== '0' ? endereco.numero : '';
+
   return (
     <div className="profile-page px-3 sm:px-4 md:px-6 lg:px-8 py-2">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="relative flex items-center justify-center mb-4 py-2">
-          <Back />
+          <Back wrapperClassName="absolute left-0 top-1/2 -translate-y-1/2" />
           <div className="text-center">
             <h1 className="text-xl sm:text-2xl font-bold text-(--text-escuro) mb-1">
-              {tipo === 'professor' ? 'Perfil do Professor' : 'Perfil do Aluno'}
+              {tipo === 'professor'
+                ? 'Perfil do Professor'
+                : tipo === 'secretaria'
+                  ? 'Perfil da Secretária'
+                  : 'Perfil do Aluno'}
             </h1>
             <p className="text-sm sm:text-base text-(--text-cinza)">
               Visualização dos dados cadastrados
@@ -87,7 +105,7 @@ export default function ProfileView() {
         {/* Profile Header Card */}
         <div className="bg-white rounded-2xl shadow-md p-5 sm:p-6 mb-4">
           <div className="flex flex-col sm:flex-row items-center gap-5">
-            {tipo === 'professor' && (
+            {tipo !== 'aluno' && (
               <div className="relative">
                 <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-(--laranja-principal) shadow-lg">
                   <img
@@ -104,7 +122,11 @@ export default function ProfileView() {
                 {dadosUser.nome}
               </h2>
               <p className="text-base sm:text-lg text-(--text-cinza)">
-                {tipo === 'professor' ? dadosUser.cargo || 'Professor' : 'Aluno'}
+                {tipo === 'professor'
+                  ? dadosUser.cargo || 'Professor'
+                  : tipo === 'secretaria'
+                    ? dadosUser.cargo || 'Secretária'
+                    : 'Aluno'}
               </p>
             </div>
           </div>
@@ -180,6 +202,96 @@ export default function ProfileView() {
           </div>
         </div>
 
+        {/* Endereço */}
+        <div className="bg-white rounded-2xl shadow-md p-5 sm:p-6 mb-4">
+          <h3 className="text-xl font-bold text-(--text-escuro) mb-4 flex items-center gap-2">
+            <FiHome className="text-(--laranja-principal)" size={24} />
+            Endereço
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label className="block text-sm font-semibold text-(--text-escuro) mb-2">Rua</label>
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
+                  <FiMapPin size={20} />
+                </div>
+                <input type="text" value={endereco.rua || ''} className={inputClass} readOnly />
+              </div>
+            </div>
+
+            {numeroVisivel && (
+              <div>
+                <label className="block text-sm font-semibold text-(--text-escuro) mb-2">
+                  Numero
+                </label>
+                <div className="relative">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
+                    <FiMapPin size={20} />
+                  </div>
+                  <input type="text" value={numeroVisivel} className={inputClass} readOnly />
+                </div>
+              </div>
+            )}
+
+            <div>
+              <label className="block text-sm font-semibold text-(--text-escuro) mb-2">
+                Bairro
+              </label>
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
+                  <FiMapPin size={20} />
+                </div>
+                <input type="text" value={endereco.bairro || ''} className={inputClass} readOnly />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-(--text-escuro) mb-2">
+                Cidade
+              </label>
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
+                  <FiMapPin size={20} />
+                </div>
+                <input type="text" value={endereco.cidade || ''} className={inputClass} readOnly />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-(--text-escuro) mb-2">
+                Estado
+              </label>
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
+                  <FiMapPin size={20} />
+                </div>
+                <input type="text" value={endereco.estado || ''} className={inputClass} readOnly />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-(--text-escuro) mb-2">UF</label>
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
+                  <FiMapPin size={20} />
+                </div>
+                <input type="text" value={endereco.uf || ''} className={inputClass} readOnly />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-(--text-escuro) mb-2">CEP</label>
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
+                  <FiMapPin size={20} />
+                </div>
+                <input type="text" value={endereco.cep || ''} className={inputClass} readOnly />
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Notificações / Limitações Card */}
         <div className="bg-white rounded-2xl shadow-md p-5 sm:p-6 mb-4">
           <h3 className="text-xl font-bold text-(--text-escuro) mb-4 flex items-center gap-2">
@@ -188,16 +300,16 @@ export default function ProfileView() {
             ) : (
               <FiAlertCircle className="text-(--laranja-principal)" size={24} />
             )}
-            {tipo === 'professor' ? 'Preferências de Notificação' : 'Informações de Saúde'}
+            {tipo !== 'alunos' ? 'Preferências de Notificação' : 'Informações de Saúde'}
           </h3>
 
           <div className="flex items-center justify-between p-4 bg-(--bg-claro) rounded-xl">
             <div>
               <p className="font-semibold text-(--text-escuro) mb-1">
-                {tipo === 'professor' ? 'Receber Notificações' : 'Problema de Mobilidade'}
+                {tipo !== 'alunos' ? 'Recebe Notificações' : 'Problema de Mobilidade'}
               </p>
               <p className="text-sm text-(--text-cinza)">
-                {tipo === 'professor'
+                {tipo !== 'alunos'
                   ? 'Recebe atualizações sobre suas aulas e lembretes'
                   : 'Aluno possui limitações físicas ou de mobilidade'}
               </p>
@@ -206,7 +318,7 @@ export default function ProfileView() {
               <input
                 type="checkbox"
                 checked={
-                  tipo === 'professor'
+                  tipo !== 'alunos'
                     ? dadosUser.notificacaoAtiva || false
                     : dadosUser.alunoComLimitacoesFisicas || false
                 }
@@ -218,21 +330,19 @@ export default function ProfileView() {
           </div>
         </div>
 
-        {/* Observações - apenas aluno */}
-        {tipo === 'aluno' && (
-          <div className="bg-white rounded-2xl shadow-md p-5 sm:p-6 mb-4">
-            <h3 className="text-xl font-bold text-(--text-escuro) mb-4 flex items-center gap-2">
-              <FiFileText className="text-(--laranja-principal)" size={24} />
-              Observações
-            </h3>
-            <textarea
-              value={dadosUser.observacao || 'Nenhuma observação registrada'}
-              rows={4}
-              readOnly
-              className="w-full p-4 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) outline-none cursor-default resize-none"
-            />
-          </div>
-        )}
+        {/* Observações - para todos */}
+        <div className="bg-white rounded-2xl shadow-md p-5 sm:p-6 mb-4">
+          <h3 className="text-xl font-bold text-(--text-escuro) mb-4 flex items-center gap-2">
+            <FiFileText className="text-(--laranja-principal)" size={24} />
+            Observações
+          </h3>
+          <textarea
+            value={dadosUser.observacao || 'Nenhuma observação registrada'}
+            rows={4}
+            readOnly
+            className="w-full p-4 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) outline-none cursor-default resize-none"
+          />
+        </div>
 
         {/* Especialidades - apenas professor */}
         {tipo === 'professor' && dadosUser.especialidades?.length > 0 && (

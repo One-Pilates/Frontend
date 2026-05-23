@@ -21,8 +21,6 @@ import { getColorForEspecialidade } from '../../../../utils/utils';
 import '../styles/Modal.scss';
 import OneIAModal from './OneIAModal';
 
-
-
 const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
   const [activeTab, setActiveTab] = useState('informacoes');
   const [editFields, setEditFields] = useState({});
@@ -36,7 +34,13 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
   const [observacoesAlunos, setObservacoesAlunos] = useState({});
   const [iaRecomendacoes, setiaRecomendacoes] = useState({});
   const [iaCarregando, setiaCarregando] = useState({});
-  const [oneIAModal, setOneIAModal] = useState({ open: false, alunoId: null, nomeAluno: '', observacao: '', recomendacao: '' });
+  const [oneIAModal, setOneIAModal] = useState({
+    open: false,
+    alunoId: null,
+    nomeAluno: '',
+    observacao: '',
+    recomendacao: '',
+  });
 
   const extrairLista = (payload) => {
     if (!payload) return [];
@@ -216,8 +220,8 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
       });
     } catch (err) {
       console.error('Erro IA (Backend):', err);
-      
-      // FALLBACK PARA TESTE: Se o backend falhar, vamos simular uma resposta para o usuário ver o modal funcionando
+      // FALLBACK PARA TESTE: Se o backend falhar,
+      // vamos simular uma resposta para o usuário ver o modal funcionando
       const simulationText = `### Recomendação Simulada (Backend offline)
 Como o serviço de IA não respondeu, aqui está uma sugestão genérica para ${nomeAluno}:
 1. Foque em exercícios de mobilidade articular.
@@ -225,7 +229,7 @@ Como o serviço de IA não respondeu, aqui está uma sugestão genérica para ${
 3. Monitore a respiração durante os movimentos de ${especialidade}.`;
 
       toast.info('Simulando recomendação (Backend não respondeu)');
-      
+
       setiaRecomendacoes((prev) => ({ ...prev, [alunoId]: simulationText }));
       setOneIAModal({
         open: true,
@@ -663,7 +667,9 @@ Como o serviço de IA não respondeu, aqui está uma sugestão genérica para ${
                                 gap: '8px',
                               }}
                             >
-                              <p style={{ fontSize: '0.875rem', color: '#666', margin: 0, flex: 1 }}>
+                              <p
+                                style={{ fontSize: '0.875rem', color: '#666', margin: 0, flex: 1 }}
+                              >
                                 {labelObs || 'Sem observações.'}
                               </p>
                               <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
@@ -760,4 +766,3 @@ Como o serviço de IA não respondeu, aqui está uma sugestão genérica para ${
 };
 
 export default AgendamentoModal;
-

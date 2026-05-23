@@ -94,45 +94,14 @@ export default function RegisterCollaborator() {
       try {
         const res = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
         const data = await res.json();
-        console.log('📍 Resposta ViaCEP:', data);
 
         if (!data.erro) {
-          const estadosMap = {
-            AC: 'Acre',
-            AL: 'Alagoas',
-            AP: 'Amapá',
-            AM: 'Amazonas',
-            BA: 'Bahia',
-            CE: 'Ceará',
-            DF: 'Distrito Federal',
-            ES: 'Espírito Santo',
-            GO: 'Goiás',
-            MA: 'Maranhão',
-            MT: 'Mato Grosso',
-            MS: 'Mato Grosso do Sul',
-            MG: 'Minas Gerais',
-            PA: 'Pará',
-            PB: 'Paraíba',
-            PR: 'Paraná',
-            PE: 'Pernambuco',
-            PI: 'Piauí',
-            RJ: 'Rio de Janeiro',
-            RN: 'Rio Grande do Norte',
-            RS: 'Rio Grande do Sul',
-            RO: 'Rondônia',
-            RR: 'Roraima',
-            SC: 'Santa Catarina',
-            SP: 'São Paulo',
-            SE: 'Sergipe',
-            TO: 'Tocantins',
-          };
-
           const novoEndereco = {
             logradouro: data.logradouro || '',
             bairro: data.bairro || '',
             cidade: data.localidade || '',
             uf: data.uf || '',
-            estado: estadosMap[data.uf] || data.uf || '',
+            estado: data.estado || data.uf || '',
           };
 
           console.log('✅ Preenchendo endereço automático:', novoEndereco);
@@ -334,9 +303,6 @@ export default function RegisterCollaborator() {
       };
 
       let url = 'api/';
-
-      console.log('📦 PAYLOAD:', JSON.stringify(payload, null, 2));
-
       if (role === 'SECRETARIA') {
         url += 'secretarias';
       } else if (role === 'PROFESSOR') {

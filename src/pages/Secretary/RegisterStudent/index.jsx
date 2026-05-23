@@ -71,7 +71,7 @@ export default function RegisterStudent() {
           email: a.email || '',
           cpf: a.cpf || '',
           dataNascimento: a.dataNascimento ? a.dataNascimento.substring(0, 10) : '',
-          telefone: a.tipoContato || '',
+          telefone: a.telefone || '',
         });
         setEndereco({
           cep: a.endereco?.cep || '',
@@ -140,6 +140,7 @@ export default function RegisterStudent() {
       try {
         const res = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
         const data = await res.json();
+        console.log('📍 Resposta ViaCEP:', data);
 
         if (!data.erro) {
           atualizarEndereco({
@@ -147,7 +148,7 @@ export default function RegisterStudent() {
             bairro: data.bairro || '',
             cidade: data.localidade || '',
             uf: data.uf || '',
-            estado: data.uf || '',
+            estado: data.estado || data.uf || '',
           });
         } else {
           toast.warning('CEP não encontrado. Verifique o CEP digitado.');
@@ -267,7 +268,7 @@ export default function RegisterStudent() {
       status: true,
       alunoComLimitacoesFisicas: !!informacoesAluno.problemasMobilidade,
       observacao: informacoesAluno.observacao || '',
-      tipoContato: dadosPessoais.telefone || '',
+      telefone: dadosPessoais.telefone || '',
       notificacaoAtiva: !!informacoesAluno.notificacaoAtiva,
       endereco: {
         rua: endereco.logradouro || '',
