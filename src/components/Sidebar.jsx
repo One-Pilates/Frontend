@@ -9,15 +9,19 @@ import {
   FaSlidersH,
   FaTimes,
   FaIdBadge,
+  FaEye,
+  FaEyeSlash,
 } from 'react-icons/fa';
 import ItemSidebar from './ItemSidebar';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { usePrivacy } from '../hooks/PrivacyContext';
 
 export default function SidebarTeacher({ navAberta, setNavAberta }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
+  const { isPrivacyMode, togglePrivacyMode } = usePrivacy();
   const isActive = (path) => location.pathname === path || location.pathname.startsWith(`${path}/`);
 
   const handleNavigate = (path) => {
@@ -101,6 +105,13 @@ export default function SidebarTeacher({ navAberta, setNavAberta }) {
             <FaSignOutAlt size={20} className="w-5 h-5 md:w-5.5 md:h-5.5" />
             {navAberta && <span className="font-medium text-sm md:text-base">Sair</span>}
           </div>
+          {navAberta && (
+            <div className="mt-4 px-6 text-center select-none">
+              <p className="text-[11px] font-medium text-white opacity-80">
+                Powered by <span className="text-white font-black tracking-wide drop-shadow-sm">OneIA</span> ✨
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </>
@@ -112,6 +123,7 @@ export default function SidebarTeacher({ navAberta, setNavAberta }) {
 export function SidebarSecretary({ navAberta, setNavAberta }) {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { isPrivacyMode, togglePrivacyMode } = usePrivacy();
   const location = useLocation();
 
   const basePath = user.role === 'ADMINISTRADOR' ? '/admin' : '/secretaria';
@@ -123,8 +135,14 @@ export function SidebarSecretary({ navAberta, setNavAberta }) {
   const isColaboradoresActive =
     isActive(`${basePath}/colaboradores`) ||
     isActive(`${basePath}/professor`) ||
-    isActive(`${basePath}/secretaria`);
-  const isAlunosActive = isActive(`${basePath}/alunos`) || isActive(`${basePath}/aluno`);
+    isActive(`${basePath}/secretaria`) ||
+    isActive(`${basePath}/perfilView/professor`) ||
+    isActive(`${basePath}/perfilView/secretaria`);
+    
+  const isAlunosActive = 
+    isActive(`${basePath}/alunos`) || 
+    isActive(`${basePath}/aluno`) ||
+    isActive(`${basePath}/perfilView/aluno`);
 
   const handleNavigate = (path) => {
     navigate(path);
@@ -229,6 +247,13 @@ export function SidebarSecretary({ navAberta, setNavAberta }) {
             <FaSignOutAlt size={20} className="w-5 h-5 md:w-5.5 md:h-5.5" />
             {navAberta && <span className="font-medium text-sm md:text-base">Sair</span>}
           </div>
+          {navAberta && (
+            <div className="mt-4 px-6 text-center select-none">
+              <p className="text-[11px] font-medium text-white opacity-80">
+                Powered by <span className="text-white font-black tracking-wide drop-shadow-sm">OneIA</span> ✨
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </>

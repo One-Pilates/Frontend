@@ -77,7 +77,7 @@ export default function ProfileView() {
   }
 
   const inputClass =
-    'w-full pl-12 pr-4 py-3 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) outline-none cursor-default';
+    'w-full pl-12 pr-4 py-3 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) outline-none cursor-default sensitive-data';
 
   const endereco = dadosUser.endereco || {};
   const numeroVisivel = endereco.numero && endereco.numero !== '0' ? endereco.numero : '';
@@ -330,19 +330,21 @@ export default function ProfileView() {
           </div>
         </div>
 
-        {/* Observações - para todos */}
-        <div className="bg-white rounded-2xl shadow-md p-5 sm:p-6 mb-4">
-          <h3 className="text-xl font-bold text-(--text-escuro) mb-4 flex items-center gap-2">
-            <FiFileText className="text-(--laranja-principal)" size={24} />
-            Observações
-          </h3>
-          <textarea
-            value={dadosUser.observacao || 'Nenhuma observação registrada'}
-            rows={4}
-            readOnly
-            className="w-full p-4 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) outline-none cursor-default resize-none"
-          />
-        </div>
+        {/* Observações - apenas aluno */}
+        {tipo === 'aluno' && (
+          <div className="bg-white rounded-2xl shadow-md p-5 sm:p-6 mb-4">
+            <h3 className="text-xl font-bold text-(--text-escuro) mb-4 flex items-center gap-2">
+              <FiFileText className="text-(--laranja-principal)" size={24} />
+              Observações
+            </h3>
+            <textarea
+              value={dadosUser.observacao || 'Nenhuma observação registrada'}
+              rows={4}
+              readOnly
+              className="w-full p-4 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) outline-none cursor-default resize-none sensitive-data"
+            />
+          </div>
+        )}
 
         {/* Especialidades - apenas professor */}
         {tipo === 'professor' && dadosUser.especialidades?.length > 0 && (

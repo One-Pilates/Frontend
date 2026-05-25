@@ -13,9 +13,12 @@ import {
   FiDownload,
   FiEdit2,
   FiChevronDown,
+  FiEye,
+  FiEyeOff,
 } from 'react-icons/fi';
 import Botao from '../../../components/Button';
 import { abrirModalDownload } from './components/Export';
+import { usePrivacy } from '../../../hooks/PrivacyContext';
 
 export default function GerenciamentoAluno() {
   const navigate = useNavigate();
@@ -27,6 +30,7 @@ export default function GerenciamentoAluno() {
   const [statusFilter, setStatusFilter] = useState('todos');
   const [nameFilter, setNameFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const { isPrivacyMode, togglePrivacyMode } = usePrivacy();
   const studentsPerPage = 10;
 
   const fetchStudents = async (page = 1) => {
@@ -159,26 +163,42 @@ export default function GerenciamentoAluno() {
       </div>
 
       <div className="flex flex-col md:flex-row w-full items-stretch md:items-center gap-4 justify-between">
-        <div className="relative w-full md:w-96 group">
-          <FiSearch
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 transition-colors group-focus-within:text-orange-500"
-            size={18}
-            style={{ color: '#94a3b8', pointerEvents: 'none' }}
-          />
-          <input
-            type="text"
-            onChange={(e) => setNameFilter(e.target.value)}
-            placeholder="Buscar por nome..."
-            className="w-full pl-11 pr-4 py-3 rounded-2xl focus:outline-none transition-all duration-200 shadow-sm border-2 border-slate-100 bg-white"
-            onFocus={(e) => {
-              e.target.style.borderColor = 'var(--laranja-principal)';
-              e.target.style.boxShadow = '0 0 0 4px rgba(247, 116, 51, 0.1)';
+        <div className="flex gap-3 w-full md:w-auto">
+          <div className="relative flex-1 md:w-96 group">
+            <FiSearch
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 transition-colors group-focus-within:text-orange-500"
+              size={18}
+              style={{ color: '#94a3b8', pointerEvents: 'none' }}
+            />
+            <input
+              type="text"
+              onChange={(e) => setNameFilter(e.target.value)}
+              placeholder="Buscar por nome..."
+              className="w-full pl-11 pr-4 py-3 rounded-2xl focus:outline-none transition-all duration-200 shadow-sm border-2 border-slate-100 bg-white"
+              onFocus={(e) => {
+                e.target.style.borderColor = 'var(--laranja-principal)';
+                e.target.style.boxShadow = '0 0 0 4px rgba(247, 116, 51, 0.1)';
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = '#f1f5f9';
+                e.target.style.boxShadow = 'none';
+              }}
+            />
+          </div>
+          <button
+            onClick={togglePrivacyMode}
+            className={`p-3 rounded-2xl flex items-center justify-center transition-all shadow-sm ${
+              isPrivacyMode
+                ? 'text-white border-transparent'
+                : 'bg-white border-2 border-slate-100 text-slate-500 hover:border-slate-300'
+            }`}
+            style={{
+              backgroundColor: isPrivacyMode ? 'var(--laranja-principal)' : '',
             }}
-            onBlur={(e) => {
-              e.target.style.borderColor = '#f1f5f9';
-              e.target.style.boxShadow = 'none';
-            }}
-          />
+            title="Ativar/Desativar modo privacidade"
+          >
+            {isPrivacyMode ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+          </button>
         </div>
 
         <div className="flex items-center gap-3">
@@ -246,13 +266,13 @@ export default function GerenciamentoAluno() {
                             state: 'alunos',
                           })
                         }
-                        className="cursor-pointer text-left hover:text-orange-600 font-bold text-slate-700 transition-colors"
+                        className="text-left hover:text-orange-600 font-bold text-slate-700 transition-colors sensitive-data"
                       >
                         {aluno.nome}
                       </button>
                     </td>
 
-                    <td className="hidden lg:table-cell px-6 py-4 text-sm text-slate-500 font-medium">
+                    <td className="hidden lg:table-cell px-6 py-4 text-sm text-slate-500 font-medium sensitive-data">
                       {aluno.email}
                     </td>
 

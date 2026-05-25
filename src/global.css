@@ -828,3 +828,18 @@ html.dark .hover\:border-orange-100:hover {
 html.dark .border-dashed.border-slate-100 {
   border-color: var(--cor-borda) !important;
 }
+
+/* ============================================
+   MODO PRIVACIDADE (BLUR DE DADOS SENSÍVEIS)
+   ============================================ */
+html.privacy-mode-active .sensitive-data {
+  filter: blur(5px);
+  user-select: none;
+  opacity: 0.8;
+  pointer-events: none;
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.sensitive-data {
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}

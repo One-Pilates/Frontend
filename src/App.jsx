@@ -7,6 +7,8 @@ import PublicRoutes from './routes/PublicRoutes';
 import TeacherRoutes from './routes/TeacherRoutes';
 import SecretaryRoutes from './routes/SecretaryRoutes';
 import { useAuth } from './hooks/useAuth';
+import { PrivacyProvider } from './hooks/PrivacyContext';
+import InactivityTracker from './components/InactivityTracker';
 
 function App() {
   const location = useLocation();
@@ -58,18 +60,21 @@ function App() {
           duration: 4000,
         }}
       />
-      <Routes>
-        <Route element={<PrivateRoutes allowedRoles={['PROFESSOR']} />}>
-          <Route path="/professor/*" element={<TeacherRoutes />} />
-        </Route>
-        <Route element={<PrivateRoutes allowedRoles={['SECRETARIA']} />}>
-          <Route path="/secretaria/*" element={<SecretaryRoutes />} />
-        </Route>
-        <Route element={<PrivateRoutes allowedRoles={['ADMINISTRADOR']} />}>
-          <Route path="/admin/*" element={<SecretaryRoutes />} />
-        </Route>
-        <Route path="/*" element={<PublicRoutes />} />
-      </Routes>
+      <PrivacyProvider>
+        <InactivityTracker />
+        <Routes>
+          <Route element={<PrivateRoutes allowedRoles={['PROFESSOR']} />}>
+            <Route path="/professor/*" element={<TeacherRoutes />} />
+          </Route>
+          <Route element={<PrivateRoutes allowedRoles={['SECRETARIA']} />}>
+            <Route path="/secretaria/*" element={<SecretaryRoutes />} />
+          </Route>
+          <Route element={<PrivateRoutes allowedRoles={['ADMINISTRADOR']} />}>
+            <Route path="/admin/*" element={<SecretaryRoutes />} />
+          </Route>
+          <Route path="/*" element={<PublicRoutes />} />
+        </Routes>
+      </PrivacyProvider>
     </>
   );
 }
