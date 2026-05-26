@@ -23,9 +23,9 @@ export default function ProfileView() {
   const [dadosUser, setDadosUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const tipo = location.pathname.includes('/professor')
+  const tipo = location.pathname.includes('/perfilView/professor')
     ? 'professor'
-    : location.pathname.includes('/secretaria')
+    : location.pathname.includes('/perfilView/secretaria')
       ? 'secretaria'
       : 'aluno';
 
@@ -41,6 +41,7 @@ export default function ProfileView() {
               : `api/alunos/${id}`;
         const response = await api.get(endpoint);
         const data = response.data;
+        console.log(`Dados do ${tipo}:`, data);
 
         if (tipo === 'professor' && data.foto) {
           setDadosUser({
@@ -79,7 +80,7 @@ export default function ProfileView() {
   const inputClass =
     'w-full pl-12 pr-4 py-3 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) outline-none cursor-default sensitive-data';
 
-  const endereco = dadosUser.endereco || {};
+  const endereco = dadosUser?.endereco || {};
   const numeroVisivel = endereco.numero && endereco.numero !== '0' ? endereco.numero : '';
 
   return (
@@ -109,8 +110,8 @@ export default function ProfileView() {
               <div className="relative">
                 <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-(--laranja-principal) shadow-lg">
                   <img
-                    src={dadosUser.foto || userIconImg}
-                    alt={dadosUser.nome}
+                    src={dadosUser?.foto || userIconImg}
+                    alt={dadosUser?.nome}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -119,13 +120,13 @@ export default function ProfileView() {
 
             <div className="flex-1 text-center sm:text-left">
               <h2 className="text-2xl sm:text-3xl font-bold text-(--text-escuro) mb-1">
-                {dadosUser.nome}
+                {dadosUser?.nome}
               </h2>
               <p className="text-base sm:text-lg text-(--text-cinza)">
                 {tipo === 'professor'
-                  ? dadosUser.cargo || 'Professor'
+                  ? dadosUser?.cargo || 'Professor'
                   : tipo === 'secretaria'
-                    ? dadosUser.cargo || 'Secretária'
+                    ? dadosUser?.cargo || 'Secretária'
                     : 'Aluno'}
               </p>
             </div>
@@ -149,7 +150,7 @@ export default function ProfileView() {
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
                   <FiUser size={20} />
                 </div>
-                <input type="text" value={dadosUser.nome || ''} className={inputClass} readOnly />
+                <input type="text" value={dadosUser?.nome || ''} className={inputClass} readOnly />
               </div>
             </div>
 
@@ -160,7 +161,12 @@ export default function ProfileView() {
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
                   <FiMail size={20} />
                 </div>
-                <input type="email" value={dadosUser.email || ''} className={inputClass} readOnly />
+                <input
+                  type="email"
+                  value={dadosUser?.email || ''}
+                  className={inputClass}
+                  readOnly
+                />
               </div>
             </div>
 
@@ -175,7 +181,7 @@ export default function ProfileView() {
                 </div>
                 <input
                   type="date"
-                  value={dadosUser.dataNascimento || dadosUser.idade || ''}
+                  value={dadosUser?.dataNascimento || dadosUser?.idade || ''}
                   className={inputClass}
                   readOnly
                 />
@@ -193,7 +199,7 @@ export default function ProfileView() {
                 </div>
                 <input
                   type="tel"
-                  value={dadosUser.tipoContato || dadosUser.telefone || ''}
+                  value={dadosUser?.tipoContato || dadosUser?.telefone || ''}
                   className={inputClass}
                   readOnly
                 />
@@ -216,7 +222,7 @@ export default function ProfileView() {
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
                   <FiMapPin size={20} />
                 </div>
-                <input type="text" value={endereco.rua || ''} className={inputClass} readOnly />
+                <input type="text" value={endereco?.rua || ''} className={inputClass} readOnly />
               </div>
             </div>
 
@@ -242,7 +248,7 @@ export default function ProfileView() {
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
                   <FiMapPin size={20} />
                 </div>
-                <input type="text" value={endereco.bairro || ''} className={inputClass} readOnly />
+                <input type="text" value={endereco?.bairro || ''} className={inputClass} readOnly />
               </div>
             </div>
 
@@ -254,7 +260,7 @@ export default function ProfileView() {
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
                   <FiMapPin size={20} />
                 </div>
-                <input type="text" value={endereco.cidade || ''} className={inputClass} readOnly />
+                <input type="text" value={endereco?.cidade || ''} className={inputClass} readOnly />
               </div>
             </div>
 
@@ -266,7 +272,7 @@ export default function ProfileView() {
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
                   <FiMapPin size={20} />
                 </div>
-                <input type="text" value={endereco.estado || ''} className={inputClass} readOnly />
+                <input type="text" value={endereco?.estado || ''} className={inputClass} readOnly />
               </div>
             </div>
 
@@ -276,7 +282,7 @@ export default function ProfileView() {
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
                   <FiMapPin size={20} />
                 </div>
-                <input type="text" value={endereco.uf || ''} className={inputClass} readOnly />
+                <input type="text" value={endereco?.uf || ''} className={inputClass} readOnly />
               </div>
             </div>
 
@@ -286,7 +292,7 @@ export default function ProfileView() {
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
                   <FiMapPin size={20} />
                 </div>
-                <input type="text" value={endereco.cep || ''} className={inputClass} readOnly />
+                <input type="text" value={endereco?.cep || ''} className={inputClass} readOnly />
               </div>
             </div>
           </div>
@@ -319,8 +325,8 @@ export default function ProfileView() {
                 type="checkbox"
                 checked={
                   tipo !== 'alunos'
-                    ? dadosUser.notificacaoAtiva || false
-                    : dadosUser.alunoComLimitacoesFisicas || false
+                    ? dadosUser?.notificacaoAtiva || false
+                    : dadosUser?.alunoComLimitacoesFisicas || false
                 }
                 readOnly
                 className="sr-only peer"
@@ -330,31 +336,29 @@ export default function ProfileView() {
           </div>
         </div>
 
-        {/* Observações - apenas aluno */}
-        {tipo === 'aluno' && (
-          <div className="bg-white rounded-2xl shadow-md p-5 sm:p-6 mb-4">
-            <h3 className="text-xl font-bold text-(--text-escuro) mb-4 flex items-center gap-2">
-              <FiFileText className="text-(--laranja-principal)" size={24} />
-              Observações
-            </h3>
-            <textarea
-              value={dadosUser.observacao || 'Nenhuma observação registrada'}
-              rows={4}
-              readOnly
-              className="w-full p-4 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) outline-none cursor-default resize-none sensitive-data"
-            />
-          </div>
-        )}
+        {/* Observações - para todos */}
+        <div className="bg-white rounded-2xl shadow-md p-5 sm:p-6 mb-4">
+          <h3 className="text-xl font-bold text-(--text-escuro) mb-4 flex items-center gap-2">
+            <FiFileText className="text-(--laranja-principal)" size={24} />
+            Observações
+          </h3>
+          <textarea
+            value={dadosUser?.observacao || 'Nenhuma observação registrada'}
+            rows={4}
+            readOnly
+            className="w-full p-4 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) outline-none cursor-default resize-none"
+          />
+        </div>
 
         {/* Especialidades - apenas professor */}
-        {tipo === 'professor' && dadosUser.especialidades?.length > 0 && (
+        {tipo === 'professor' && dadosUser?.especialidades?.length > 0 && (
           <div className="bg-white rounded-2xl shadow-md p-5 sm:p-6 mb-4">
             <h3 className="text-xl font-bold text-(--text-escuro) mb-4 flex items-center gap-2">
               <FiAward className="text-(--laranja-principal)" size={24} />
               Especialidades
             </h3>
             <div className="flex flex-wrap gap-3">
-              {dadosUser.especialidades.map((esp) => (
+              {dadosUser?.especialidades?.map((esp) => (
                 <span
                   key={esp.id}
                   className="inline-flex items-center gap-2 px-5 py-3 bg-(--laranja-principal) text-white text-sm font-semibold rounded-full"

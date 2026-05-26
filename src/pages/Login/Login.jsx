@@ -119,8 +119,24 @@ export default function Login() {
 
       <BackgroundLogin />
 
-      <p style={{ position: 'absolute', bottom: '3rem', left: '40%', right: '0', textAlign: 'center', fontSize: '12px', color: '#fff', zIndex: 3, opacity: 0.9 }}>
-        Powered by <span className="font-bold tracking-widest" style={{ color: '#f77433' }}>OneIA</span> ✨
+      <p
+        style={{
+          position: 'absolute',
+          bottom: '3rem',
+          left: '40%',
+          right: '0',
+          textAlign: 'center',
+          fontSize: '12px',
+          color: '#fff',
+          zIndex: 3,
+          opacity: 0.9,
+        }}
+      >
+        Powered by{' '}
+        <span className="font-bold tracking-widest" style={{ color: '#f77433' }}>
+          OneIA
+        </span>{' '}
+        ✨
       </p>
 
       <p className="login__terms">
