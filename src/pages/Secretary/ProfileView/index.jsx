@@ -306,16 +306,16 @@ export default function ProfileView() {
             ) : (
               <FiAlertCircle className="text-(--laranja-principal)" size={24} />
             )}
-            {tipo !== 'alunos' ? 'Preferências de Notificação' : 'Informações de Saúde'}
+            {tipo !== 'aluno' ? 'Preferências de Notificação' : 'Informações de Saúde'}
           </h3>
 
           <div className="flex items-center justify-between p-4 bg-(--bg-claro) rounded-xl">
             <div>
               <p className="font-semibold text-(--text-escuro) mb-1">
-                {tipo !== 'alunos' ? 'Recebe Notificações' : 'Problema de Mobilidade'}
+                {tipo !== 'aluno' ? 'Recebe Notificações' : 'Problema de Mobilidade'}
               </p>
               <p className="text-sm text-(--text-cinza)">
-                {tipo !== 'alunos'
+                {tipo !== 'aluno'
                   ? 'Recebe atualizações sobre suas aulas e lembretes'
                   : 'Aluno possui limitações físicas ou de mobilidade'}
               </p>
@@ -324,7 +324,7 @@ export default function ProfileView() {
               <input
                 type="checkbox"
                 checked={
-                  tipo !== 'alunos'
+                  tipo !== 'aluno'
                     ? dadosUser?.notificacaoAtiva || false
                     : dadosUser?.alunoComLimitacoesFisicas || false
                 }

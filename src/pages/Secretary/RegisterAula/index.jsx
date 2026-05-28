@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import Swal from 'sweetalert2';
 import api from '../../../services/api';
 import StepIndicator from '../../../components/StepIndicator';
+import ModalErrors from '../../../components/modalErrors';
 import Etapa1DataHora from './screens/Etapa1DataHora';
 import Etapa2Turma from './screens/Etapa2Turma';
 import Etapa3Alunos from './screens/Etapa3Alunos';
@@ -21,6 +22,7 @@ export default function RegisterAula() {
   const [etapaAtual, setEtapaAtual] = useState(1);
   const [carregando, setCarregando] = useState(false);
   const [erros, setErros] = useState({});
+  const [conflitos, setConflitos] = useState(null);
 
   const [dataHora, setDataHora] = useState({
     data: location.state?.data || '',
@@ -201,8 +203,9 @@ export default function RegisterAula() {
     setEtapaAtual(4);
   };
 
-  const criarAula = async () => {
+  const criarAula = async (usarAbsoluto = false) => {
     setCarregando(true);
+    const deveUsarAbsoluto = usarAbsoluto === true;
 
     try {
       const dataHoraString = `${dataHora.data}T${dataHora.horario}:00`;
@@ -221,7 +224,6 @@ export default function RegisterAula() {
 
       if (payloadInvalido) {
         toast.error('Dados da aula inválidos. Revise professor, sala, especialidade e alunos.');
-        setCarregando(false);
         return;
       }
 
@@ -233,7 +235,11 @@ export default function RegisterAula() {
         alunoIds,
       };
 
-      await api.post('/api/agendamentos', payload);
+      if (deveUsarAbsoluto) {
+        await api.post('/api/agendamentos/absoluto', payload);
+      } else {
+        await api.post('/api/agendamentos', payload);
+      }
 
       toast.success('Aula criada com sucesso!');
 
@@ -247,6 +253,12 @@ export default function RegisterAula() {
     } catch (error) {
       console.error('Erro ao criar aula:', error);
       console.error('Detalhes do erro:', error.response?.data);
+      const responseData = error.response?.data;
+      const conflitosRecebidos = Array.isArray(responseData?.erros) ? responseData.erros : [];
+
+      if (conflitosRecebidos.length) {
+        setConflitos(responseData);
+      }
 
       let mensagem = 'Erro ao criar aula. Tente novamente.';
 
@@ -260,14 +272,21 @@ export default function RegisterAula() {
 
       if (mensagem === 'Authentication failed') {
         toast.error('Sua sessão expirou. Faça login novamente.');
-        setCarregando(false);
-        navigate('/login');
+        navigate('/');
         return;
       }
-
-      toast.error(mensagem);
+    } finally {
       setCarregando(false);
     }
+  };
+
+  async function handleConfirmarMesmoAssim() {
+    setConflitos(null);
+    await criarAula(true);
+  }
+
+  const handleCancelarConflitos = () => {
+    setConflitos(null);
   };
 
   const cancelar = () => {
@@ -356,6 +375,15 @@ export default function RegisterAula() {
           Etapa {etapaAtual} de {etapas.length}
         </span>
       </div>
+
+      {conflitos?.erros?.length > 0 && (
+        <ModalErrors
+          erros={conflitos.erros}
+          subtitulo={conflitos?.mensagem}
+          onCancel={handleCancelarConflitos}
+          onConfirm={handleConfirmarMesmoAssim}
+        />
+      )}
 
       <div className="register-content">
         <StepIndicator steps={etapas} currentStep={etapaAtual} onStepClick={irParaEtapa} />
