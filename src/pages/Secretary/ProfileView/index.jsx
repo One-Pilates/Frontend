@@ -41,16 +41,11 @@ export default function ProfileView() {
               : `api/alunos/${id}`;
         const response = await api.get(endpoint);
         const data = response.data;
-        console.log(`Dados do ${tipo}:`, data);
 
-        if (tipo === 'professor' && data.foto) {
-          setDadosUser({
-            ...data,
-            foto: `${api.defaults.baseURL}/api/imagens/${data.foto}?token=${localStorage.getItem('token')}`,
-          });
-        } else {
-          setDadosUser(data);
-        }
+        setDadosUser({
+          ...data,
+          foto: `${api.defaults.baseURL}/api/imagens/funcionarios/${data.id}`,
+        });
       } catch (error) {
         console.error(`Erro ao buscar ${tipo}:`, error);
       } finally {

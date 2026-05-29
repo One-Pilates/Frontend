@@ -15,13 +15,11 @@ import {
 import ItemSidebar from './ItemSidebar';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { usePrivacy } from '../hooks/PrivacyContext';
 
 export default function SidebarTeacher({ navAberta, setNavAberta }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
-  const { isPrivacyMode, togglePrivacyMode } = usePrivacy();
   const isActive = (path) => location.pathname === path || location.pathname.startsWith(`${path}/`);
 
   const handleNavigate = (path) => {
@@ -108,7 +106,8 @@ export default function SidebarTeacher({ navAberta, setNavAberta }) {
           {navAberta && (
             <div className="mt-4 px-6 text-center select-none">
               <p className="text-[11px] font-medium text-white opacity-80">
-                Powered by <span className="text-white font-black tracking-wide drop-shadow-sm">OneIA</span> ✨
+                Powered by{' '}
+                <span className="text-white font-black tracking-wide drop-shadow-sm">OneIA</span> ✨
               </p>
             </div>
           )}
@@ -123,7 +122,6 @@ export default function SidebarTeacher({ navAberta, setNavAberta }) {
 export function SidebarSecretary({ navAberta, setNavAberta }) {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const { isPrivacyMode, togglePrivacyMode } = usePrivacy();
   const location = useLocation();
 
   const basePath = user.role === 'ADMINISTRADOR' ? '/admin' : '/secretaria';
@@ -138,9 +136,9 @@ export function SidebarSecretary({ navAberta, setNavAberta }) {
     isActive(`${basePath}/secretaria`) ||
     isActive(`${basePath}/perfilView/professor`) ||
     isActive(`${basePath}/perfilView/secretaria`);
-    
-  const isAlunosActive = 
-    isActive(`${basePath}/alunos`) || 
+
+  const isAlunosActive =
+    isActive(`${basePath}/alunos`) ||
     isActive(`${basePath}/aluno`) ||
     isActive(`${basePath}/perfilView/aluno`);
 
@@ -250,7 +248,8 @@ export function SidebarSecretary({ navAberta, setNavAberta }) {
           {navAberta && (
             <div className="mt-4 px-6 text-center select-none">
               <p className="text-[11px] font-medium text-white opacity-80">
-                Powered by <span className="text-white font-black tracking-wide drop-shadow-sm">OneIA</span> ✨
+                Powered by{' '}
+                <span className="text-white font-black tracking-wide drop-shadow-sm">OneIA</span> ✨
               </p>
             </div>
           )}

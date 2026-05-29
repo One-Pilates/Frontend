@@ -220,7 +220,7 @@ export default function GerenciamentoProfessor() {
                   <img
                     src={
                       professor.foto
-                        ? `${api.defaults.baseURL}/api/imagens/${professor.foto}?token=${localStorage.getItem('token')}`
+                        ? `${api.defaults.baseURL}/api/imagens/funcionarios/${professor.id}`
                         : userIconImg
                     }
                     alt={professor.nome}

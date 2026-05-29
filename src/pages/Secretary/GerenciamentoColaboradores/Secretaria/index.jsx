@@ -187,7 +187,7 @@ export default function GerenciamentoSecretaria() {
                   <img
                     src={
                       secretaria.foto
-                        ? `${api.defaults.baseURL}/api/imagens/${secretaria.foto}?token=${localStorage.getItem('token')}`
+                        ? `${api.defaults.baseURL}/api/imagens/funcionarios/${secretaria.id}`
                         : userIconImg
                     }
                     alt={secretaria.nome}

@@ -80,7 +80,7 @@ const ProfileUser = () => {
       cargo: user?.cargo || '',
       role: user?.role || '',
       foto: user?.foto
-        ? `${api.defaults.baseURL}/api/imagens/${user.foto}?token=${localStorage.getItem('token')}`
+        ? `${api.defaults.baseURL}/api/imagens/funcionarios/${user.id}`
         : userIconImg,
       email: user?.email || '',
       dataNascimento: user?.idade || user?.dataNascimento || '',

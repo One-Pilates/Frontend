@@ -12,8 +12,8 @@ export default function Navbar({ navAberta, setNavAberta }) {
       <button
         onClick={() => setNavAberta(!navAberta)}
         className="p-2 rounded-lg transition-all active:scale-95"
-        onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--cor-borda)')}
-        onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
+        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--cor-borda)')}
+        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
         style={{ color: 'var(--text-escuro)' }}
         aria-label="Toggle menu"
       >

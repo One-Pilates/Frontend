@@ -54,7 +54,7 @@ function Account() {
       >
         {user && user.foto ? (
           <img
-            src={`${api.defaults.baseURL}/api/imagens/${user.foto}?token=${localStorage.getItem('token')}`}
+            src={`${api.defaults.baseURL}/api/imagens/funcionarios/${user.id}`}
             alt={nome}
             className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover"
             style={{ outline: '2px solid var(--laranja-principal)' }}
@@ -106,7 +106,7 @@ function Account() {
                 <img
                   src={
                     user?.foto
-                      ? `${api.defaults.baseURL}/api/imagens/${user.foto}?token=${localStorage.getItem('token')}`
+                      ? `${api.defaults.baseURL}/api/imagens/funcionarios/${user.id}`
                       : userIconImg
                   }
                   alt={nome}
@@ -124,8 +124,8 @@ function Account() {
                 onClick={openAdminModal}
                 className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left transition-colors flex items-center gap-3"
                 style={{ backgroundColor: 'var(--branco)', color: 'var(--text-escuro)' }}
-                onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--surface-3)'}
-                onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--branco)'}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--surface-3)')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--branco)')}
               >
                 <FaCog className="text-base" style={{ color: 'var(--text-cinza)' }} />
                 <span className="text-sm sm:text-base">Configurações</span>
@@ -135,8 +135,8 @@ function Account() {
                 onClick={() => navigate('/redefinir-senha')}
                 className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left transition-colors flex items-center gap-3"
                 style={{ backgroundColor: 'var(--branco)', color: 'var(--text-escuro)' }}
-                onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--surface-3)'}
-                onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--branco)'}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--surface-3)')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--branco)')}
               >
                 <FaKey className="text-base" style={{ color: 'var(--text-cinza)' }} />
                 <span className="text-sm sm:text-base">Senhas</span>
@@ -146,8 +146,8 @@ function Account() {
                 onClick={toggleModoEscuro}
                 className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left transition-colors flex items-center justify-between"
                 style={{ backgroundColor: 'var(--branco)', color: 'var(--text-escuro)' }}
-                onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--surface-3)'}
-                onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--branco)'}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--surface-3)')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--branco)')}
               >
                 <div className="flex items-center gap-3">
                   {modoEscuro ? (
