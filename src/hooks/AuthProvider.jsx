@@ -28,7 +28,7 @@ export function AuthProvider({ children }) {
     setIsLoading(true);
 
     try {
-      const response = await api.post('/auth/login', { email, senha });
+      const response = await api.post('/api/auth/login', { email, senha });
       const data = response.data;
 
       const tokenCandidate =

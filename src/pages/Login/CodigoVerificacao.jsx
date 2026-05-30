@@ -42,7 +42,7 @@ export default function CodigoVerificacao() {
     const loadingId = toast.loading('Validando código...');
 
     try {
-      const response = await api.post('auth/validarCodigo', { email, codigo: codigoFinal });
+      const response = await api.post('api/auth/validarCodigo', { email, codigo: codigoFinal });
       console.log('Resposta do servidor:', response.data);
 
       toast.success('Código válido! Agora você pode redefinir sua senha.', { id: loadingId });
@@ -62,7 +62,7 @@ export default function CodigoVerificacao() {
     setIsResending(true);
 
     try {
-      await api.post('auth/criarCodigoVerificacao', { email });
+      await api.post('api/auth/criarCodigoVerificacao', { email });
 
       setCodigo(['', '', '', '', '']);
       inputsRef.current[0]?.focus();

@@ -55,7 +55,7 @@ export default function RedefinirSenha() {
     const loadingId = toast.loading('Enviando código de verificação...');
 
     try {
-      await api.post('/auth/criarCodigoVerificacao', { email });
+      await api.post('/api/auth/criarCodigoVerificacao', { email });
 
       toast.success('Código enviado! Verifique sua caixa de entrada.', { id: loadingId });
       setCurrentStep(2);
@@ -99,7 +99,7 @@ export default function RedefinirSenha() {
     const loadingId = toast.loading('Validando código...');
 
     try {
-      await api.post('/auth/validarCodigo', { email, codigo: codigoFinal });
+      await api.post('/api/auth/validarCodigo', { email, codigo: codigoFinal });
 
       toast.success('Código válido! Agora você pode redefinir sua senha.', { id: loadingId });
       setCurrentStep(3);
@@ -113,7 +113,7 @@ export default function RedefinirSenha() {
     setIsResending(true);
 
     try {
-      await api.post('/auth/criarCodigoVerificacao', { email });
+      await api.post('/api/auth/criarCodigoVerificacao', { email });
 
       setCodigo(['', '', '', '', '']);
       inputsRef.current[0]?.focus();
@@ -145,7 +145,7 @@ export default function RedefinirSenha() {
     const loadingId = toast.loading('Redefinindo sua senha...');
 
     try {
-      await api.post('/auth/alterarSenha', {
+      await api.post('/api/auth/alterarSenha', {
         senha: password1,
         email: email,
       });
