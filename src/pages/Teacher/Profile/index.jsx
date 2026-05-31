@@ -126,8 +126,8 @@ const ProfileUser = () => {
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      toast.warning('A imagem deve ter no máximo 5MB. Por favor, selecione uma imagem menor.');
+    if (file.size > 10 * 1024 * 1024) {
+      toast.warning('A imagem deve ter no máximo 10MB. Por favor, selecione uma imagem menor.');
       e.target.value = '';
       return;
     }
@@ -246,7 +246,17 @@ const ProfileUser = () => {
       setOriginalData(updatedData);
       setOriginalSpecialties(new Set(selectedSpecialties));
 
-      const mergedUser = { ...data, telefone: userDTO.telefone };
+      const mergedUser = { 
+        ...user,
+        ...data, 
+        ...updatedData,
+        telefone: userDTO.telefone,
+        endereco: {
+          ...user.endereco,
+          ...(data.endereco || {}),
+          ...userDTO.endereco,
+        }
+      };
       setUser(mergedUser);
       localStorage.setItem('user', JSON.stringify(mergedUser));
 
@@ -287,6 +297,59 @@ const ProfileUser = () => {
       formatted = `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
     }
     setUserData({ ...userData, telefone: formatted });
+  };
+
+  const handleCepChange = (e) => {
+    let cepValue = e.target.value.replace(/\D/g, '');
+    if (cepValue.length > 5) {
+      cepValue = cepValue.replace(/^(\d{5})(\d)/, '$1-$2');
+    }
+    setUserData({
+      ...userData,
+      endereco: { ...userData.endereco, cep: cepValue },
+    });
+  };
+
+  const getEstadoNome = (uf) => {
+    const estados = {
+      AC: 'Acre', AL: 'Alagoas', AP: 'Amapá', AM: 'Amazonas', BA: 'Bahia', CE: 'Ceará',
+      DF: 'Distrito Federal', ES: 'Espírito Santo', GO: 'Goiás', MA: 'Maranhão',
+      MT: 'Mato Grosso', MS: 'Mato Grosso do Sul', MG: 'Minas Gerais', PA: 'Pará',
+      PB: 'Paraíba', PR: 'Paraná', PE: 'Pernambuco', PI: 'Piauí', RJ: 'Rio de Janeiro',
+      RN: 'Rio Grande do Norte', RS: 'Rio Grande do Sul', RO: 'Rondônia', RR: 'Roraima',
+      SC: 'Santa Catarina', SP: 'São Paulo', SE: 'Sergipe', TO: 'Tocantins',
+    };
+    return estados[uf] || '';
+  };
+
+  const handleCepBlur = async (e) => {
+    const cep = e.target.value.replace(/\D/g, '');
+    if (cep.length === 8) {
+      try {
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await response.json();
+
+        if (!data.erro) {
+          setUserData((prev) => ({
+            ...prev,
+            endereco: {
+              ...prev.endereco,
+              rua: data.logradouro || prev.endereco.rua,
+              bairro: data.bairro || prev.endereco.bairro,
+              cidade: data.localidade || prev.endereco.cidade,
+              estado: data.estado || getEstadoNome(data.uf) || prev.endereco.estado,
+              uf: data.uf || prev.endereco.uf,
+            },
+          }));
+          toast.success('Endereço preenchido automaticamente!');
+        } else {
+          toast.error('CEP não encontrado.');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar CEP:', error);
+        toast.error('Erro ao buscar informações do CEP.');
+      }
+    }
   };
 
   const toggleSpecialty = (especialidadeId) => {
@@ -609,12 +672,8 @@ const ProfileUser = () => {
                     <input
                       type="text"
                       value={userData?.endereco?.cep || ''}
-                      onChange={(e) =>
-                        setUserData({
-                          ...userData,
-                          endereco: { ...userData.endereco, cep: e.target.value },
-                        })
-                      }
+                      onChange={handleCepChange}
+                      onBlur={handleCepBlur}
                       className="w-full pl-12 pr-4 py-3 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) focus:border-(--laranja-principal) focus:bg-white transition-all outline-none"
                       placeholder="Digite o CEP"
                       maxLength={9}

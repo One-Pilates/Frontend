@@ -4,6 +4,7 @@ import AlunoItem from './AlunoItem';
 import api from '../../../../services/api';
 import { toast } from 'sonner';
 import '../Styles/Modal.scss';
+import OneIAModal from '../../../Secretary/Calendar/Components/OneIAModal';
 
 const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
   const [activeTab, setActiveTab] = useState('informacoes');
@@ -11,6 +12,15 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
   const [observacoesExpandidas, setObservacoesExpandidas] = useState({});
   const [observacoesAlunos, setObservacoesAlunos] = useState({});
   const [editFields, setEditFields] = useState({});
+  const [iaRecomendacoes, setiaRecomendacoes] = useState({});
+  const [iaCarregando, setiaCarregando] = useState({});
+  const [oneIAModal, setOneIAModal] = useState({
+    open: false,
+    alunoId: null,
+    nomeAluno: '',
+    observacao: '',
+    recomendacao: '',
+  });
 
   useEffect(() => {
     if (agendamento?.alunos) {
@@ -61,6 +71,51 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
           ? JSON.stringify(e.response.data)
           : e.response?.data || 'Tente novamente.';
       toast.error(`Erro ao salvar: ${msg}`);
+    }
+  };
+
+  const handlePedirRecomendacaoIA = async (alunoId, nomeAluno, observacao, especialidade) => {
+    if (!observacao || !observacao.trim()) return;
+
+    setiaCarregando((prev) => ({ ...prev, [alunoId]: true }));
+    setiaRecomendacoes((prev) => ({ ...prev, [alunoId]: null }));
+
+    try {
+      const response = await api.post('/api/ia/recomendacao', {
+        nomeAluno,
+        observacao,
+        especialidade,
+      });
+
+      const texto = response.data?.recomendacao || 'Não foi possível gerar uma recomendação.';
+      setiaRecomendacoes((prev) => ({ ...prev, [alunoId]: texto }));
+
+      // Abre o modal OneIA com a recomendação inicial
+      setOneIAModal({
+        open: true,
+        alunoId,
+        nomeAluno,
+        observacao,
+        recomendacao: texto,
+      });
+    } catch (err) {
+      console.error('Erro IA (Backend):', err);
+      // FALLBACK PARA TESTE: Se o backend falhar,
+      // vamos simular uma resposta para o usuário ver o modal funcionando
+      const simulationText = `### Recomendação Simulada (Backend offline)\nComo o serviço de IA não respondeu, aqui está uma sugestão genérica para ${nomeAluno}:\n1. Foque em exercícios de mobilidade articular.\n2. Evite sobrecarga na região mencionada: "${observacao}".\n3. Monitore a respiração durante os movimentos de ${especialidade}.`;
+
+      toast.info('Simulando recomendação (Backend não respondeu)');
+
+      setiaRecomendacoes((prev) => ({ ...prev, [alunoId]: simulationText }));
+      setOneIAModal({
+        open: true,
+        alunoId,
+        nomeAluno,
+        observacao,
+        recomendacao: simulationText,
+      });
+    } finally {
+      setiaCarregando((prev) => ({ ...prev, [alunoId]: false }));
     }
   };
 
@@ -212,31 +267,72 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
                                 </div>
                               </div>
                             ) : (
-                              <>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginTop: '0.5rem', width: '100%' }}>
                                 <span
                                   className="info-value"
-                                  style={{ display: 'block', marginTop: '0.5rem' }}
+                                  style={{ display: 'block', flex: 1 }}
                                 >
                                   {observacaoAtual && observacaoAtual.trim() !== ''
                                     ? observacaoAtual
                                     : 'Nenhuma observação registrada.'}
                                 </span>
-                                <button
-                                  className="icon-btn"
-                                  onClick={() =>
-                                    setEditFields((f) => ({
-                                      ...f,
-                                      [`observacao_${aluno.id}`]: observacaoAtual || '',
-                                    }))
-                                  }
-                                  title="Editar observação"
-                                  style={{ marginTop: '0.5rem' }}
-                                >
-                                  <FiEdit2 size={16} />
-                                </button>
-                              </>
+                                <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
+                                  {observacaoAtual && observacaoAtual.trim() !== '' && (
+                                    <button
+                                      className="btn-oneia-obs"
+                                      title="Receber recomendação da IA"
+                                      onClick={() =>
+                                        handlePedirRecomendacaoIA(
+                                          aluno.id,
+                                          aluno.nome,
+                                          observacaoAtual,
+                                          agendamento.especialidade
+                                        )
+                                      }
+                                      disabled={iaCarregando[aluno.id]}
+                                      style={{
+                                        background: 'linear-gradient(135deg, #a855f7 0%, #d946ef 100%)',
+                                        color: '#fff',
+                                        border: 'none',
+                                        borderRadius: '8px',
+                                        width: '28px',
+                                        height: '28px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        cursor: 'pointer',
+                                        fontSize: '14px',
+                                        boxShadow: '0 2px 5px rgba(217, 70, 239, 0.3)'
+                                      }}
+                                    >
+                                      ✨
+                                    </button>
+                                  )}
+                                  <button
+                                    className="icon-btn"
+                                    onClick={() =>
+                                      setEditFields((f) => ({
+                                        ...f,
+                                        [`observacao_${aluno.id}`]: observacaoAtual || '',
+                                      }))
+                                    }
+                                    title="Editar observação"
+                                  >
+                                    <FiEdit2 size={16} />
+                                  </button>
+                                </div>
+                              </div>
                             )}
                           </div>
+                          
+                          {/* Indicador de carregamento IA */}
+                          {iaCarregando[aluno.id] && (
+                            <div style={{ marginTop: '10px' }}>
+                                <div style={{ height: '8px', background: '#f0f0f0', borderRadius: '4px', marginBottom: '6px', width: '100%', animation: 'pulse 1.5s infinite ease-in-out' }}></div>
+                                <div style={{ height: '8px', background: '#f0f0f0', borderRadius: '4px', marginBottom: '6px', width: '80%', animation: 'pulse 1.5s infinite ease-in-out' }}></div>
+                                <div style={{ height: '8px', background: '#f0f0f0', borderRadius: '4px', width: '90%', animation: 'pulse 1.5s infinite ease-in-out' }}></div>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -251,6 +347,20 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
           )}
         </div>
       </div>
+      
+      {/* Modal OneIA — sobrepõe o modal de aula */}
+      <OneIAModal
+        isOpen={oneIAModal.open}
+        nomeAluno={oneIAModal.nomeAluno}
+        observacao={oneIAModal.observacao}
+        especialidade={agendamento.especialidade}
+        recomendacaoInicial={oneIAModal.recomendacao}
+        onBack={() => setOneIAModal((s) => ({ ...s, open: false }))}
+        onClose={() => {
+          setOneIAModal((s) => ({ ...s, open: false }));
+          handleClose();
+        }}
+      />
     </div>
   );
 };

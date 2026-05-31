@@ -132,6 +132,7 @@ export function SidebarSecretary({ navAberta, setNavAberta }) {
 
   const isColaboradoresActive =
     isActive(`${basePath}/colaboradores`) ||
+    isActive(`${basePath}/colaborador`) ||
     isActive(`${basePath}/professor`) ||
     isActive(`${basePath}/secretaria`) ||
     isActive(`${basePath}/perfilView/professor`) ||
