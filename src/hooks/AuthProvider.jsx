@@ -92,11 +92,18 @@ export function AuthProvider({ children }) {
 
       return true;
     } catch (error) {
-      const msg = error
-        ? 'Email ou senha incorretos.'
-        : 'Ocorreu um erro inesperado. Tente novamente mais tarde.';
+      const data = error?.response?.data;
+      const codigoErro = data?.codigoErro;
+      const msg =
+        codigoErro === 'CREDENCIAIS_INVALIDAS'
+          ? 'Email ou senha inválidos. Por favor, tente novamente.'
+          : 'Ocorreu um erro inesperado. Tente novamente mais tarde.';
 
-      toast.error(msg);
+      if (codigoErro === 'CREDENCIAIS_INVALIDAS') {
+        toast.error(msg);
+      } else {
+        toast.error(msg);
+      }
       return false;
     } finally {
       setIsLoading(false);
