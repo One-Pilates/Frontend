@@ -241,7 +241,9 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
                                   placeholder="Ex: Aluno com limitações no joelho direito..."
                                   style={{ width: '100%' }}
                                 />
-                                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                                <div
+                                  style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}
+                                >
                                   <button
                                     className="icon-btn"
                                     onClick={() =>
@@ -267,11 +269,17 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
                                 </div>
                               </div>
                             ) : (
-                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginTop: '0.5rem', width: '100%' }}>
-                                <span
-                                  className="info-value"
-                                  style={{ display: 'block', flex: 1 }}
-                                >
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'flex-start',
+                                  gap: '8px',
+                                  marginTop: '0.5rem',
+                                  width: '100%',
+                                }}
+                              >
+                                <span className="info-value" style={{ display: 'block', flex: 1 }}>
                                   {observacaoAtual && observacaoAtual.trim() !== ''
                                     ? observacaoAtual
                                     : 'Nenhuma observação registrada.'}
@@ -286,12 +294,13 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
                                           aluno.id,
                                           aluno.nome,
                                           observacaoAtual,
-                                          agendamento.especialidade
+                                          agendamento.especialidade,
                                         )
                                       }
                                       disabled={iaCarregando[aluno.id]}
                                       style={{
-                                        background: 'linear-gradient(135deg, #a855f7 0%, #d946ef 100%)',
+                                        background:
+                                          'linear-gradient(135deg, #a855f7 0%, #d946ef 100%)',
                                         color: '#fff',
                                         border: 'none',
                                         borderRadius: '8px',
@@ -302,7 +311,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
                                         justifyContent: 'center',
                                         cursor: 'pointer',
                                         fontSize: '14px',
-                                        boxShadow: '0 2px 5px rgba(217, 70, 239, 0.3)'
+                                        boxShadow: '0 2px 5px rgba(217, 70, 239, 0.3)',
                                       }}
                                     >
                                       ✨
@@ -324,13 +333,39 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
                               </div>
                             )}
                           </div>
-                          
+
                           {/* Indicador de carregamento IA */}
                           {iaCarregando[aluno.id] && (
                             <div style={{ marginTop: '10px' }}>
-                                <div style={{ height: '8px', background: '#f0f0f0', borderRadius: '4px', marginBottom: '6px', width: '100%', animation: 'pulse 1.5s infinite ease-in-out' }}></div>
-                                <div style={{ height: '8px', background: '#f0f0f0', borderRadius: '4px', marginBottom: '6px', width: '80%', animation: 'pulse 1.5s infinite ease-in-out' }}></div>
-                                <div style={{ height: '8px', background: '#f0f0f0', borderRadius: '4px', width: '90%', animation: 'pulse 1.5s infinite ease-in-out' }}></div>
+                              <div
+                                style={{
+                                  height: '8px',
+                                  background: '#f0f0f0',
+                                  borderRadius: '4px',
+                                  marginBottom: '6px',
+                                  width: '100%',
+                                  animation: 'pulse 1.5s infinite ease-in-out',
+                                }}
+                              ></div>
+                              <div
+                                style={{
+                                  height: '8px',
+                                  background: '#f0f0f0',
+                                  borderRadius: '4px',
+                                  marginBottom: '6px',
+                                  width: '80%',
+                                  animation: 'pulse 1.5s infinite ease-in-out',
+                                }}
+                              ></div>
+                              <div
+                                style={{
+                                  height: '8px',
+                                  background: '#f0f0f0',
+                                  borderRadius: '4px',
+                                  width: '90%',
+                                  animation: 'pulse 1.5s infinite ease-in-out',
+                                }}
+                              ></div>
                             </div>
                           )}
                         </div>
@@ -347,7 +382,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
           )}
         </div>
       </div>
-      
+
       {/* Modal OneIA — sobrepõe o modal de aula */}
       <OneIAModal
         isOpen={oneIAModal.open}

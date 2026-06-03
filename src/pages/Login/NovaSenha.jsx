@@ -8,12 +8,14 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import BackgroundLogin from '../../components/BackgroundLogin';
 import { useAuth } from '../../hooks/useAuth';
 import Back from '../../components/Back';
+import ContactAdm from '../../components/ContactAdm';
 
 export default function NovaSenha() {
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
   const [showPassword1, setShowPassword1] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
+  const [isContactAdmOpen, setIsContactAdmOpen] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
   const email = useLocation().state?.email;
@@ -163,9 +165,17 @@ export default function NovaSenha() {
         </form>
 
         <p className="login__contact">
-          Precisa de acesso? <span>Contate o administrador</span>
+          Precisa de acesso?{' '}
+          <span
+            onClick={() => setIsContactAdmOpen(true)}
+            style={{ cursor: 'pointer', textDecoration: 'underline' }}
+          >
+            Contate o administrador
+          </span>
         </p>
       </div>
+
+      <ContactAdm isOpen={isContactAdmOpen} onClose={() => setIsContactAdmOpen(false)} />
 
       <BackgroundLogin />
 

@@ -174,7 +174,9 @@ const DefinirAusenciaModal = ({
         window.dispatchEvent(new CustomEvent('ausencia:create', { detail: bgEvent }));
       }
 
-      toast.success(isEditMode ? 'Ausência atualizada com sucesso!' : 'Ausência definida com sucesso!');
+      toast.success(
+        isEditMode ? 'Ausência atualizada com sucesso!' : 'Ausência definida com sucesso!',
+      );
 
       setTimeout(() => {
         window.location.reload();
@@ -200,7 +202,11 @@ const DefinirAusenciaModal = ({
         const serverMsg =
           error.response.data &&
           (error.response.data.message || JSON.stringify(error.response.data));
-        Swal.fire('Erro', serverMsg || 'Erro ao salvar ausência. Verifique os dados e tente novamente.', 'error');
+        Swal.fire(
+          'Erro',
+          serverMsg || 'Erro ao salvar ausência. Verifique os dados e tente novamente.',
+          'error',
+        );
       } else {
         Swal.fire('Erro', 'Erro ao salvar ausência. Tente novamente.', 'error');
       }

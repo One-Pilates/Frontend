@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import api from '../../services/api';
 import BackgroundLogin from '../../components/BackgroundLogin';
 import Back from '../../components/Back';
+import ContactAdm from '../../components/ContactAdm';
 
 export default function CodigoVerificacao() {
   const [codigo, setCodigo] = useState(['', '', '', '', '']);
@@ -12,6 +13,7 @@ export default function CodigoVerificacao() {
   const navigate = useNavigate();
   const email = useLocation().state?.email;
   const [isResending, setIsResending] = useState(false);
+  const [isContactAdmOpen, setIsContactAdmOpen] = useState(false);
 
   const handleChange = (index, value) => {
     if (!/^[A-Za-z0-9]?$/.test(value)) return;
@@ -123,9 +125,17 @@ export default function CodigoVerificacao() {
         </div>
 
         <p className="login__contact">
-          Precisa de acesso? <span>Contate o administrador</span>
+          Precisa de acesso?{' '}
+          <span
+            onClick={() => setIsContactAdmOpen(true)}
+            style={{ cursor: 'pointer', textDecoration: 'underline' }}
+          >
+            Contate o administrador
+          </span>
         </p>
       </div>
+
+      <ContactAdm isOpen={isContactAdmOpen} onClose={() => setIsContactAdmOpen(false)} />
 
       <BackgroundLogin />
 

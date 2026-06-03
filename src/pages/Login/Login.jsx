@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { useNavigate, Link } from 'react-router-dom';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import BackgroundLogin from '../../components/BackgroundLogin';
+import ContactAdm from '../../components/ContactAdm';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isContactAdmOpen, setIsContactAdmOpen] = useState(false);
   // const [rememberMe, setRememberMe] = useState(false);
 
   useEffect(() => {
@@ -113,9 +115,17 @@ export default function Login() {
         </form>
 
         <p className="login__contact">
-          Precisa de acesso? <span>Contate o administrador</span>
+          Precisa de acesso?{' '}
+          <span
+            onClick={() => setIsContactAdmOpen(true)}
+            style={{ cursor: 'pointer', textDecoration: 'underline' }}
+          >
+            Contate o administrador
+          </span>
         </p>
       </div>
+
+      <ContactAdm isOpen={isContactAdmOpen} onClose={() => setIsContactAdmOpen(false)} />
 
       <BackgroundLogin />
 

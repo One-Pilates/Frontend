@@ -5,9 +5,11 @@ import { toast } from 'sonner';
 import api from '../../services/api';
 import BackgroundLogin from '../../components/BackgroundLogin';
 import Back from '../../components/Back';
+import ContactAdm from '../../components/ContactAdm';
 
 export default function EsqueciSenha() {
   const [email, setEmail] = useState('');
+  const [isContactAdmOpen, setIsContactAdmOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleEnviar = async (e) => {
@@ -64,9 +66,17 @@ export default function EsqueciSenha() {
         </form>
 
         <p className="login__contact">
-          Precisa de acesso? <span>Contate o administrador</span>
+          Precisa de acesso?{' '}
+          <span
+            onClick={() => setIsContactAdmOpen(true)}
+            style={{ cursor: 'pointer', textDecoration: 'underline' }}
+          >
+            Contate o administrador
+          </span>
         </p>
       </div>
+
+      <ContactAdm isOpen={isContactAdmOpen} onClose={() => setIsContactAdmOpen(false)} />
 
       <BackgroundLogin />
 
