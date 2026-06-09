@@ -1,623 +1,641 @@
 @use '../../../../variables.scss' as *;
 
-.icon-btn.info-btn-save {
-  background: #4caf50;
-  color: var(--branco);
-  border-radius: 4px;
-  border: none;
-  padding: 6px 10px;
-  transition: background 0.2s;
-  cursor: pointer;
+// Animações Premium
+@keyframes premiumEntrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(40px);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
 }
-.icon-btn.info-btn-save:hover {
-  background: #388e3c;
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
-.icon-btn.info-btn-cancel {
-  background: #e91e63;
-  color: var(--branco);
-  border-radius: 4px;
-  border: none;
-  padding: 6px 10px;
-  transition: background 0.2s;
-  cursor: pointer;
-}
-.icon-btn.info-btn-cancel:hover {
-  background: #ad1457;
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .modal-content {
-  background: var(--branco);
-  border-radius: 12px;
-  max-width: 550px;
+  background: var(--surface-1, var(--branco));
+  border-radius: 20px;
+  max-width: 580px;
   width: 100%;
   max-height: 90vh;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  animation: slideUp 0.3s ease-in-out;
+  position: relative;
   display: flex;
   flex-direction: column;
-}
-
-.ausencia-modal {
-  max-width: 450px;
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  box-shadow: var(--shadow-modal, 0 25px 50px -12px rgba(0, 0, 0, 0.25));
+  animation: premiumEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid var(--cor-borda);
 }
 
 .modal-header {
-  padding: 1.5rem;
-  border-bottom: 1px solid var(--cor-borda);
+  padding: 1.75rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: var(--branco);
+  border-bottom: 1px solid var(--cor-borda);
+  background: linear-gradient(to right, var(--laranja-subtle, rgba(247, 116, 51, 0.04)), transparent);
+
+  h2 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-escuro);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 }
 
-.modal-header h2 {
-  margin: 0;
-  font-size: 1.25rem;
-  color: var(--text-escuro);
-  font-weight: 600;
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
 }
 
 .modal-close {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-cinza);
-  padding: 0.5rem;
-  border-radius: 6px;
-  transition: all 0.2s;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.modal-close:hover {
-  background: var(--bg-claro);
+  border-radius: 10px;
+  border: none;
+  background: var(--surface-3, var(--bg-claro));
   color: var(--text-cinza);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    transform: rotate(90deg);
+  }
 }
 
 .btn-delete-aula {
-  background: #dc3545;
-  border: none;
-  cursor: pointer;
-  color: var(--branco);
-  padding: 0.5rem;
-  border-radius: 6px;
-  transition: all 0.2s;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
+  border-radius: 10px;
+  border: none;
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  cursor: pointer;
+  transition: all 0.2s;
 
-.btn-delete-aula:hover {
-  background: #c82333;
-  transform: scale(1.05);
+  &:hover {
+    background: #ef4444;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  }
 }
 
 .modal-tabs {
   display: flex;
-  border-bottom: 2px solid var(--cor-borda);
-  background: var(--branco);
+  padding: 0.5rem 2rem;
+  gap: 8px;
+  background: var(--surface-2, rgba(0, 0, 0, 0.02));
+  border-bottom: 1px solid var(--cor-borda);
 }
 
 .modal-tab {
-  flex: 1;
-  padding: 1rem;
-  background: none;
+  padding: 0.75rem 1.5rem;
   border: none;
-  cursor: pointer;
-  font-size: 0.938rem;
-  font-weight: 500;
+  background: none;
+  font-size: 0.9rem;
+  font-weight: 600;
   color: var(--text-cinza);
-  transition: all 0.2s;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.3s ease;
   position: relative;
-}
 
-.modal-tab.active {
-  color: var(--laranja-principal);
-}
+  &:hover {
+    color: var(--text-escuro);
+    background: var(--surface-3, rgba(0, 0, 0, 0.04));
+  }
 
-.modal-tab.active::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--laranja-principal);
-}
-
-.modal-tab:hover {
-  color: var(--laranja-principal);
-  background: rgba(247, 116, 51, 0.05);
+  &.active {
+    background: var(--surface-1, white);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    color: var(--laranja-principal);
+  }
 }
 
 .modal-body {
-  padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+  padding: 2rem;
   overflow-y: auto;
   flex: 1;
+  background: var(--surface-1, white);
+  color: var(--text-escuro);
 }
 
+// Grid de informações mais limpo
 .info-section {
-  padding-top: 0;
-  padding-bottom: 1rem;
-  animation: fadeIn 0.3s ease-in-out;
+  animation: slideInRight 0.4s ease-out;
 }
 
-.info-group {
+.info-grid {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
 .info-item {
+  background: var(--surface-2, var(--bg-claro));
+  padding: 1.25rem;
+  border-radius: 16px;
+  border: 1px solid var(--cor-borda);
+  transition: all 0.2s;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.75rem;
-  background: var(--bg-claro);
-  border-radius: 8px;
+  gap: 8px;
+
+  &:hover {
+    background: var(--surface-3, white);
+    border-color: rgba(247, 116, 51, 0.25);
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
 }
 
 .info-label {
-  font-weight: 600;
-  color: var(--laranja-principal);
-  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--text-cinza);
 }
 
 .info-content {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: space-between;
   width: 100%;
 }
 
 .info-value {
+  font-size: 0.95rem;
+  font-weight: 600;
   color: var(--text-escuro);
-  flex: 1;
-  font-size: 0.875rem;
-  font-weight: 500;
 }
 
-.edit-container {
-  display: flex;
-  gap: 8px;
-  width: 100%;
-  align-items: flex-start;
-
-  &.full-width {
-    flex-direction: column;
-  }
-}
-
-.info-edit-input {
+.info-edit-input, .aluno-select {
   flex: 1;
-  padding: 8px 12px;
-  border: 2px solid var(--cor-borda);
-  border-radius: 6px;
-  font-size: 0.875rem;
+  padding: 10px 14px;
+  border: 2px solid var(--borda-input);
+  border-radius: 12px;
+  font-size: 0.9rem;
   font-family: inherit;
   transition: all 0.2s;
-  min-width: 0;
-  background: var(--branco);
+  background: var(--surface-input, white);
   color: var(--text-escuro);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23f77433'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
 
   &:focus {
     outline: none;
     border-color: var(--laranja-principal);
-    box-shadow: 0 0 0 3px rgba(247, 116, 51, 0.1);
+    box-shadow: 0 0 0 4px var(--laranja-glow, rgba(247, 116, 51, 0.1));
   }
 }
 
-.edit-buttons {
-  display: flex;
-  gap: 6px;
-  flex-shrink: 0;
-}
-
 .icon-btn {
-  background: var(--cor-borda);
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
   border: none;
-  border-radius: 4px;
-  padding: 6px 8px;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   transition: all 0.2s;
+  
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.lista-vazia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
   color: var(--text-cinza);
+  text-align: center;
+  opacity: 0.6;
+
+  svg {
+    margin-bottom: 1rem;
+    color: var(--laranja-principal);
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+}
+
+// Estilo dos botões de rodapé
+.edit-actions {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--cor-borda);
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn-cancel {
+  padding: 0.875rem 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--cor-borda);
+  background: var(--surface-2, white);
+  color: var(--text-cinza);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
 
   &:hover {
-    background: var(--cor-borda);
+    background: var(--surface-3, var(--bg-claro));
     color: var(--text-escuro);
   }
 }
 
-// Botões de ação centralizados
-.edit-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 2px solid var(--cor-borda);
-}
-
-.btn-cancel {
-  padding: 10px 24px;
-  background: var(--bg-claro);
-  color: var(--text-cinza);
-  border: 2px solid var(--cor-borda);
-  border-radius: 8px;
-  font-size: 0.938rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover:not(:disabled) {
-    background: var(--cor-borda);
-    border-color: #d0d0d0;
-  }
-
-  &:disabled {
-    background: var(--bg-claro);
-    color: var(--texto-secundario);
-    border-color: var(--cor-borda);
-    cursor: not-allowed;
-  }
-}
-
 .btn-save {
-  padding: 10px 32px;
-  background: $laranja-principal;
-  color: var(--branco);
+  padding: 0.875rem 2.5rem;
+  border-radius: 12px;
   border: none;
-  border-radius: 8px;
-  font-size: 0.938rem;
+  color: white;
   font-weight: 600;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
   &:hover:not(:disabled) {
-    background: #e85f2d;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px -4px rgba(247, 116, 51, 0.4);
+    filter: brightness(1.1);
   }
 
   &:disabled {
-    background: var(--cor-borda);
-    color: var(--texto-secundario);
+    opacity: 0.6;
     cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
   }
 }
 
-.ausencia-form {
-  padding: 1.5rem;
+// Lista de Alunos Redenhada
+.alunos-section {
+  animation: slideInRight 0.4s ease-out;
 }
 
-.form-group {
-  margin-bottom: 1.25rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: var(--text-escuro);
-  font-weight: 600;
-  font-size: 0.875rem;
-}
-
-.form-group input,
-.form-group textarea {
-  width: 100%;
-  padding: 0.75rem;
-  border: 2px solid var(--cor-borda);
-  border-radius: 8px;
-  font-size: 0.938rem;
-  font-family: inherit;
-  transition: all 0.2s;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: $laranja-principal;
-  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
-}
-
-.form-group textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-.form-actions {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: flex-end;
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--cor-borda);
-}
-
-.form-row {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.form-row .form-group {
-  flex: 1;
-  min-width: 140px;
-}
-
-@media (max-width: 768px) {
-  .modal-content {
-    max-width: 100%;
-    margin: 0.5rem;
-    max-height: 95vh;
-  }
-
-  .modal-header h2 {
-    font-size: 1rem;
-  }
-
-  .edit-container {
-    flex-direction: column;
-
-    .info-edit-input {
-      width: 100%;
-    }
-
-    .edit-buttons {
-      align-self: flex-end;
-    }
-  }
-
-  .edit-actions {
-    flex-direction: column;
-
-    .btn-cancel,
-    .btn-save {
-      width: 100%;
-    }
-  }
-
-  .form-actions {
-    flex-direction: column;
-  }
-}
-
-// Adicione esses estilos ao seu arquivo Modal.scss existente
-
-// Estilos para a seção de adicionar aluno
 .adicionar-aluno-box {
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  background: var(--bg-claro);
-  border-radius: 8px;
-  border: 2px dashed var(--cor-borda);
-}
-
-.adicionar-aluno-label {
-  font-weight: 600;
-  color: var(--text-escuro);
-  margin-bottom: 0.75rem;
-  font-size: 0.875rem;
-}
-
-.adicionar-aluno-form {
-  display: flex;
-  gap: 0.5rem;
-  align-items: stretch;
+  background: var(--laranja-subtle, #fdf2f0);
+  padding: 1.5rem;
+  border-radius: 18px;
+  border: 2px dashed rgba(247, 116, 51, 0.25);
+  margin-bottom: 2rem;
 }
 
 .aluno-select {
-  flex: 1;
-  padding: 8px 12px;
-  border: 2px solid var(--cor-borda);
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-family: inherit;
-  background: var(--branco);
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--borda-input);
+  background: var(--surface-input, white);
+  color: var(--text-escuro);
+  font-size: 0.9rem;
+  outline: none;
   transition: all 0.2s;
 
   &:focus {
-    outline: none;
-    border-color: $laranja-principal;
-    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+    border-color: var(--laranja-principal);
+    box-shadow: 0 0 0 4px var(--laranja-glow, rgba(247, 116, 51, 0.1));
   }
-}
-
-.btn-adicionar-aluno {
-  background: #28a745;
-  color: var(--branco);
-  border: none;
-  border-radius: 6px;
-  padding: 8px 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  transition: all 0.2s;
-  white-space: nowrap;
-
-  &:hover:not(:disabled) {
-    background: #218838;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
-  }
-
-  &:disabled {
-    background: var(--cor-borda);
-    cursor: not-allowed;
-    color: var(--text-cinza);
-  }
-}
-
-// Estilos para a lista de alunos
-.lista-alunos-label {
-  font-weight: 600;
-  color: var(--text-escuro);
-  margin-bottom: 0.75rem;
-  margin-top: 1rem;
-  font-size: 0.875rem;
 }
 
 .lista-alunos {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 12px;
 }
 
-.aluno-item-wrapper {
+.aluno-card-premium {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background: transparent;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: var(--surface-1, white);
+  border-radius: 16px;
+  border: 1px solid var(--cor-borda);
   transition: all 0.2s;
-  position: relative;
 
   &:hover {
-    .btn-remover-aluno {
-      opacity: 1;
-    }
-  }
-
-  // O AlunoItem original já tem seu próprio estilo
-  .aluno-item {
-    flex: 1;
-    margin-bottom: 0;
+    border-color: rgba(247, 116, 51, 0.25);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 }
 
-.btn-remover-aluno {
-  background: #dc3545;
-  color: var(--branco);
-  border: none;
-  border-radius: 4px;
-  padding: 8px 10px;
-  cursor: pointer;
+.aluno-main-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.aluno-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
-  flex-shrink: 0;
-  opacity: 0.7;
-
-  &:hover {
-    background: #c82333;
-    transform: scale(1.05);
-    opacity: 1;
-  }
-
-  &:active {
-    transform: scale(0.95);
-  }
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
-// Melhorias na seção de alunos
-.alunos-section {
-  animation: fadeIn 0.3s ease-in-out;
+.aluno-details {
+  display: flex;
+  flex-direction: column;
 }
 
-// Responsividade
-@media (max-width: 768px) {
-  .adicionar-aluno-form {
-    flex-direction: column;
-  }
-
-  .btn-adicionar-aluno {
-    width: 100%;
-    justify-content: center;
-  }
+.aluno-nome {
+  font-weight: 600;
+  color: var(--text-escuro);
+  font-size: 0.95rem;
 }
 
-// Estilos para o search de alunos
-.search-container {
-  position: relative;
-  flex: 1;
+.aluno-tags {
+  display: flex;
+  gap: 6px;
+  margin-top: 2px;
 }
 
-.aluno-search {
-  width: 100%;
-  padding: 8px 12px;
-  border: 2px solid var(--cor-borda);
+.tag-pcd {
+  background: rgba(37, 99, 235, 0.12);
+  color: #2563eb;
+  padding: 2px 8px;
   border-radius: 6px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+html.dark .tag-pcd {
+  background: rgba(96, 165, 250, 0.15);
+  color: #60a5fa;
+}
+
+.aluno-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-action-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &.view {
+    background: var(--surface-3, var(--bg-claro));
+    color: var(--text-cinza);
+    &:hover { background: rgba(3, 105, 161, 0.15); color: #0369a1; }
+  }
+
+  &.delete {
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+    &:hover { background: #ef4444; color: white; }
+  }
+}
+
+.observacao-edit-box {
+  margin-top: 12px;
+  padding: 1rem;
+  background: var(--surface-2, #fafafa);
+  border-radius: 12px;
+  border: 1px solid var(--cor-borda);
+}
+
+.obs-textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--cor-borda);
+  background: var(--surface-input, white);
+  color: var(--text-escuro);
   font-size: 0.875rem;
   font-family: inherit;
-  background: var(--branco);
-  color: var(--text-escuro);
-  transition: all 0.2s;
+  resize: none;
+  &:focus { border-color: var(--laranja-principal); outline: none; }
+}
 
-  &:focus {
-    outline: none;
-    border-color: $laranja-principal;
-    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+@media (max-width: 640px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-content {
+    border-radius: 0;
+    max-height: 100vh;
+    height: 100%;
   }
 
-  &::placeholder {
-    color: var(--text-cinza);
+  .modal-tabs {
+    padding: 0.5rem 1rem;
   }
 }
 
-.search-results {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
-  background: var(--branco);
-  border: 2px solid var(--cor-borda);
-  border-radius: 6px;
-  max-height: 300px;
-  overflow-y: auto;
-  z-index: 1001;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+// ──────────────────────────────────────────────
+// Botão IA ✨ — animação de brilho, sem fundo
+// ──────────────────────────────────────────────
+@keyframes iaSpin {
+  0%   { transform: rotate(0deg) scale(1); }
+  25%  { transform: rotate(20deg) scale(1.2); }
+  50%  { transform: rotate(-15deg) scale(1.3); }
+  75%  { transform: rotate(10deg) scale(1.15); }
+  100% { transform: rotate(0deg) scale(1); }
 }
 
-.search-result-item {
-  padding: 12px 12px;
-  border-bottom: 1px solid var(--cor-borda);
+.btn-oneia-obs {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  color: var(--text-escuro);
-  font-size: 0.875rem;
-  transition: all 0.2s;
+  transition: opacity 0.2s;
+  margin-top: -2px;
+  padding: 0;
+  line-height: 1;
 
-  &:last-child {
-    border-bottom: none;
+  &:hover:not(:disabled) {
+    background: transparent;
+    animation: iaSpin 0.5s ease-in-out;
   }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+}
+
+// ──────────────────────────────────────────────
+// Loading Shimmer
+// ──────────────────────────────────────────────
+@keyframes shimmerSlide {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.oneia-loading-panel {
+  margin-top: 10px;
+  padding: 0.875rem 1rem;
+  background: var(--laranja-subtle, #fff9f6);
+  border-radius: 12px;
+  border: 1px solid rgba(247, 116, 51, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.oneia-shimmer {
+  height: 12px;
+  width: 100%;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    rgba(247, 116, 51, 0.06) 25%,
+    rgba(247, 116, 51, 0.18) 50%,
+    rgba(247, 116, 51, 0.06) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmerSlide 1.3s ease-in-out infinite;
+}
+
+// ──────────────────────────────────────────────
+// Painel de Resposta IA — limpo e escaneável
+// ──────────────────────────────────────────────
+@keyframes iaFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.oneia-response-panel {
+  margin-top: 10px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(247, 116, 51, 0.2);
+  box-shadow: 0 4px 16px rgba(247, 116, 51, 0.08);
+  animation: iaFadeIn 0.3s ease-out;
+}
+
+.oneia-response-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.875rem;
+  background: var(--laranja-principal, #f77433);
+}
+
+.oneia-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.95;
+}
+
+.oneia-close-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.22);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s;
 
   &:hover {
-    background: rgba(247, 116, 51, 0.1);
-    color: $laranja-principal;
-    padding-left: 16px;
+    background: rgba(255, 255, 255, 0.38);
   }
+}
 
-  &.empty {
-    text-align: center;
-    color: var(--text-cinza);
-    cursor: default;
-    padding: 1rem;
+.oneia-response-body {
+  padding: 0.875rem 1rem;
+  background: var(--surface-2, #fffcfa);
+  max-height: 260px;
+  overflow-y: auto;
+}
 
-    &:hover {
-      background: transparent;
-      padding-left: 12px;
-    }
+.oneia-linha {
+  font-size: 0.83rem;
+  color: var(--text-escuro);
+  line-height: 1.6;
+  margin: 0 0 4px 0;
+
+  // Destaque para linhas com emoji (seções)
+  &:has(> span.ia-emoji) {
+    margin-top: 8px;
+    font-weight: 600;
   }
 }

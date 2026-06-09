@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import { FaArrowLeft, FaUserGraduate } from 'react-icons/fa';
+import { FaArrowLeft, FaUser } from 'react-icons/fa';
 import { FiArrowRight, FiArrowLeft as FiArrowLeftIcon, FiCheck } from 'react-icons/fi';
 import { toast } from 'sonner';
 import api from '../../../services/api';
@@ -12,6 +12,7 @@ import ConfirmacaoAlunoScreen from './screens/Confirmacao';
 import { validarCPF, validarEmail } from '../../../utils/utils';
 import { useAuth } from '../../../hooks/useAuth';
 import './style.scss';
+import Back from '../../../components/Back';
 
 export default function RegisterStudent() {
   const navigate = useNavigate();
@@ -53,6 +54,7 @@ export default function RegisterStudent() {
   const [informacoesAluno, setInformacoesAluno] = useState(
     dadosIniciais.informacoesAluno || {
       problemasMobilidade: false,
+      notificacaoAtiva: true,
       observacao: '',
     },
   );
@@ -69,7 +71,7 @@ export default function RegisterStudent() {
           email: a.email || '',
           cpf: a.cpf || '',
           dataNascimento: a.dataNascimento ? a.dataNascimento.substring(0, 10) : '',
-          telefone: a.tipoContato || '',
+          telefone: a.telefone || '',
         });
         setEndereco({
           cep: a.endereco?.cep || '',
@@ -82,6 +84,7 @@ export default function RegisterStudent() {
         });
         setInformacoesAluno({
           problemasMobilidade: a.alunoComLimitacoesFisicas ?? false,
+          notificacaoAtiva: a.notificacaoAtiva ?? true,
           observacao: a.observacao || '',
         });
       })
@@ -137,6 +140,7 @@ export default function RegisterStudent() {
       try {
         const res = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
         const data = await res.json();
+        console.log('📍 Resposta ViaCEP:', data);
 
         if (!data.erro) {
           atualizarEndereco({
@@ -144,7 +148,7 @@ export default function RegisterStudent() {
             bairro: data.bairro || '',
             cidade: data.localidade || '',
             uf: data.uf || '',
-            estado: data.uf || '',
+            estado: data.estado || data.uf || '',
           });
         } else {
           toast.warning('CEP não encontrado. Verifique o CEP digitado.');
@@ -264,8 +268,8 @@ export default function RegisterStudent() {
       status: true,
       alunoComLimitacoesFisicas: !!informacoesAluno.problemasMobilidade,
       observacao: informacoesAluno.observacao || '',
-      tipoContato: dadosPessoais.telefone || '',
-      notificacaoAtiva: true,
+      telefone: dadosPessoais.telefone || '',
+      notificacaoAtiva: !!informacoesAluno.notificacaoAtiva,
       endereco: {
         rua: endereco.logradouro || '',
         numero: endereco.numero || '',
@@ -288,7 +292,9 @@ export default function RegisterStudent() {
       navigate(`${basePath}/alunos`);
     } catch (error) {
       console.error('Erro ao salvar aluno:', error);
-      toast.error(isEditMode ? 'Não foi possível atualizar o aluno.' : 'Não foi possível cadastrar o aluno.');
+      toast.error(
+        isEditMode ? 'Não foi possível atualizar o aluno.' : 'Não foi possível cadastrar o aluno.',
+      );
     } finally {
       setCarregando(false);
     }
@@ -338,20 +344,19 @@ export default function RegisterStudent() {
     <div className="register-student-page">
       <div className="register-container">
         <div className="register-header">
-          <button className="back-button" onClick={() => navigate(`${basePath}/alunos`)}>
-            <FaArrowLeft size={13} />
-            <span>Voltar</span>
-          </button>
+          <Back />
           <div className="header-title-group">
             <div className="header-icon" aria-hidden="true">
-              <FaUserGraduate size={18} />
+              <FaUser size={18} />
             </div>
             <div>
               <h1 className="main-title">{isEditMode ? 'Editar Aluno' : 'Cadastrar Aluno'}</h1>
               <p className="main-subtitle">Preencha as informações abaixo</p>
             </div>
           </div>
-          <span className="header-step-badge">Etapa {etapaAtual} de {etapas.length}</span>
+          <span className="header-step-badge">
+            Etapa {etapaAtual} de {etapas.length}
+          </span>
         </div>
 
         <div className="register-content">
@@ -378,7 +383,13 @@ export default function RegisterStudent() {
               )}
               {etapaAtual === 4 && (
                 <button className="btn-finish" onClick={cadastrarAluno} disabled={carregando}>
-                  {carregando ? '⏳ ' + (isEditMode ? 'Salvando...' : 'Cadastrando...') : <><FiCheck size={16} /> Confirmar e {isEditMode ? 'Salvar' : 'Cadastrar'}</>}
+                  {carregando ? (
+                    '⏳ ' + (isEditMode ? 'Salvando...' : 'Cadastrando...')
+                  ) : (
+                    <>
+                      <FiCheck size={16} /> Confirmar e {isEditMode ? 'Salvar' : 'Cadastrar'}
+                    </>
+                  )}
                 </button>
               )}
             </div>

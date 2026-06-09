@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaArrowLeft, FaChalkboardTeacher } from 'react-icons/fa';
+import { useNavigate, useParams } from 'react-router-dom';
+import { FaChalkboardTeacher } from 'react-icons/fa';
 import { FiArrowRight, FiArrowLeft as FiArrowLeftIcon, FiCheck } from 'react-icons/fi';
 import api from '../../../services/api';
 import { useAuth } from '../../../hooks/useAuth';
 import { toast } from 'sonner';
 import Swal from 'sweetalert2';
+import Back from '../../../components/Back';
 import StepIndicator from './components/StepIndicator';
 import DadosPessoaisScreen from './screens/DadosPessoais';
 import EnderecoScreen from './screens/Endereco';
@@ -14,10 +15,16 @@ import ConfirmacaoScreen from './screens/Confirmacao';
 import { validarCPF, validarEmail } from '../../../utils/utils';
 import './style.scss';
 
-export default function RegisterTeacher() {
+export default function RegisterCollaborator() {
   const navigate = useNavigate();
+  const { role: roleParam } = useParams();
   const { user } = useAuth();
   const basePath = user?.role === 'ADMINISTRADOR' ? '/admin' : '/secretaria';
+  const roleNormalizado = (roleParam || '').toUpperCase();
+  const isValidRole = ['PROFESSOR', 'SECRETARIA'].includes(roleNormalizado);
+  const role = isValidRole ? roleNormalizado : 'PROFESSOR';
+  const isProfessor = role === 'PROFESSOR';
+  const routeSegment = isProfessor ? 'professor' : 'secretaria';
   const [etapaAtual, setEtapaAtual] = useState(1);
   const [erros, setErros] = useState({});
   const [especialidades, setEspecialidades] = useState([]);
@@ -52,13 +59,21 @@ export default function RegisterTeacher() {
   const etapas = [
     { label: 'Dados Pessoais' },
     { label: 'Endereço' },
-    { label: 'Informações' },
+    { label: 'Informações Profissionais' },
     { label: 'Confirmação' },
   ];
 
   useEffect(() => {
-    buscarEspecialidades();
-  }, []);
+    if (!isValidRole) {
+      navigate(`${basePath}/colaboradores`, { replace: true });
+    }
+  }, [basePath, isValidRole, navigate]);
+
+  useEffect(() => {
+    if (isProfessor) {
+      buscarEspecialidades();
+    }
+  }, [isProfessor]);
 
   const buscarEspecialidades = async () => {
     try {
@@ -79,45 +94,14 @@ export default function RegisterTeacher() {
       try {
         const res = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
         const data = await res.json();
-        console.log('📍 Resposta ViaCEP:', data);
 
         if (!data.erro) {
-          const estadosMap = {
-            AC: 'Acre',
-            AL: 'Alagoas',
-            AP: 'Amapá',
-            AM: 'Amazonas',
-            BA: 'Bahia',
-            CE: 'Ceará',
-            DF: 'Distrito Federal',
-            ES: 'Espírito Santo',
-            GO: 'Goiás',
-            MA: 'Maranhão',
-            MT: 'Mato Grosso',
-            MS: 'Mato Grosso do Sul',
-            MG: 'Minas Gerais',
-            PA: 'Pará',
-            PB: 'Paraíba',
-            PR: 'Paraná',
-            PE: 'Pernambuco',
-            PI: 'Piauí',
-            RJ: 'Rio de Janeiro',
-            RN: 'Rio Grande do Norte',
-            RS: 'Rio Grande do Sul',
-            RO: 'Rondônia',
-            RR: 'Roraima',
-            SC: 'Santa Catarina',
-            SP: 'São Paulo',
-            SE: 'Sergipe',
-            TO: 'Tocantins',
-          };
-
           const novoEndereco = {
             logradouro: data.logradouro || '',
             bairro: data.bairro || '',
             cidade: data.localidade || '',
             uf: data.uf || '',
-            estado: estadosMap[data.uf] || data.uf || '',
+            estado: data.estado || data.uf || '',
           };
 
           console.log('✅ Preenchendo endereço automático:', novoEndereco);
@@ -235,7 +219,7 @@ export default function RegisterTeacher() {
         novosErros.cargo = 'Cargo obrigatório';
         console.log('❌ Cargo vazio');
       }
-      if (!informacoesProfissionais.especialidades?.length) {
+      if (isProfessor && !informacoesProfissionais.especialidades?.length) {
         novosErros.especialidades = 'Selecione ao menos uma especialidade';
         console.log('❌ Nenhuma especialidade selecionada');
       }
@@ -280,22 +264,14 @@ export default function RegisterTeacher() {
     }
   };
 
-  const voltarEtapa = () => {
-    console.log('⬅️ Voltando etapa (atual:', etapaAtual, ')');
-    if (etapaAtual === 4) {
-      setEtapaAtual(3);
-    } else if (etapaAtual > 1) {
-      setEtapaAtual(etapaAtual - 1);
-    }
-  };
-
-  const cadastrarProfessor = async () => {
+  const cadastrarColaborador = async () => {
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log('🚀 INICIANDO CADASTRO DE PROFESSOR');
+    console.log('🚀 INICIANDO CADASTRO DE COLABORADOR');
+    console.log(role);
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     setCadastrando(true);
 
-    const loadingId = toast.loading('Cadastrando professor...');
+    const loadingId = toast.loading('Cadastrando colaborador...');
 
     try {
       const senhaGerada = Math.floor(100000 + Math.random() * 900000).toString();
@@ -312,7 +288,6 @@ export default function RegisterTeacher() {
         notificacaoAtiva: informacoesProfissionais.notificacaoAtiva,
         senha: senhaGerada,
         cargo: informacoesProfissionais.cargo.trim(),
-        role: 'PROFESSOR',
         endereco: {
           rua: endereco.logradouro.trim(),
           numero: endereco.numero === 'S/N' ? '0' : endereco.numero.trim(),
@@ -322,15 +297,21 @@ export default function RegisterTeacher() {
           cep: endereco.cep.replace(/\D/g, ''),
           uf: endereco.uf,
         },
+        role,
         telefone: dadosPessoais.telefone.replace(/\D/g, ''),
-        especialidadeIds: informacoesProfissionais.especialidades,
+        ...(isProfessor ? { especialidadeIds: informacoesProfissionais.especialidades } : {}),
       };
 
-      console.log('📦 PAYLOAD:', JSON.stringify(payload, null, 2));
+      let url = 'api/';
+      if (role === 'SECRETARIA') {
+        url += 'secretarias';
+      } else if (role === 'PROFESSOR') {
+        url += 'professores';
+      }
 
-      const response = await api.post('api/professores', payload);
+      const response = await api.post(url, payload);
 
-      console.log('✅ SUCESSO! Professor cadastrado:', response.data);
+      console.log('✅ SUCESSO! Colaborador cadastrado:', response.data);
 
       if (dadosPessoais.fotoPerfil && response.data.id) {
         console.log('📸 Iniciando upload de foto...');
@@ -347,7 +328,7 @@ export default function RegisterTeacher() {
 
       await Swal.fire({
         icon: 'success',
-        title: 'Professor cadastrado com sucesso!',
+        title: 'Colaborador cadastrado com sucesso!',
         html: `
           <div style="text-align: left; padding: 1rem;">
             <p><strong>Nome:</strong> ${dadosPessoais.nomeCompleto}</p>
@@ -364,13 +345,13 @@ export default function RegisterTeacher() {
         width: '600px',
       });
 
-      navigate(`${basePath}/professor`);
+      navigate(`${basePath}/${routeSegment}`);
     } catch (error) {
       console.error('❌ ERRO NO CADASTRO:', error);
 
       toast.dismiss(loadingId);
 
-      let mensagemErro = 'Erro ao cadastrar professor';
+      let mensagemErro = 'Erro ao cadastrar colaborador';
       let detalhes = '';
 
       if (error.response?.status === 409) {
@@ -421,17 +402,17 @@ export default function RegisterTeacher() {
       observacoes: '',
     });
 
-    navigate(`${basePath}/professor`);
+    navigate(`${basePath}/${routeSegment}`);
   };
 
-  const uploadFoto = async (professorId) => {
+  const uploadFoto = async (colaboradorId) => {
     if (!dadosPessoais.fotoPerfil) {
       console.log('⚠️ Nenhuma foto para enviar');
       return;
     }
 
     try {
-      console.log('📤 Enviando foto do professor ID:', professorId);
+      console.log('📤 Enviando foto do colaborador ID:', colaboradorId);
 
       let arquivo = dadosPessoais.fotoPerfil;
 
@@ -450,7 +431,11 @@ export default function RegisterTeacher() {
       const formData = new FormData();
       formData.append('file', arquivo);
 
-      const response = await api.post(`api/professores/${professorId}/uploadFoto`, formData, {
+      const uploadEndpoint = isProfessor
+        ? `api/professores/${colaboradorId}/uploadFoto`
+        : `api/secretarias/${colaboradorId}/uploadFoto`;
+
+      const response = await api.post(uploadEndpoint, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -500,6 +485,7 @@ export default function RegisterTeacher() {
             atualizar={(novos) => setInformacoesProfissionais((prev) => ({ ...prev, ...novos }))}
             especialidades={especialidades}
             erros={erros}
+            role={role}
           />
         );
       case 4:
@@ -509,6 +495,7 @@ export default function RegisterTeacher() {
             endereco={endereco}
             informacoesProfissionais={informacoesProfissionais}
             especialidades={especialidades}
+            role={role}
           />
         );
       default:
@@ -516,24 +503,27 @@ export default function RegisterTeacher() {
     }
   };
 
+  if (!isValidRole) {
+    return null;
+  }
+
   return (
-    <div className="register-teacher-page">
+    <div className="register-collaborator-page">
       <div className="register-container">
         <div className="register-header">
-          <button className="back-button" onClick={() => navigate(`${basePath}/professor`)}>
-            <FaArrowLeft size={13} />
-            <span>Voltar</span>
-          </button>
+          <Back />
           <div className="header-title-group">
             <div className="header-icon" aria-hidden="true">
               <FaChalkboardTeacher size={19} />
             </div>
             <div>
-              <h1 className="main-title">Cadastrar Professor</h1>
+              <h1 className="main-title">Cadastrar colaborador</h1>
               <p className="main-subtitle">Preencha as informações abaixo</p>
             </div>
           </div>
-          <span className="header-step-badge">Etapa {etapaAtual} de {etapas.length}</span>
+          <span className="header-step-badge">
+            Etapa {etapaAtual} de {etapas.length}
+          </span>
         </div>
 
         <div className="register-content">
@@ -559,8 +549,18 @@ export default function RegisterTeacher() {
                 </button>
               )}
               {etapaAtual === 4 && (
-                <button className="btn-finish" onClick={cadastrarProfessor} disabled={cadastrando}>
-                  {cadastrando ? '⏳ Cadastrando...' : <><FiCheck size={16} /> Confirmar e Cadastrar</>}
+                <button
+                  className="btn-finish"
+                  onClick={cadastrarColaborador}
+                  disabled={cadastrando}
+                >
+                  {cadastrando ? (
+                    '⏳ Cadastrando...'
+                  ) : (
+                    <>
+                      <FiCheck size={16} /> Confirmar e Cadastrar
+                    </>
+                  )}
                 </button>
               )}
             </div>

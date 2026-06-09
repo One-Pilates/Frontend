@@ -27,16 +27,17 @@
 }
 
 .modal-content {
-  background: var(--branco);
+  background: var(--surface-1, var(--branco));
   border-radius: 12px;
   max-width: 550px;
   width: 100%;
   max-height: 90vh;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-modal, 0 20px 60px rgba(0, 0, 0, 0.3));
   animation: slideUp 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
+  border: 1px solid var(--cor-borda);
 }
 
 .ausencia-modal {
@@ -61,7 +62,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: var(--branco);
+  background: var(--surface-1, var(--branco));
 }
 
 .modal-header h2 {
@@ -92,7 +93,7 @@
 .modal-tabs {
   display: flex;
   border-bottom: 2px solid var(--cor-borda);
-  background: var(--branco);
+  background: var(--surface-2, var(--branco));
 }
 
 .modal-tab {
@@ -149,8 +150,9 @@
   align-items: flex-start;
   gap: 0.75rem;
   padding: 0.75rem;
-  background: var(--bg-claro);
+  background: var(--surface-2, var(--bg-claro));
   border-radius: 8px;
+  border: 1px solid var(--cor-borda);
 }
 
 .info-label {
@@ -192,6 +194,8 @@
   font-size: 0.938rem;
   font-family: inherit;
   transition: all 0.2s;
+  background: var(--surface-input, var(--branco));
+  color: var(--text-escuro);
 }
 
 .form-group input:focus,

@@ -38,7 +38,7 @@ export default function ContactAdm({ isOpen, onClose }) {
             className="px-2 py-2 rounded-lg bg-orange-500 text-white hover:bg-orange-600 transition flex items-center gap-2"
           >
             <FaEnvelope />
-            <span>Sim, Contratar</span>
+            <span>Sim, Contatar</span>
           </button>
         </div>
       </div>

@@ -2,12 +2,14 @@ import { useState } from 'react';
 import './CodigoVerificacao.scss';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { IoArrowBack } from 'react-icons/io5';
 import api from '../../services/api';
 import BackgroundLogin from '../../components/BackgroundLogin';
+import Back from '../../components/Back';
+import ContactAdm from '../../components/ContactAdm';
 
 export default function EsqueciSenha() {
   const [email, setEmail] = useState('');
+  const [isContactAdmOpen, setIsContactAdmOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleEnviar = async (e) => {
@@ -35,9 +37,7 @@ export default function EsqueciSenha() {
   return (
     <div className="login">
       <div className="login__container">
-        <button onClick={() => navigate(-1)} className="botao-voltar">
-          <IoArrowBack size={18} /> Voltar
-        </button>
+        <Back wrapperClassName="absolute left-[30px] top-[30px]" />
 
         <div className="login__header">
           <h1 className="login__title">Esqueci minha senha</h1>
@@ -66,9 +66,17 @@ export default function EsqueciSenha() {
         </form>
 
         <p className="login__contact">
-          Precisa de acesso? <span>Contate o administrador</span>
+          Precisa de acesso?{' '}
+          <span
+            onClick={() => setIsContactAdmOpen(true)}
+            style={{ cursor: 'pointer', textDecoration: 'underline' }}
+          >
+            Contate o administrador
+          </span>
         </p>
       </div>
+
+      <ContactAdm isOpen={isContactAdmOpen} onClose={() => setIsContactAdmOpen(false)} />
 
       <BackgroundLogin />
 

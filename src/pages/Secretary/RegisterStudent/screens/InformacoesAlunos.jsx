@@ -27,6 +27,18 @@ export default function InformacoesAlunoScreen({ dados, atualizar, erros = {} })
           </label>
         </div>
 
+        <div className="checkbox-item">
+          <label className="checkbox-toggle-label">
+            <input
+              type="checkbox"
+              checked={dados.notificacaoAtiva ?? true}
+              onChange={(e) => atualizar({ notificacaoAtiva: e.target.checked })}
+              className="checkbox-toggle-input"
+            />
+            <span className="checkbox-toggle-text">Ativar notificações por e-mail</span>
+          </label>
+        </div>
+
         <div className="textarea-section">
           <label className="textarea-label">Observações</label>
           <textarea

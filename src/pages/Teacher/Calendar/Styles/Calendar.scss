@@ -22,11 +22,11 @@
   .calendar-view-buttons {
     display: flex;
     gap: 0.5rem;
-    background: rgba(255, 255, 255, 0.5);
+    background: var(--surface-1, rgba(255, 255, 255, 0.5));
     backdrop-filter: blur(8px);
     padding: 0.25rem;
     border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-card, 0 2px 6px rgba(0, 0, 0, 0.05));
   }
 
   > button {
@@ -98,10 +98,11 @@
 }
 
 .calendar-wrapper {
-  background: var(--branco);
+  background: var(--surface-1, var(--branco));
   border-radius: 10px;
   padding: 0.5rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-card, 0 4px 16px rgba(0, 0, 0, 0.08));
+  border: 1px solid var(--cor-borda);
   min-height: 450px;
   transition: all 0.3s ease;
 
@@ -205,7 +206,7 @@
 }
 
 .fc-theme-standard .fc-scrollgrid {
-  border: 1px solid #e8e8e8;
+  border: 1px solid var(--cor-borda);
   border-radius: 10px;
   overflow: hidden;
 }
@@ -260,10 +261,16 @@
 
 /* Ausência: cor cinza mais forte e texto em negrito */
 .fc-event.ausencia-event {
-  background-color: #f3f4f6 !important;
-  border-color: #d1d5db !important;
+  background-color: var(--surface-3, #f3f4f6) !important;
+  border-color: var(--cor-borda) !important;
   color: var(--text-escuro) !important;
   font-weight: 700 !important;
+}
+
+html.dark .fc-event.ausencia-event {
+  background-color: #2a2520 !important;
+  border-color: rgba(255, 122, 61, 0.25) !important;
+  color: var(--text-cinza) !important;
 }
 
 .fc-daygrid-day-number {
@@ -335,11 +342,11 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #d0d0d0;
+    background: var(--cor-borda);
     border-radius: 4px;
 
     &:hover {
-      background: #b0b0b0;
+      background: var(--text-cinza);
     }
   }
 }
@@ -366,6 +373,10 @@
   backdrop-filter: blur(4px);
   border-radius: 12px;
   z-index: 10;
+}
+
+html.dark .loading-overlay {
+  background: rgba(20, 18, 16, 0.85);
 }
 
 .loading-overlay.show {

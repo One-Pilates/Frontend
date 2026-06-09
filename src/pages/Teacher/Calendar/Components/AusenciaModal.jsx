@@ -13,7 +13,11 @@ const AusenciaModal = ({ isOpen, ausencia, onClose, onDelete }) => {
     // Trata string "2025-04-10T08:00:00" ou com Z
     const d = new Date(dateStr);
     if (isNaN(d.getTime())) return dateStr;
-    const data = d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const data = d.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
     const hora = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     return `${data} às ${hora}`;
   };

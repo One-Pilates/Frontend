@@ -17,7 +17,7 @@
 .section-label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #4b5563;
+  color: var(--text-cinza);
 }
 
 .section-required {
@@ -47,12 +47,12 @@
   width: 1.25rem;
   height: 1.25rem;
   cursor: pointer;
-  accent-color: #3b82f6;
+  accent-color: var(--laranja-principal);
 }
 
 .checkbox-text {
   font-size: 0.875rem;
-  color: #4b5563;
+  color: var(--text-cinza);
   user-select: none;
 }
 
@@ -71,17 +71,17 @@
 .textarea-label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #4b5563;
+  color: var(--text-cinza);
 }
 
 .textarea-field {
   width: 100%;
   padding: 0.75rem;
   font-size: 0.875rem;
-  color: #1f2937;
+  color: var(--text-escuro);
   font-family: inherit;
-  background-color: #f3f4f6;
-  border: 1px solid #e5e7eb;
+  background-color: var(--surface-2, #f3f4f6);
+  border: 1px solid var(--cor-borda);
   border-radius: 0.5rem;
   transition: all 0.2s ease;
   outline: none;
@@ -89,18 +89,18 @@
   min-height: 120px;
 
   &::placeholder {
-    color: #9ca3af;
+    color: var(--text-cinza);
   }
 
   &:focus {
-    background-color: #ffffff;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background-color: var(--surface-1, white);
+    border-color: var(--laranja-principal);
+    box-shadow: 0 0 0 3px var(--laranja-glow, rgba(247, 116, 51, 0.1));
   }
 
   &.textarea-error {
     border-color: #ef4444;
-    background-color: #fef2f2;
+    background-color: rgba(239, 68, 68, 0.05);
   }
 }
 
@@ -122,14 +122,14 @@
   height: 1.5rem;
   position: relative;
   appearance: none;
-  background-color: #d1d5db;
+  background-color: var(--surface-3, #d1d5db);
   border-radius: 9999px;
   cursor: pointer;
   transition: background-color 0.3s ease;
   outline: none;
 
   &:checked {
-    background-color: #3b82f6;
+    background-color: var(--laranja-principal);
   }
 
   &::before {
@@ -153,7 +153,7 @@
 .checkbox-toggle-text {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #4b5563;
+  color: var(--text-cinza);
 }
 
 @media (max-width: 768px) {

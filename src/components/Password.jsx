@@ -6,6 +6,7 @@ import { BiArrowBack } from 'react-icons/bi';
 import api from '../services/api';
 import StepIndicator from './StepIndicator';
 import { useAuth } from '../hooks/useAuth';
+import Back from './Back';
 
 export default function RedefinirSenha() {
   const { user } = useAuth() || {};
@@ -175,14 +176,7 @@ export default function RedefinirSenha() {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-8 bg-orange-50/30 relative">
-      <button
-        onClick={() => navigate(-1)}
-        className="absolute top-8 left-8 flex items-center gap-2 bg-white dark:bg-dark-secondary hover:bg-gray-100 dark:hover:bg-dark-component text-gray-700 dark:text-fontMain font-medium py-2.5 px-5 rounded-lg shadow-sm border border-gray-200 dark:border-dark-component transition-all duration-300 hover:shadow-md hover:-translate-x-1"
-      >
-        <BiArrowBack size={20} />
-        Voltar
-      </button>
-
+      <Back wrapperClassName="absolute left-[30px] top-[30px]" />
       <div className="bg-white dark:bg-dark-secondary rounded-2xl shadow-lg p-10 w-full max-w-2xl mx-auto">
         <div className="mb-12">
           <StepIndicator steps={steps} currentStep={currentStep} onStepClick={handleStepClick} />

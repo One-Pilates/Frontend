@@ -5,15 +5,17 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import api from '../../services/api';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { IoArrowBack } from 'react-icons/io5';
 import BackgroundLogin from '../../components/BackgroundLogin';
 import { useAuth } from '../../hooks/useAuth';
+import Back from '../../components/Back';
+import ContactAdm from '../../components/ContactAdm';
 
 export default function NovaSenha() {
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
   const [showPassword1, setShowPassword1] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
+  const [isContactAdmOpen, setIsContactAdmOpen] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
   const email = useLocation().state?.email;
@@ -65,7 +67,7 @@ export default function NovaSenha() {
               : '/secretaria/dashboard';
         navigate(route);
       } else {
-        navigate('/login');
+        navigate('/');
       }
     } catch (error) {
       console.error('Erro ao redefinir senha:', error);
@@ -80,11 +82,7 @@ export default function NovaSenha() {
         role="region"
         aria-label="Formulário de redefinição de senha"
       >
-        {!isPrimeiroAcesso && (
-          <button onClick={() => navigate(-1)} className="botao-voltar">
-            <IoArrowBack size={18} /> Voltar
-          </button>
-        )}
+        {!isPrimeiroAcesso && <Back wrapperClassName="absolute left-[30px] top-[30px]" />}
 
         <div className="login__header">
           <h1 id="login-title" className="login__title">
@@ -167,9 +165,17 @@ export default function NovaSenha() {
         </form>
 
         <p className="login__contact">
-          Precisa de acesso? <span>Contate o administrador</span>
+          Precisa de acesso?{' '}
+          <span
+            onClick={() => setIsContactAdmOpen(true)}
+            style={{ cursor: 'pointer', textDecoration: 'underline' }}
+          >
+            Contate o administrador
+          </span>
         </p>
       </div>
+
+      <ContactAdm isOpen={isContactAdmOpen} onClose={() => setIsContactAdmOpen(false)} />
 
       <BackgroundLogin />
 

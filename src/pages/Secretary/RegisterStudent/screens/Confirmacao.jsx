@@ -63,10 +63,21 @@ export default function ConfirmacaoAlunoScreen({
               </span>
             </div>
 
+            <div className="card-info">
+              <span className="card-label">Notificações por E-mail</span>
+              <span className="card-value">
+                {informacoesAluno.notificacaoAtiva ? (
+                  <span className="badge badge-sim">Ativado</span>
+                ) : (
+                  <span className="badge badge-nao">Desativado</span>
+                )}
+              </span>
+            </div>
+
             <div className="card-info observacoes-card">
               <span className="card-label">Observações</span>
               <span className="card-value observacoes-text">
-                {informacoesAluno.observacoes || 'Nenhuma observação registrada'}
+                {informacoesAluno.observacao || 'Nenhuma observação registrada'}
               </span>
             </div>
           </div>

@@ -11,4 +11,12 @@ export default defineConfig({
     }),
     tailwindcss(),
   ],
+  esbuild: {
+    pure: ['console.log', 'console.info', 'console.debug', 'console.trace'],
+    drop: ['debugger'],
+  },
+  build: {
+    sourcemap: false,
+    chunkSizeWarningLimit: 1000,
+  },
 });

@@ -17,11 +17,19 @@ export default function CalendarSecretary() {
   const location = useLocation();
   const { user } = useAuth();
   const basePath = user?.role === 'ADMINISTRADOR' ? '/admin' : '/secretaria';
+  const initialIdSala = location.state?.idSala;
+  const initialIdProfessor = location.state?.idProfessor;
 
   const [salas, setSalas] = useState([]);
   const [professores, setProfessores] = useState([]);
-  const [idSala, setIdSala] = useState('');
-  const [idProfessor, setIdProfessor] = useState('0');
+  const [idSala, setIdSala] = useState(
+    initialIdSala === undefined || initialIdSala === null ? '' : String(initialIdSala),
+  );
+  const [idProfessor, setIdProfessor] = useState(
+    initialIdProfessor === undefined || initialIdProfessor === null
+      ? '0'
+      : String(initialIdProfessor),
+  );
   const [agendamentos, setAgendamentos] = useState([]);
   const [ausencias, setAusencias] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -69,7 +77,15 @@ export default function CalendarSecretary() {
         api.get('/api/professores').catch(() => ({ data: [] })),
       ]);
       setSalas(Array.isArray(respSalas.data) ? respSalas.data : []);
-      setProfessores(Array.isArray(respProfs.data) ? respProfs.data : []);
+      const profData = respProfs.data;
+      const listProfs = Array.isArray(profData)
+        ? profData
+        : Array.isArray(profData?.professores)
+          ? profData.professores
+          : Array.isArray(profData?.content)
+            ? profData.content
+            : [];
+      setProfessores(listProfs);
     } catch (err) {
       console.error('Erro ao carregar filtros:', err);
       setErrorMessage('Erro ao carregar filtros. Tente novamente.');
@@ -181,6 +197,7 @@ export default function CalendarSecretary() {
 
     const calendar = new window.FullCalendar.Calendar(calendarRef.current, {
       initialView: currentViewRef.current || 'timeGridWeek',
+      weekends: false,
       locale: 'pt-br',
       height: 'auto',
       slotMinTime: '07:00:00',
@@ -306,7 +323,6 @@ export default function CalendarSecretary() {
           await fetchFiltros();
           setTimeout(() => {
             setCarregouInicial(true);
-            fetchAgendamentosFiltro();
           }, 200);
         };
         document.body.appendChild(script);
@@ -314,7 +330,6 @@ export default function CalendarSecretary() {
         await fetchFiltros();
         setTimeout(() => {
           setCarregouInicial(true);
-          fetchAgendamentosFiltro();
         }, 200);
       }
     };

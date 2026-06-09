@@ -3,11 +3,11 @@
   align-items: center;
   gap: 16px;
   padding: 16px 20px;
-  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-  border: 2px solid #fcd34d;
+  background: linear-gradient(135deg, rgba(253, 211, 77, 0.15) 0%, rgba(252, 211, 77, 0.10) 100%);
+  border: 2px solid rgba(252, 211, 77, 0.40);
   border-radius: 12px;
   margin: 20px 0;
-  box-shadow: 0 4px 12px rgba(252, 211, 77, 0.15);
+  box-shadow: 0 4px 12px rgba(252, 211, 77, 0.10);
   animation: slideIn 0.3s ease-out;
 
   .alert-icon {

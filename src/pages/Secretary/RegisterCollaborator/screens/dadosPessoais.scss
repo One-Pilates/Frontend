@@ -9,7 +9,7 @@
   gap: 1rem;
   margin-bottom: 2.5rem;
   padding-bottom: 2rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--cor-borda);
 }
 
 .photo-container {
@@ -17,11 +17,11 @@
   height: 6rem;
   border-radius: 50%;
   overflow: hidden;
-  background-color: #f3f4f6;
+  background-color: var(--surface-2, #f3f4f6);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--cor-borda);
 }
 
 .photo {
@@ -38,7 +38,7 @@
 
 .upload-button {
   font-size: 0.875rem;
-  color: #3b82f6;
+  color: var(--laranja-principal);
   background: none;
   border: none;
   cursor: pointer;
@@ -46,7 +46,7 @@
   transition: color 0.2s ease;
 
   &:hover {
-    color: #2563eb;
+    color: var(--laranja-hover);
   }
 }
 

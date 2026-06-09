@@ -16,6 +16,8 @@ import {
   FiAward,
   FiSave,
   FiX,
+  FiHome,
+  FiMapPin,
 } from 'react-icons/fi';
 import userIconImg from '/user-icon.png';
 import './style.scss';
@@ -31,6 +33,15 @@ const ProfileUser = () => {
     dataNascimento: '',
     telefone: '',
     receberNotificacao: false,
+    endereco: {
+      rua: '',
+      numero: '',
+      bairro: '',
+      cidade: '',
+      estado: '',
+      cep: '',
+      uf: '',
+    },
   });
   const [profileImage, setProfileImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -69,12 +80,21 @@ const ProfileUser = () => {
       cargo: user?.cargo || '',
       role: user?.role || '',
       foto: user?.foto
-        ? `${api.defaults.baseURL}/api/imagens/${user.foto}?token=${localStorage.getItem('token')}`
+        ? `${api.defaults.baseURL}/api/imagens/funcionarios/${user.id}`
         : userIconImg,
       email: user?.email || '',
       dataNascimento: user?.idade || user?.dataNascimento || '',
       telefone: formatarTelefone(user?.telefone) || '',
       receberNotificacao: user?.notificacaoAtiva ?? user?.receberNotificacao ?? false,
+      endereco: {
+        rua: user?.endereco?.rua || '',
+        numero: user?.endereco?.numero || '',
+        bairro: user?.endereco?.bairro || '',
+        cidade: user?.endereco?.cidade || '',
+        estado: user?.endereco?.estado || '',
+        cep: user?.endereco?.cep || '',
+        uf: user?.endereco?.uf || '',
+      },
     };
 
     setUserData(currentData);
@@ -106,8 +126,8 @@ const ProfileUser = () => {
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      toast.warning('A imagem deve ter no máximo 5MB. Por favor, selecione uma imagem menor.');
+    if (file.size > 10 * 1024 * 1024) {
+      toast.warning('A imagem deve ter no máximo 10MB. Por favor, selecione uma imagem menor.');
       e.target.value = '';
       return;
     }
@@ -199,6 +219,15 @@ const ProfileUser = () => {
         idade: userData.dataNascimento,
         telefone: userData.telefone.replace(/\D/g, ''),
         notificacaoAtiva: userData.receberNotificacao,
+        endereco: {
+          rua: userData.endereco.rua.trim(),
+          numero: userData.endereco.numero.trim(),
+          bairro: userData.endereco.bairro.trim(),
+          cidade: userData.endereco.cidade.trim(),
+          estado: userData.endereco.estado.trim(),
+          uf: userData.endereco.uf.trim(),
+          cep: userData.endereco.cep.trim(),
+        },
       };
 
       if (user.role === 'PROFESSOR') {
@@ -217,7 +246,17 @@ const ProfileUser = () => {
       setOriginalData(updatedData);
       setOriginalSpecialties(new Set(selectedSpecialties));
 
-      const mergedUser = { ...data, telefone: userDTO.telefone };
+      const mergedUser = { 
+        ...user,
+        ...data, 
+        ...updatedData,
+        telefone: userDTO.telefone,
+        endereco: {
+          ...user.endereco,
+          ...(data.endereco || {}),
+          ...userDTO.endereco,
+        }
+      };
       setUser(mergedUser);
       localStorage.setItem('user', JSON.stringify(mergedUser));
 
@@ -238,7 +277,7 @@ const ProfileUser = () => {
         toast.success('Perfil atualizado! Seus dados foram salvos com sucesso.');
       }
     } catch (error) {
-      toast.error('Ocorreu um erro ao atualizar seus dados. Por favor, tente novamente mais tarde.');
+      toast.error('Erro ao atualizar perfil. Por favor, tente novamente.');
       console.error('Erro ao atualizar dados:', error);
     }
   };
@@ -258,6 +297,59 @@ const ProfileUser = () => {
       formatted = `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
     }
     setUserData({ ...userData, telefone: formatted });
+  };
+
+  const handleCepChange = (e) => {
+    let cepValue = e.target.value.replace(/\D/g, '');
+    if (cepValue.length > 5) {
+      cepValue = cepValue.replace(/^(\d{5})(\d)/, '$1-$2');
+    }
+    setUserData({
+      ...userData,
+      endereco: { ...userData.endereco, cep: cepValue },
+    });
+  };
+
+  const getEstadoNome = (uf) => {
+    const estados = {
+      AC: 'Acre', AL: 'Alagoas', AP: 'Amapá', AM: 'Amazonas', BA: 'Bahia', CE: 'Ceará',
+      DF: 'Distrito Federal', ES: 'Espírito Santo', GO: 'Goiás', MA: 'Maranhão',
+      MT: 'Mato Grosso', MS: 'Mato Grosso do Sul', MG: 'Minas Gerais', PA: 'Pará',
+      PB: 'Paraíba', PR: 'Paraná', PE: 'Pernambuco', PI: 'Piauí', RJ: 'Rio de Janeiro',
+      RN: 'Rio Grande do Norte', RS: 'Rio Grande do Sul', RO: 'Rondônia', RR: 'Roraima',
+      SC: 'Santa Catarina', SP: 'São Paulo', SE: 'Sergipe', TO: 'Tocantins',
+    };
+    return estados[uf] || '';
+  };
+
+  const handleCepBlur = async (e) => {
+    const cep = e.target.value.replace(/\D/g, '');
+    if (cep.length === 8) {
+      try {
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await response.json();
+
+        if (!data.erro) {
+          setUserData((prev) => ({
+            ...prev,
+            endereco: {
+              ...prev.endereco,
+              rua: data.logradouro || prev.endereco.rua,
+              bairro: data.bairro || prev.endereco.bairro,
+              cidade: data.localidade || prev.endereco.cidade,
+              estado: data.estado || getEstadoNome(data.uf) || prev.endereco.estado,
+              uf: data.uf || prev.endereco.uf,
+            },
+          }));
+          toast.success('Endereço preenchido automaticamente!');
+        } else {
+          toast.error('CEP não encontrado.');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar CEP:', error);
+        toast.error('Erro ao buscar informações do CEP.');
+      }
+    }
   };
 
   const toggleSpecialty = (especialidadeId) => {
@@ -351,7 +443,7 @@ const ProfileUser = () => {
                 </div>
                 <input
                   type="text"
-                  value={userData.nome}
+                  value={userData?.nome}
                   onChange={(e) => setUserData({ ...userData, nome: e.target.value })}
                   className="w-full pl-12 pr-4 py-3 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) focus:border-(--laranja-principal) focus:bg-white transition-all outline-none"
                   placeholder="Digite seu nome completo"
@@ -368,7 +460,7 @@ const ProfileUser = () => {
                 </div>
                 <input
                   type="email"
-                  value={userData.email}
+                  value={userData?.email}
                   onChange={(e) => setUserData({ ...userData, email: e.target.value })}
                   className="w-full pl-12 pr-4 py-3 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) focus:border-(--laranja-principal) focus:bg-white transition-all outline-none"
                   placeholder="seu@email.com"
@@ -387,7 +479,7 @@ const ProfileUser = () => {
                 </div>
                 <input
                   type="date"
-                  value={userData.dataNascimento}
+                  value={userData?.dataNascimento}
                   onChange={(e) => setUserData({ ...userData, dataNascimento: e.target.value })}
                   className="w-full pl-12 pr-4 py-3 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) focus:border-(--laranja-principal) focus:bg-white transition-all outline-none"
                 />
@@ -405,7 +497,7 @@ const ProfileUser = () => {
                 </div>
                 <input
                   type="tel"
-                  value={userData.telefone}
+                  value={userData?.telefone}
                   onChange={handleTelefoneChange}
                   maxLength={16}
                   className="w-full pl-12 pr-4 py-3 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) focus:border-(--laranja-principal) focus:bg-white transition-all outline-none"
@@ -416,6 +508,182 @@ const ProfileUser = () => {
           </div>
         </div>
 
+        {/* Endereço */}
+        <div>
+          {
+            <div className="bg-white rounded-2xl shadow-md p-5 sm:p-6 mb-4">
+              <h3 className="text-xl font-bold text-(--text-escuro) mb-4 flex items-center gap-2">
+                <FiHome className="text-(--laranja-principal)" size={24} />
+                Endereço
+              </h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-semibold text-(--text-escuro) mb-2">
+                    Rua
+                  </label>
+                  <div className="relative">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
+                      <FiMapPin size={20} />
+                    </div>
+                    <input
+                      type="text"
+                      value={userData?.endereco?.rua || ''}
+                      onChange={(e) =>
+                        setUserData({
+                          ...userData,
+                          endereco: { ...userData.endereco, rua: e.target.value },
+                        })
+                      }
+                      className="w-full pl-12 pr-4 py-3 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) focus:border-(--laranja-principal) focus:bg-white transition-all outline-none"
+                      placeholder="Digite o nome da rua"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-(--text-escuro) mb-2">
+                    Numero
+                  </label>
+                  <div className="relative">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
+                      <FiMapPin size={20} />
+                    </div>
+                    <input
+                      type="text"
+                      value={
+                        userData?.endereco?.numero === '0'
+                          ? 'S/N'
+                          : userData?.endereco?.numero || ''
+                      }
+                      onChange={(e) =>
+                        setUserData({
+                          ...userData,
+                          endereco: { ...userData.endereco, numero: e.target.value },
+                        })
+                      }
+                      className="w-full pl-12 pr-4 py-3 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) focus:border-(--laranja-principal) focus:bg-white transition-all outline-none"
+                      placeholder="Digite o número da residência"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-(--text-escuro) mb-2">
+                    Bairro
+                  </label>
+                  <div className="relative">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
+                      <FiMapPin size={20} />
+                    </div>
+                    <input
+                      type="text"
+                      value={userData?.endereco?.bairro || ''}
+                      onChange={(e) =>
+                        setUserData({
+                          ...userData,
+                          endereco: { ...userData.endereco, bairro: e.target.value },
+                        })
+                      }
+                      className="w-full pl-12 pr-4 py-3 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) focus:border-(--laranja-principal) focus:bg-white transition-all outline-none"
+                      placeholder="Digite o nome do bairro"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-(--text-escuro) mb-2">
+                    Cidade
+                  </label>
+                  <div className="relative">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
+                      <FiMapPin size={20} />
+                    </div>
+                    <input
+                      type="text"
+                      value={userData?.endereco?.cidade || ''}
+                      onChange={(e) =>
+                        setUserData({
+                          ...userData,
+                          endereco: { ...userData.endereco, cidade: e.target.value },
+                        })
+                      }
+                      className="w-full pl-12 pr-4 py-3 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) focus:border-(--laranja-principal) focus:bg-white transition-all outline-none"
+                      placeholder="Digite o nome da cidade"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-(--text-escuro) mb-2">
+                    Estado
+                  </label>
+                  <div className="relative">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
+                      <FiMapPin size={20} />
+                    </div>
+                    <input
+                      type="text"
+                      value={userData?.endereco?.estado || ''}
+                      onChange={(e) =>
+                        setUserData({
+                          ...userData,
+                          endereco: { ...userData.endereco, estado: e.target.value },
+                        })
+                      }
+                      className="w-full pl-12 pr-4 py-3 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) focus:border-(--laranja-principal) focus:bg-white transition-all outline-none"
+                      placeholder="Digite o nome do estado"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-(--text-escuro) mb-2">
+                    UF
+                  </label>
+                  <div className="relative">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
+                      <FiMapPin size={20} />
+                    </div>
+                    <input
+                      type="text"
+                      value={userData?.endereco?.uf || ''}
+                      onChange={(e) =>
+                        setUserData({
+                          ...userData,
+                          endereco: { ...userData.endereco, uf: e.target.value },
+                        })
+                      }
+                      className="w-full pl-12 pr-4 py-3 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) focus:border-(--laranja-principal) focus:bg-white transition-all outline-none"
+                      placeholder="Digite a sigla do estado"
+                      maxLength={2}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-(--text-escuro) mb-2">
+                    CEP
+                  </label>
+                  <div className="relative">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-(--text-cinza)">
+                      <FiMapPin size={20} />
+                    </div>
+                    <input
+                      type="text"
+                      value={userData?.endereco?.cep || ''}
+                      onChange={handleCepChange}
+                      onBlur={handleCepBlur}
+                      className="w-full pl-12 pr-4 py-3 bg-(--bg-claro) border-2 border-transparent rounded-xl text-(--text-escuro) focus:border-(--laranja-principal) focus:bg-white transition-all outline-none"
+                      placeholder="Digite o CEP"
+                      maxLength={9}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
         {/* Notifications Card */}
         <div className="bg-white rounded-2xl shadow-md p-5 sm:p-6 mb-4">
           <h3 className="text-xl font-bold text-(--text-escuro) mb-4 flex items-center gap-2">

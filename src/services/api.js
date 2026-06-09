@@ -14,9 +14,7 @@ function normalizeToken(rawToken) {
   const semAspas = rawToken.trim().replace(/^"|"$/g, '');
   if (!semAspas) return '';
 
-  return semAspas.toLowerCase().startsWith('bearer ')
-    ? semAspas.substring(7).trim()
-    : semAspas;
+  return semAspas.toLowerCase().startsWith('bearer ') ? semAspas.substring(7).trim() : semAspas;
 }
 
 function isAuthenticationFailure(error) {
@@ -36,7 +34,8 @@ function clearSessionAndRedirect() {
   } catch (e) {
     console.warn('Falha ao limpar localStorage:', e);
   }
-  window.location.href = '/login';
+  console.error('Sessão inválida ou expirada. Redirecionando para a raiz...');
+  window.location.href = '/';
 }
 
 // Adiciona o token de autenticação a cada requisição, se disponível

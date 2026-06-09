@@ -14,15 +14,19 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
-  background: #fafafa;
-  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  background: var(--surface-2, #f7f7f7);
+  border-radius: 10px;
   transition: all 0.2s;
   border: 1px solid transparent;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  font-size: 0.938rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
 .aluno-item:hover {
-  background: var(--bg-claro);
+  background: var(--surface-3, var(--bg-claro));
   border-color: var(--cor-borda);
 }
 
@@ -30,26 +34,12 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: $branco;
+  background: var(--surface-1, var(--branco));
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.aluno-item {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  background: #f7f7f7;
-  margin-bottom: 0.75rem;
-  font-weight: 600;
-  font-size: 1rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-  font-size: 0.938rem;
-  border-radius: 10px;
 }
 
 .aluno-status {

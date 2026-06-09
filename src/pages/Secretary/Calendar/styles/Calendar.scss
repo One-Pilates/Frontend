@@ -5,7 +5,7 @@
   display: flex;
   flex-direction: column;
   padding: 1.5rem;
-  backgroundcolor: 'var(--bg-claro)';
+  background-color: var(--bg-claro);
 
   @media (min-width: 768px) {
     padding: 1.5rem 2rem;
@@ -155,7 +155,7 @@
     position: relative;
 
     &:hover {
-      background-color: rgba(247, 116, 51, 0.1);
+      background-color: var(--laranja-subtle, rgba(247, 116, 51, 0.1));
       color: var(--laranja-principal);
       transform: translateY(-1px) scale(1.02);
     }
@@ -201,12 +201,13 @@
 }
 
 .calendar-wrapper {
-  background: var(--branco);
+  background: var(--surface-1, var(--branco));
   border-radius: 14px;
   padding: 1.5rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-card, 0 4px 16px rgba(0, 0, 0, 0.08));
   min-height: 600px;
   transition: all 0.3s ease;
+  border: 1px solid var(--cor-borda);
 
   &:hover {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
@@ -254,8 +255,9 @@
   min-height: 550px;
 }
 
+/* FullCalendar — estilo base (light) */
 .fc-theme-standard .fc-scrollgrid {
-  border: 1px solid #e8e8e8;
+  border: 1px solid var(--cor-borda);
   border-radius: 10px;
   overflow: hidden;
 }
@@ -332,7 +334,7 @@
 }
 
 .fc-col-header-cell {
-  background: var(--bg-claro);
+  background: var(--surface-2, var(--bg-claro));
   font-weight: 600;
   color: var(--text-escuro);
   text-transform: uppercase;
@@ -365,12 +367,12 @@
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: rgba(255, 112, 67, 0.03);
+    background-color: var(--laranja-subtle, rgba(255, 112, 67, 0.03));
   }
 }
 
 .fc-day-today {
-  background-color: rgba(255, 112, 67, 0.05) !important;
+  background-color: var(--laranja-subtle, rgba(255, 112, 67, 0.05)) !important;
 }
 
 .fc-scroller {
@@ -380,16 +382,16 @@
   }
 
   &::-webkit-scrollbar-track {
-    background: var(--bg-claro);
+    background: var(--surface-2, var(--bg-claro));
     border-radius: 4px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #d0d0d0;
+    background: var(--cor-borda);
     border-radius: 4px;
 
     &:hover {
-      background: #b0b0b0;
+      background: var(--text-cinza);
     }
   }
 }
@@ -416,6 +418,10 @@
   backdrop-filter: blur(4px);
   border-radius: 12px;
   z-index: 10;
+}
+
+html.dark .loading-overlay {
+  background: rgba(20, 18, 16, 0.85);
 }
 
 .loading-overlay.show {

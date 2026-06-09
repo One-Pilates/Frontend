@@ -7,7 +7,9 @@ export default function InformacoesProfissionaisScreen({
   atualizar,
   especialidades = [],
   erros = {},
+  role,
 }) {
+  const isProfessor = role === 'PROFESSOR';
   const manipularEspecialidade = (especialidadeId) => {
     const especialidadesAtuais = dados.especialidades || [];
     const novasEspecialidades = especialidadesAtuais.includes(especialidadeId)
@@ -25,50 +27,51 @@ export default function InformacoesProfissionaisScreen({
         </div>
         <div className="etapa-title-group">
           <h2>Informações Profissionais</h2>
-          <p>Cargo, especialidades e configurações</p>
+          <p>Cargo{isProfessor ? ', especialidades' : ''} e configurações</p>
         </div>
       </div>
       <div className="professional-content">
         <Input
           label="Cargo"
-          placeholder="Ex: Fisioterapeuta, Professor de Pilates"
+          placeholder="Ex: Fisioterapeuta, Professor de Pilates, Secretária..."
           value={dados.cargo}
           onChange={(e) => atualizar({ cargo: e.target.value })}
           required
           erro={erros.cargo}
         />
+        {isProfessor && (
+          <div className="especialidades-section">
+            <label className="section-label">
+              Especialidades
+              <span className="section-required">*</span>
+            </label>
 
-        <div className="especialidades-section">
-          <label className="section-label">
-            Especialidades
-            <span className="section-required">*</span>
-          </label>
+            {especialidades.length === 0 ? (
+              <div className="loading-message">Carregando especialidades...</div>
+            ) : (
+              <div className="checkbox-grid">
+                {especialidades.map((especialidade) => (
+                  <label key={especialidade.id} className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={dados.especialidades?.includes(especialidade.id) || false}
+                      onChange={() => manipularEspecialidade(especialidade.id)}
+                      className="checkbox-input"
+                    />
+                    <span className="checkbox-text">{especialidade.nome}</span>
+                  </label>
+                ))}
+              </div>
+            )}
 
-          {especialidades.length === 0 ? (
-            <div className="loading-message">Carregando especialidades...</div>
-          ) : (
-            <div className="checkbox-grid">
-              {especialidades.map((especialidade) => (
-                <label key={especialidade.id} className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={dados.especialidades?.includes(especialidade.id) || false}
-                    onChange={() => manipularEspecialidade(especialidade.id)}
-                    className="checkbox-input"
-                  />
-                  <span className="checkbox-text">{especialidade.nome}</span>
-                </label>
-              ))}
-            </div>
-          )}
-
-          {erros.especialidades && <span className="error-message">{erros.especialidades}</span>}
-        </div>
+            {erros.especialidades && <span className="error-message">{erros.especialidades}</span>}
+          </div>
+        )}
 
         <div className="observacoes-section">
           <label className="textarea-label">Observações</label>
           <textarea
-            placeholder="Informações adicionais sobre o professor..."
+            placeholder="Informações adicionais sobre o colaborador..."
             value={dados.observacoes || ''}
             onChange={(e) => atualizar({ observacoes: e.target.value })}
             className={`textarea-field ${erros.observacoes ? 'textarea-error' : ''}`}

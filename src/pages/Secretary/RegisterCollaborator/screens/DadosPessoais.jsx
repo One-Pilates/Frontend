@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { FaCamera, FaUser } from 'react-icons/fa';
 import Input from '../components/Input';
+import { toast } from 'sonner';
 import './dadosPessoais.scss';
 
 export default function DadosPessoaisScreen({ dados, atualizar, erros = {} }) {
@@ -9,6 +10,18 @@ export default function DadosPessoaisScreen({ dados, atualizar, erros = {} }) {
   const manipularArquivo = (e) => {
     const arquivo = e.target.files?.[0];
     if (arquivo) {
+      if (!arquivo.type.startsWith('image/')) {
+        toast.warning('Por favor, selecione apenas arquivos de imagem.');
+        e.target.value = '';
+        return;
+      }
+      
+      if (arquivo.size > 10 * 1024 * 1024) {
+        toast.warning('A imagem deve ter no máximo 10MB. Por favor, selecione uma imagem menor.');
+        e.target.value = '';
+        return;
+      }
+
       const leitor = new FileReader();
       leitor.onloadend = () => {
         atualizar({ fotoPerfil: leitor.result });
@@ -25,7 +38,7 @@ export default function DadosPessoaisScreen({ dados, atualizar, erros = {} }) {
         </div>
         <div className="etapa-title-group">
           <h2>Dados Pessoais</h2>
-          <p>Informações básicas do professor</p>
+          <p>Informações básicas do colaborador</p>
         </div>
       </div>
       <div className="photo-section">

@@ -8,6 +8,9 @@ import {
   FaUsers,
   FaSlidersH,
   FaTimes,
+  FaIdBadge,
+  FaEye,
+  FaEyeSlash,
 } from 'react-icons/fa';
 import ItemSidebar from './ItemSidebar';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -42,7 +45,7 @@ export default function SidebarTeacher({ navAberta, setNavAberta }) {
           navAberta ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         } ${navAberta ? 'w-60' : 'lg:w-20 w-60'} 
         fixed lg:static inset-y-0 left-0 z-50 lg:z-auto
-        text-white flex flex-col justify-between transition-all duration-300`}
+        text-white flex flex-col justify-between transition-all duration-300 select-none`}
         style={{
           backgroundColor: 'var(--laranja-principal)',
         }}
@@ -95,11 +98,19 @@ export default function SidebarTeacher({ navAberta, setNavAberta }) {
         <div className="mb-4 md:mb-6">
           <div
             onClick={logout}
-            className="flex items-center gap-4 px-4 py-3 cursor-pointer transition-all rounded-lg mx-2 my-2 hover:bg-orange-600 active:bg-orange-700 active:scale-95"
+            className="flex items-center gap-4 px-4 py-3 cursor-pointer transition-all rounded-lg mx-2 my-2 hover:bg-orange-600 active:bg-orange-700 active:scale-95 select-none"
           >
             <FaSignOutAlt size={20} className="w-5 h-5 md:w-5.5 md:h-5.5" />
             {navAberta && <span className="font-medium text-sm md:text-base">Sair</span>}
           </div>
+          {navAberta && (
+            <div className="mt-4 px-6 text-center select-none">
+              <p className="text-[11px] font-medium text-white opacity-80">
+                Powered by{' '}
+                <span className="text-white font-black tracking-wide drop-shadow-sm">OneIA</span> ✨
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </>
@@ -119,8 +130,18 @@ export function SidebarSecretary({ navAberta, setNavAberta }) {
 
   const isAgendaActive = isActive(`${basePath}/agenda`) || isActive(`${basePath}/agendamento`);
 
-  const isProfessorActive = isActive(`${basePath}/professor`);
-  const isAlunosActive = isActive(`${basePath}/alunos`) || isActive(`${basePath}/aluno`);
+  const isColaboradoresActive =
+    isActive(`${basePath}/colaboradores`) ||
+    isActive(`${basePath}/colaborador`) ||
+    isActive(`${basePath}/professor`) ||
+    isActive(`${basePath}/secretaria`) ||
+    isActive(`${basePath}/perfilView/professor`) ||
+    isActive(`${basePath}/perfilView/secretaria`);
+
+  const isAlunosActive =
+    isActive(`${basePath}/alunos`) ||
+    isActive(`${basePath}/aluno`) ||
+    isActive(`${basePath}/perfilView/aluno`);
 
   const handleNavigate = (path) => {
     navigate(path);
@@ -145,7 +166,7 @@ export function SidebarSecretary({ navAberta, setNavAberta }) {
           navAberta ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         } ${navAberta ? 'w-60' : 'lg:w-20 w-60'} 
         fixed lg:static inset-y-0 left-0 z-50 lg:z-auto
-        text-white flex flex-col justify-between transition-all duration-300`}
+        text-white flex flex-col justify-between transition-all duration-300 select-none`}
         style={{
           backgroundColor: 'var(--laranja-principal)',
         }}
@@ -192,11 +213,11 @@ export function SidebarSecretary({ navAberta, setNavAberta }) {
               onClick={() => handleNavigate(`${basePath}/agenda`)}
             />
             <ItemSidebar
-              icon={FaChalkboardTeacher}
-              texto="Professor"
+              icon={FaIdBadge}
+              texto="Colaboradores"
               navAberta={navAberta}
-              ativo={isProfessorActive}
-              onClick={() => handleNavigate(`${basePath}/professor`)}
+              ativo={isColaboradoresActive}
+              onClick={() => handleNavigate(`${basePath}/colaboradores`)}
             />
             <ItemSidebar
               icon={FaUsers}
@@ -220,11 +241,19 @@ export function SidebarSecretary({ navAberta, setNavAberta }) {
         <div className="mb-4 md:mb-6">
           <div
             onClick={logout}
-            className="flex items-center gap-4 px-4 py-3 cursor-pointer transition-all rounded-lg mx-2 my-2 hover:bg-orange-600 active:bg-orange-700 active:scale-95"
+            className="flex items-center gap-4 px-4 py-3 cursor-pointer transition-all rounded-lg mx-2 my-2 hover:bg-orange-600 active:bg-orange-700 active:scale-95 select-none"
           >
             <FaSignOutAlt size={20} className="w-5 h-5 md:w-5.5 md:h-5.5" />
             {navAberta && <span className="font-medium text-sm md:text-base">Sair</span>}
           </div>
+          {navAberta && (
+            <div className="mt-4 px-6 text-center select-none">
+              <p className="text-[11px] font-medium text-white opacity-80">
+                Powered by{' '}
+                <span className="text-white font-black tracking-wide drop-shadow-sm">OneIA</span> ✨
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </>

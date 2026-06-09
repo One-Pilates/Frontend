@@ -14,20 +14,23 @@
 
     select {
       padding: 0.5rem 1rem;
-      border: 1px solid $borda-input;
+      border: 1px solid var(--borda-input);
       border-radius: 6px;
       font-size: 0.875rem;
       width: auto;
       cursor: pointer;
       transition: all 0.2s ease;
+      background: var(--surface-input, var(--branco));
+      color: var(--text-escuro);
 
       &:hover {
-        border-color: $laranja-hover;
+        border-color: var(--laranja-principal);
       }
 
       &:focus {
-        border-color: $laranja-hover;
+        border-color: var(--laranja-principal);
         outline: none;
+        box-shadow: 0 0 0 3px var(--laranja-glow, rgba(247, 116, 51, 0.1));
       }
     }
   }
@@ -43,10 +46,10 @@
     }
 
       .kpi-card {
-      background: var(--branco);
+      background: var(--surface-1, var(--branco));
       border-radius: 12px;
       padding: 1.5rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      box-shadow: var(--shadow-card, 0 2px 8px rgba(0, 0, 0, 0.08));
       transition: all 0.3s ease;
       border: 1px solid var(--cor-borda);
       display: flex;
@@ -150,17 +153,18 @@
     box-sizing: border-box;
 
       .chart-container {
-      background: var(--branco);
-      border-radius: 8px;
-      box-shadow: 0 0.1vh 0.3vh rgba(0, 0, 0, 0.1);
+      background: var(--surface-1, var(--branco));
+      border-radius: 12px;
+      border: 1px solid var(--cor-borda);
+      box-shadow: var(--shadow-card, 0 0.1vh 0.3vh rgba(0, 0, 0, 0.1));
       overflow: hidden;
 
       .chart-header {
-        background: $laranja-header;
+        background: var(--laranja-principal);
         padding: 1.5vh 2vw;
 
         h3 {
-          color: $branco;
+          color: #ffffff;
           font-size: clamp(1rem, 1.5vw, 1.25rem);
           font-weight: 600;
         }
@@ -170,6 +174,7 @@
         padding: 2vh 2vw;
         width: 100%;
         overflow-x: auto;
+        background: var(--surface-1, var(--branco));
       }
     }
   }

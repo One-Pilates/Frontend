@@ -24,12 +24,6 @@ function Account() {
     }
   };
 
-  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
-  const openAdminModal = () => {
-    setMenuAberto(false);
-    setIsAdminModalOpen(true);
-  };
-
   const nome = user?.nome || user?.name || 'Usuário';
   const roleRaw = user?.role || user?.cargo || '';
   const papel = (() => {
@@ -54,7 +48,7 @@ function Account() {
       >
         {user && user.foto ? (
           <img
-            src={`${api.defaults.baseURL}/api/imagens/${user.foto}?token=${localStorage.getItem('token')}`}
+            src={`${api.defaults.baseURL}/api/imagens/funcionarios/${user.id}`}
             alt={nome}
             className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover"
             style={{ outline: '2px solid var(--laranja-principal)' }}
@@ -106,7 +100,7 @@ function Account() {
                 <img
                   src={
                     user?.foto
-                      ? `${api.defaults.baseURL}/api/imagens/${user.foto}?token=${localStorage.getItem('token')}`
+                      ? `${api.defaults.baseURL}/api/imagens/funcionarios/${user.id}`
                       : userIconImg
                   }
                   alt={nome}
@@ -121,36 +115,22 @@ function Account() {
 
             <div className="py-2">
               <button
-                onClick={openAdminModal}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left transition-colors flex items-center gap-3 hover:bg-gray-50 active:bg-gray-100"
-                style={{
-                  backgroundColor: 'var(--branco)',
-                  color: 'var(--text-escuro)',
-                }}
-              >
-                <FaCog className="text-base" style={{ color: 'var(--text-cinza)' }} />
-                <span className="text-sm sm:text-base">Configurações</span>
-              </button>
-
-              <button
                 onClick={() => navigate('/redefinir-senha')}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left transition-colors flex items-center gap-3 hover:bg-gray-50 active:bg-gray-100"
-                style={{
-                  backgroundColor: 'var(--branco)',
-                  color: 'var(--text-escuro)',
-                }}
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left transition-colors flex items-center gap-3"
+                style={{ backgroundColor: 'var(--branco)', color: 'var(--text-escuro)' }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--surface-3)')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--branco)')}
               >
                 <FaKey className="text-base" style={{ color: 'var(--text-cinza)' }} />
-                <span className="text-sm sm:text-base">Senhas</span>
+                <span className="text-sm sm:text-base cursor-pointer">Senha</span>
               </button>
 
               <button
                 onClick={toggleModoEscuro}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left transition-colors flex items-center justify-between hover:bg-gray-50 active:bg-gray-100"
-                style={{
-                  backgroundColor: 'var(--branco)',
-                  color: 'var(--text-escuro)',
-                }}
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left transition-colors flex items-center justify-between cursor-pointer"
+                style={{ backgroundColor: 'var(--branco)', color: 'var(--text-escuro)' }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--surface-3)')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--branco)')}
               >
                 <div className="flex items-center gap-3">
                   {modoEscuro ? (
@@ -180,8 +160,6 @@ function Account() {
           </div>
         </>
       )}
-
-      <ContactAdm isOpen={isAdminModalOpen} onClose={() => setIsAdminModalOpen(false)} />
     </div>
   );
 }

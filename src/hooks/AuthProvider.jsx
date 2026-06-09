@@ -92,13 +92,18 @@ export function AuthProvider({ children }) {
 
       return true;
     } catch (error) {
-      const status = error.response?.status;
+      const data = error?.response?.data;
+      const codigoErro = data?.codigoErro;
       const msg =
-        status === 401
-          ? 'Email ou senha incorretos.'
+        codigoErro === 'CREDENCIAIS_INVALIDAS'
+          ? 'Email ou senha inválidos. Por favor, tente novamente.'
           : 'Ocorreu um erro inesperado. Tente novamente mais tarde.';
 
-      toast.error(msg);
+      if (codigoErro === 'CREDENCIAIS_INVALIDAS') {
+        toast.error(msg);
+      } else {
+        toast.error(msg);
+      }
       return false;
     } finally {
       setIsLoading(false);
@@ -118,6 +123,9 @@ export function AuthProvider({ children }) {
       if (result.isConfirmed) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        // Sempre volta para modo claro ao deslogar
+        localStorage.removeItem('theme');
+        document.documentElement.classList.remove('dark');
         setUser(null);
         navigate('/login');
       }
