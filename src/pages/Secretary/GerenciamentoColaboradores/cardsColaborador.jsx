@@ -18,10 +18,10 @@ const cards = [
     key: 'secretarios',
     Icon: FaUserTie,
     badge: 'Colaboradores',
-    title: 'Secretárias',
+    title: 'Recepcionistas',
     meta: 'Lista completa cadastrada no estúdio',
-    description: 'Visualize e gerencie todos os secretárias ativos registrados.',
-    label: 'Ver secretárias',
+    description: 'Visualize e gerencie todos os recepcionistas ativos registrados.',
+    label: 'Ver recepcionistas',
     getPath: (base) => `${base}/secretaria`,
   },
 ];
