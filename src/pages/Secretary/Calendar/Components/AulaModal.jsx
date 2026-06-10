@@ -12,6 +12,7 @@ import {
   FiBookOpen,
   FiUserPlus,
   FiHash,
+  FiChevronDown,
 } from 'react-icons/fi';
 import { FaWheelchair } from 'react-icons/fa';
 import api from '../../../../services/api';
@@ -23,6 +24,20 @@ import OneIAModal from './OneIAModal';
 
 const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
   const [activeTab, setActiveTab] = useState('informacoes');
+  const [filtroAluno, setFiltroAluno] = useState('');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const [editFields, setEditFields] = useState({});
   const [professores, setProfessores] = useState([]);
   const [especialidades, setEspecialidades] = useState([]);
@@ -555,23 +570,92 @@ Como o serviço de IA não respondeu, aqui está uma sugestão genérica para ${
                 <span className="info-label" style={{ marginBottom: '10px' }}>
                   <FiUserPlus size={14} /> Adicionar novo aluno
                 </span>
-                <select
-                  className="aluno-select"
-                  value=""
-                  onChange={(e) => {
-                    const select = todosAlunos.find((a) => String(a.id) === e.target.value);
-                    if (select) handleAdicionarAluno(select);
-                  }}
-                >
-                  <option value="" disabled>
-                    Selecionar aluno...
-                  </option>
-                  {alunosDisponiveis.map((a) => (
-                    <option key={a.id} value={a.id}>
-                      {a.nome} {a.alunoComLimitacoesFisicas ? '♿ (PCD)' : ''}
-                    </option>
-                  ))}
-                </select>
+                <div style={{ position: 'relative' }} ref={dropdownRef}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    border: dropdownOpen ? '1px solid var(--laranja-principal, #ea580c)' : '1px solid #e2e8f0',
+                    borderRadius: '6px',
+                    padding: '8px 12px',
+                    background: '#fff',
+                    boxShadow: dropdownOpen ? '0 0 0 3px rgba(234, 88, 12, 0.15)' : 'none',
+                    transition: 'all 0.2s ease',
+                  }}>
+                    <input
+                      type="text"
+                      placeholder="Buscar ou selecionar aluno..."
+                      value={filtroAluno}
+                      onChange={(e) => {
+                        setFiltroAluno(e.target.value);
+                        setDropdownOpen(true);
+                      }}
+                      onFocus={() => setDropdownOpen(true)}
+                      style={{
+                        border: 'none',
+                        outline: 'none',
+                        width: '100%',
+                        background: 'transparent',
+                        fontSize: '0.9rem',
+                        color: 'var(--text-escuro, #1e293b)'
+                      }}
+                    />
+                    <FiChevronDown style={{ color: dropdownOpen ? 'var(--laranja-principal, #ea580c)' : '#94a3b8', transition: 'all 0.2s', transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)', cursor: 'pointer', marginLeft: '8px' }} onClick={() => setDropdownOpen(!dropdownOpen)} />
+                  </div>
+                  {dropdownOpen && (
+                    <div style={{
+                      position: 'absolute',
+                      top: 'calc(100% + 6px)',
+                      left: 0,
+                      right: 0,
+                      background: '#fff',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '8px',
+                      zIndex: 50,
+                      maxHeight: '220px',
+                      overflowY: 'auto',
+                      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+                      padding: '6px 0',
+                    }}>
+                      {alunosDisponiveis.filter(a => a.nome.toLowerCase().includes(filtroAluno.toLowerCase())).length === 0 ? (
+                        <div style={{ padding: '8px 12px', color: '#64748b', textAlign: 'center', fontSize: '0.9rem' }}>Nenhum aluno encontrado</div>
+                      ) : (
+                        alunosDisponiveis.filter(a => a.nome.toLowerCase().includes(filtroAluno.toLowerCase())).map(aluno => (
+                          <div
+                            key={aluno.id}
+                            onClick={() => {
+                              handleAdicionarAluno(aluno);
+                              setFiltroAluno('');
+                              setDropdownOpen(false);
+                            }}
+                            style={{
+                              padding: '8px 12px',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              fontSize: '0.9rem',
+                              color: 'var(--text-escuro, #1e293b)',
+                              transition: 'background 0.15s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = '#f1f5f9';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = '#fff';
+                            }}
+                          >
+                            <span style={{ fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              {aluno.nome}
+                              {aluno.alunoComLimitacoesFisicas && (
+                                <span title="Aluno PCD">♿</span>
+                              )}
+                            </span>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="lista-alunos">
@@ -594,8 +678,8 @@ Como o serviço de IA não respondeu, aqui está uma sugestão genérica para ${
                             <span className="aluno-nome">{aluno.nome}</span>
                             <div className="aluno-tags">
                               {aluno.alunoComLimitacoesFisicas && (
-                                <span className="tag-pcd">
-                                  <FaWheelchair size={10} /> PCD
+                                <span className="tag-pcd" title="Aluno PCD">
+                                  ♿
                                 </span>
                               )}
                             </div>

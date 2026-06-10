@@ -42,7 +42,6 @@ const Calendar = () => {
       const user = JSON.parse(localStorage.getItem('user'));
       const response = await api.get(`/api/agendamentos/professorId/${user.id}`);
       setAgendamentos(Array.isArray(response.data) ? response.data : []);
-
       try {
         const respAus = await api.get(`/api/ausencias/professor/${user.id}`);
         setAusencias(Array.isArray(respAus.data) ? respAus.data : []);

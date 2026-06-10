@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiUserPlus, FiTrash2 } from 'react-icons/fi';
+import { FiUserPlus, FiTrash2, FiChevronDown } from 'react-icons/fi';
 import { FaWheelchair } from 'react-icons/fa';
 
 export default function Etapa3Alunos({
@@ -9,6 +9,20 @@ export default function Etapa3Alunos({
   handleAdicionarAluno,
   handleRemoverAluno,
 }) {
+  const [filtroAluno, setFiltroAluno] = React.useState('');
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  const dropdownRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const alunosOrdenados = [...(alunosDisponiveis || [])].sort((a, b) =>
     (a?.nome || '').localeCompare(b?.nome || '', 'pt-BR', { sensitivity: 'base' }),
   );
@@ -35,33 +49,93 @@ export default function Etapa3Alunos({
         <label htmlFor="select-aluno">
           Selecionar Aluno <span className="required">*</span>
         </label>
-        <select
-          id="select-aluno"
-          defaultValue=""
-          onChange={(e) => {
-            const alunoSelecionado = alunosOrdenados.find((aluno) => String(aluno.id) === e.target.value);
-            if (alunoSelecionado) {
-              handleAdicionarAluno(alunoSelecionado);
-              e.target.value = '';
-            }
-          }}
-        >
-          <option value="" disabled>
-            Selecionar aluno
-          </option>
-          {alunosOrdenados.length === 0 ? (
-            <option value="" disabled>
-              Nenhum aluno disponivel
-            </option>
-          ) : (
-            alunosOrdenados.map((aluno) => (
-              <option key={aluno.id} value={aluno.id}>
-                {aluno.nome}
-                {aluno.alunoComLimitacoesFisicas ? ' (PCD)' : ''}
-              </option>
-            ))
+        <div style={{ position: 'relative' }} ref={dropdownRef}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            border: dropdownOpen ? '1px solid var(--laranja-principal, #ea580c)' : '1px solid #e2e8f0',
+            borderRadius: '6px',
+            padding: '8px 12px',
+            background: '#fff',
+            boxShadow: dropdownOpen ? '0 0 0 3px rgba(234, 88, 12, 0.15)' : 'none',
+            transition: 'all 0.2s ease',
+          }}>
+            <input
+              type="text"
+              placeholder="Buscar ou selecionar aluno..."
+              value={filtroAluno}
+              onChange={(e) => {
+                setFiltroAluno(e.target.value);
+                setDropdownOpen(true);
+              }}
+              onFocus={() => setDropdownOpen(true)}
+              style={{
+                border: 'none',
+                outline: 'none',
+                width: '100%',
+                background: 'transparent',
+                fontSize: '0.9rem',
+                color: 'var(--text-escuro, #1e293b)'
+              }}
+            />
+            <FiChevronDown style={{ color: dropdownOpen ? 'var(--laranja-principal, #ea580c)' : '#94a3b8', transition: 'all 0.2s', transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)', cursor: 'pointer', marginLeft: '8px' }} onClick={() => setDropdownOpen(!dropdownOpen)} />
+          </div>
+
+          {dropdownOpen && (
+            <div style={{
+              position: 'absolute',
+              top: 'calc(100% + 6px)',
+              left: 0,
+              right: 0,
+              background: '#fff',
+              border: '1px solid #e2e8f0',
+              borderRadius: '8px',
+              zIndex: 50,
+              maxHeight: '220px',
+              overflowY: 'auto',
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+              padding: '6px 0',
+            }}>
+              {alunosOrdenados.filter(a => a.nome.toLowerCase().includes(filtroAluno.toLowerCase())).length === 0 ? (
+                <div style={{ padding: '8px 12px', color: '#64748b', textAlign: 'center', fontSize: '0.9rem' }}>Nenhum aluno encontrado</div>
+              ) : (
+                alunosOrdenados.filter(a => a.nome.toLowerCase().includes(filtroAluno.toLowerCase())).map(aluno => (
+                  <div
+                    key={aluno.id}
+                    onClick={() => {
+                      handleAdicionarAluno(aluno);
+                      setFiltroAluno('');
+                      setDropdownOpen(false);
+                    }}
+                    style={{
+                      padding: '8px 12px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      fontSize: '0.9rem',
+                      color: 'var(--text-escuro, #1e293b)',
+                      transition: 'background 0.15s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = '#f1f5f9';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = '#fff';
+                    }}
+                  >
+                    <span style={{ fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {aluno.nome}
+                      {aluno.alunoComLimitacoesFisicas && (
+                        <span title="Aluno PCD">♿</span>
+                      )}
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
           )}
-        </select>
+        </div>
         {erros.alunos && <span className="error-message">{erros.alunos}</span>}
       </div>
 
@@ -82,8 +156,8 @@ export default function Etapa3Alunos({
                   <div>
                     <span className="aluno-nome">{aluno.nome}</span>
                     {aluno.alunoComLimitacoesFisicas && (
-                      <div className="pcd-badge">
-                        <FaWheelchair size={11} /> PCD
+                      <div className="pcd-badge" title="Aluno PCD">
+                        ♿
                       </div>
                     )}
                   </div>

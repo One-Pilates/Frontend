@@ -127,7 +127,7 @@ export default function Etapa4Confirmacao({
                   <div key={aluno.id} className="aluno-confirmation">
                     {aluno.nome}
                     {alunoCompleto.alunoComLimitacoesFisicas && (
-                      <FaWheelchair size={12} style={{ opacity: 0.9 }} title="Limitação física" />
+                      <span title="Aluno PCD">♿</span>
                     )}
                   </div>
                 );

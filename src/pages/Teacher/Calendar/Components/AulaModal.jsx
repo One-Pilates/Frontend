@@ -284,7 +284,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
                                     ? observacaoAtual
                                     : 'Nenhuma observação registrada.'}
                                 </span>
-                                <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
+                                <div style={{ display: 'flex', gap: '6px', flexShrink: 0, alignItems: 'center' }}>
                                   {observacaoAtual && observacaoAtual.trim() !== '' && (
                                     <button
                                       className="btn-oneia-obs"
@@ -298,21 +298,7 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
                                         )
                                       }
                                       disabled={iaCarregando[aluno.id]}
-                                      style={{
-                                        background:
-                                          'linear-gradient(135deg, #a855f7 0%, #d946ef 100%)',
-                                        color: '#fff',
-                                        border: 'none',
-                                        borderRadius: '8px',
-                                        width: '28px',
-                                        height: '28px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        cursor: 'pointer',
-                                        fontSize: '14px',
-                                        boxShadow: '0 2px 5px rgba(217, 70, 239, 0.3)',
-                                      }}
+                                      style={{ background: 'transparent', border: 'none', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', width: '32px', height: '32px', fontSize: '1.2rem' }}
                                     >
                                       ✨
                                     </button>
