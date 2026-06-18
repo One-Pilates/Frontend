@@ -22,7 +22,7 @@ export default function EsqueciSenha() {
     const loadingId = toast.loading('Enviando código de verificação...');
 
     try {
-      const response = await api.post('auth/criarCodigoVerificacao', { email });
+      const response = await api.post('api/auth/criarCodigoVerificacao', { email });
       console.log('Email enviado para:', email);
       console.log('Resposta do servidor:', response.data);
 

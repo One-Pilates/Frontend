@@ -51,7 +51,7 @@ export default function NovaSenha() {
     const loadingId = toast.loading('Redefinindo sua senha...');
 
     try {
-      await api.post('auth/alterarSenha', {
+      await api.post('api/auth/alterarSenha', {
         senha: password1,
         email: email || user.email,
       });
