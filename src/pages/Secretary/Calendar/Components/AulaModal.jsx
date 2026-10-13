@@ -16,6 +16,7 @@ import {
 } from 'react-icons/fi';
 import { FaWheelchair } from 'react-icons/fa';
 import api from '../../../../services/api';
+import { solicitarRecomendacaoIA } from '../../../../services/ia';
 import Swal from 'sweetalert2';
 import { toast } from 'sonner';
 import { getColorForEspecialidade } from '../../../../utils/utils';
@@ -216,13 +217,13 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
     setiaRecomendacoes((prev) => ({ ...prev, [alunoId]: null }));
 
     try {
-      const response = await api.post('/api/ia/recomendacao', {
+      const recomendacao = await solicitarRecomendacaoIA({
         nomeAluno,
         observacao,
         especialidade,
       });
 
-      const texto = response.data?.recomendacao || 'Não foi possível gerar uma recomendação.';
+      const texto = recomendacao || 'Não foi possível gerar uma recomendação.';
       setiaRecomendacoes((prev) => ({ ...prev, [alunoId]: texto }));
 
       // Abre o modal OneIA com a recomendação inicial

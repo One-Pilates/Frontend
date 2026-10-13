@@ -2,6 +2,7 @@ import React from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { Outlet, Navigate, useLocation } from 'react-router-dom';
 import LoadingSpinner from '../components/LoadingSpinner';
+import AgenteIAChat from '../components/AgenteIAChat';
 
 const PrivateRoutes = ({ allowedRoles }) => {
   const { user, isCheckingAuth } = useAuth();
@@ -28,7 +29,12 @@ const PrivateRoutes = ({ allowedRoles }) => {
     return <Navigate to={fallback} replace state={{ from: location }} />;
   }
 
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+      <AgenteIAChat />
+    </>
+  );
 };
 
 export default PrivateRoutes;

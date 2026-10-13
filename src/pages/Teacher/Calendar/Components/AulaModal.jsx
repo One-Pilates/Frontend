@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FiX, FiEdit2, FiEye, FiEyeOff, FiSave } from 'react-icons/fi';
 import AlunoItem from './AlunoItem';
 import api from '../../../../services/api';
+import { solicitarRecomendacaoIA } from '../../../../services/ia';
 import { toast } from 'sonner';
 import '../Styles/Modal.scss';
 import OneIAModal from '../../../Secretary/Calendar/Components/OneIAModal';
@@ -81,13 +82,13 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose }) => {
     setiaRecomendacoes((prev) => ({ ...prev, [alunoId]: null }));
 
     try {
-      const response = await api.post('/api/ia/recomendacao', {
+      const recomendacao = await solicitarRecomendacaoIA({
         nomeAluno,
         observacao,
         especialidade,
       });
 
-      const texto = response.data?.recomendacao || 'Não foi possível gerar uma recomendação.';
+      const texto = recomendacao || 'Não foi possível gerar uma recomendação.';
       setiaRecomendacoes((prev) => ({ ...prev, [alunoId]: texto }));
 
       // Abre o modal OneIA com a recomendação inicial

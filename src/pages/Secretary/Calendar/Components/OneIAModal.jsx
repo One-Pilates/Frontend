@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FiArrowLeft, FiSend, FiX } from 'react-icons/fi';
-import api from '../../../../services/api';
+import { solicitarRecomendacaoIA } from '../../../../services/ia';
 import '../styles/OneIAModal.scss';
 
 /* ─────────────────────────────────────────
@@ -134,7 +134,7 @@ const OneIAModal = ({
         content: m.text,
       }));
 
-      const response = await api.post('/api/ia/recomendacao', {
+      const recomendacao = await solicitarRecomendacaoIA({
         nomeAluno,
         observacao,
         especialidade,
@@ -142,8 +142,7 @@ const OneIAModal = ({
         mensagemUsuario: texto,
       });
 
-      const resposta =
-        response.data?.recomendacao || 'Não consegui gerar uma resposta. Tente novamente.';
+      const resposta = recomendacao || 'Não consegui gerar uma resposta. Tente novamente.';
 
       setMensagens((prev) => [...prev, { role: 'ia', text: resposta, animate: true }]);
     } catch (err) {

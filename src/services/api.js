@@ -8,7 +8,7 @@ export const api = axios.create({
   },
 });
 
-function normalizeToken(rawToken) {
+export function normalizeToken(rawToken) {
   if (!rawToken) return '';
 
   const semAspas = rawToken.trim().replace(/^"|"$/g, '');
@@ -27,7 +27,7 @@ function isAuthenticationFailure(error) {
   return false;
 }
 
-function clearSessionAndRedirect() {
+export function clearSessionAndRedirect() {
   try {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -52,7 +52,7 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (isAuthenticationFailure(error)) {
+    if (!error?.config?.skipAuthRedirect && isAuthenticationFailure(error)) {
       clearSessionAndRedirect();
     }
     return Promise.reject(error);
