@@ -8,6 +8,7 @@ import {
   FiAlertCircle,
   FiChevronDown,
 } from 'react-icons/fi';
+import DOMPurify from 'dompurify';
 import { useAuth } from '../hooks/useAuth';
 import { conversarComAgente } from '../services/ia';
 import './AgenteIAChat.scss';
@@ -16,6 +17,34 @@ const BOAS_VINDAS = {
   role: 'ia',
   text: 'Olá! Sou o assistente da One Pilates. Escreva pedidos completos, pois não lembro das mensagens anteriores (ex.: "Quais aulas tem amanhã?").',
 };
+
+const TAGS_HTML_PERMITIDAS = [
+  'p',
+  'br',
+  'strong',
+  'b',
+  'em',
+  'i',
+  'ul',
+  'ol',
+  'li',
+  'table',
+  'thead',
+  'tbody',
+  'tr',
+  'th',
+  'td',
+  'h3',
+  'h4',
+];
+
+const pareceHtml = (texto) => /<\/?[a-z][a-z0-9]*[^>]*>/i.test(texto);
+
+/** Resposta da IA em HTML, sanitizada: só tags de formatação e nenhum atributo. */
+function HtmlSeguro({ html }) {
+  const limpo = DOMPurify.sanitize(html, { ALLOWED_TAGS: TAGS_HTML_PERMITIDAS, ALLOWED_ATTR: [] });
+  return <div className="agente-ia-html" dangerouslySetInnerHTML={{ __html: limpo }} />;
+}
 
 /** Revela o texto aos poucos (a resposta inteira em ~2,5s no máximo). Renderiza como texto puro. */
 function TextoDigitando({ text, onTick }) {
@@ -183,7 +212,9 @@ export default function AgenteIAChat() {
                   </details>
                 )}
                 <div className={`agente-ia-balao ${m.role}${m.erro ? ' erro' : ''}`}>
-                  {m.animar && i === ultimoIndice ? (
+                  {m.role === 'ia' && !m.erro && pareceHtml(m.text) ? (
+                    <HtmlSeguro html={m.text} />
+                  ) : m.animar && i === ultimoIndice ? (
                     <TextoDigitando text={m.text} onTick={rolarParaOFim} />
                   ) : (
                     m.text
