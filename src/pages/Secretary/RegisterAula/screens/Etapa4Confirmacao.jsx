@@ -1,6 +1,7 @@
 import React from 'react';
 import { FiEdit2, FiCalendar, FiUsers, FiCheckCircle } from 'react-icons/fi';
 import { FaWheelchair } from 'react-icons/fa';
+import AvisoPacote from '../../../../components/AvisoPacote';
 
 export default function Etapa4Confirmacao({
   dataHora,
@@ -13,6 +14,7 @@ export default function Etapa4Confirmacao({
   salas,
   especialidades,
   irParaEtapa,
+  avisosPacote = [],
 }) {
   const professoresMap = professores.find((p) => p.id === parseInt(professor));
   const salasMap = salas.find((s) => s.id === parseInt(sala));
@@ -140,6 +142,8 @@ export default function Etapa4Confirmacao({
           )}
         </div>
       </div>
+
+      <AvisoPacote avisos={avisosPacote} />
     </div>
   );
 }

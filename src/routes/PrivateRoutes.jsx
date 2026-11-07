@@ -24,7 +24,9 @@ const PrivateRoutes = ({ allowedRoles }) => {
         ? '/professor/dashboard'
         : user.role === 'ADMINISTRADOR'
           ? '/admin/dashboard'
-          : '/secretaria/dashboard';
+          : user.role === 'ALUNO'
+            ? '/aluno/inicio'
+            : '/secretaria/dashboard';
 
     return <Navigate to={fallback} replace state={{ from: location }} />;
   }
@@ -32,7 +34,8 @@ const PrivateRoutes = ({ allowedRoles }) => {
   return (
     <>
       <Outlet />
-      <AgenteIAChat />
+      {/* o assistente OneIA é da equipe; o aluno não tem acesso */}
+      {user.role !== 'ALUNO' && <AgenteIAChat />}
     </>
   );
 };

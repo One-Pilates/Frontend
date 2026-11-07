@@ -98,6 +98,33 @@ export default function RegisterAula() {
     carregarDados();
   }, []);
 
+  // Aviso (não bloqueante) de quem ficaria além do pacote de aulas na especialidade escolhida
+  const [avisosPacote, setAvisosPacote] = useState([]);
+
+  useEffect(() => {
+    const ids = alunos.map((a) => a.id);
+    if (!especialidade || ids.length === 0) {
+      setAvisosPacote([]);
+      return undefined;
+    }
+    let cancelado = false;
+    api
+      .get('/api/agendamentos/verificar-pacote', {
+        params: { alunoIds: ids.join(','), especialidadeId: Number(especialidade) },
+      })
+      .then((res) => {
+        if (!cancelado) setAvisosPacote((res.data || []).filter((v) => v.excedeUmPacote));
+      })
+      .catch((err) => {
+        // o aviso é só informativo: se falhar, o agendamento continua possível
+        console.error('Erro ao verificar o pacote de aulas:', err);
+        if (!cancelado) setAvisosPacote([]);
+      });
+    return () => {
+      cancelado = true;
+    };
+  }, [alunos, especialidade]);
+
   useEffect(() => {
     if (especialidade) {
       setSala('');
@@ -235,13 +262,13 @@ export default function RegisterAula() {
         alunoIds,
       };
 
-      if (deveUsarAbsoluto) {
-        await api.post('/api/agendamentos/absoluto', payload);
-      } else {
-        await api.post('/api/agendamentos', payload);
-      }
+      const resposta = deveUsarAbsoluto
+        ? await api.post('/api/agendamentos/absoluto', payload)
+        : await api.post('/api/agendamentos', payload);
 
       toast.success('Aula criada com sucesso!');
+      // a aula foi criada; os avisos de pacote só informam quem passou do número de aulas
+      (resposta.data?.avisos || []).forEach((aviso) => toast.warning(aviso, { duration: 8000 }));
 
       navigate(`${basePath}/agendamento`, {
         state: {
@@ -336,6 +363,7 @@ export default function RegisterAula() {
             handleAdicionarAluno={handleAdicionarAluno}
             handleRemoverAluno={handleRemoverAluno}
             erros={erros}
+            avisosPacote={avisosPacote}
           />
         );
       case 4:
@@ -351,6 +379,7 @@ export default function RegisterAula() {
             salas={salas}
             especialidades={especialidades}
             irParaEtapa={irParaEtapa}
+            avisosPacote={avisosPacote}
           />
         );
       default:

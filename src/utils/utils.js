@@ -229,3 +229,22 @@ export const getColorForEspecialidade = (especialidade) => {
   const backgroundColor = especialidadeCores[especialidade] || '#3788d8';
   return { backgroundColor, textColor: '#fff' };
 };
+
+/**
+ * Senha provisória de 6 dígitos (a mesma regra usada no cadastro de professor e secretária),
+ * sorteada com o gerador criptográfico do navegador.
+ */
+export function gerarSenhaProvisoria() {
+  const sorteio = new Uint32Array(1);
+  crypto.getRandomValues(sorteio);
+  return String(100000 + (sorteio[0] % 900000));
+}
+
+/** Escapa texto de usuário antes de colocá-lo em HTML (ex.: janelas do SweetAlert2). */
+export function escaparHtml(texto) {
+  return String(texto ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}

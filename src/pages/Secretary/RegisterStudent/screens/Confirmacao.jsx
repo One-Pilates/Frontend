@@ -12,6 +12,7 @@ export default function ConfirmacaoAlunoScreen({
   dadosPessoais,
   endereco,
   informacoesAluno,
+  pacotes = [],
 }) {
   return (
     <div className="confirmacao-screen etapa-content">
@@ -71,6 +72,18 @@ export default function ConfirmacaoAlunoScreen({
                 ) : (
                   <span className="badge badge-nao">Desativado</span>
                 )}
+              </span>
+            </div>
+
+            <div className="card-info">
+              <span className="card-label">Pacote de aulas</span>
+              <span className="card-value">
+                {pacotes.filter((p) => p.saldo !== 0).length === 0
+                  ? 'Nenhuma aula definida'
+                  : pacotes
+                      .filter((p) => p.saldo !== 0)
+                      .map((p) => `${p.especialidade}: ${p.saldo}`)
+                      .join(' · ')}
               </span>
             </div>
 

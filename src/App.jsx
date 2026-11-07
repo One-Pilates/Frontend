@@ -6,6 +6,7 @@ import PrivateRoutes from './routes/PrivateRoutes';
 import PublicRoutes from './routes/PublicRoutes';
 import TeacherRoutes from './routes/TeacherRoutes';
 import SecretaryRoutes from './routes/SecretaryRoutes';
+import StudentRoutes from './routes/StudentRoutes';
 import { useAuth } from './hooks/useAuth';
 import { PrivacyProvider } from './hooks/PrivacyContext';
 import InactivityTracker from './components/InactivityTracker';
@@ -71,6 +72,9 @@ function App() {
           </Route>
           <Route element={<PrivateRoutes allowedRoles={['ADMINISTRADOR']} />}>
             <Route path="/admin/*" element={<SecretaryRoutes />} />
+          </Route>
+          <Route element={<PrivateRoutes allowedRoles={['ALUNO']} />}>
+            <Route path="/aluno/*" element={<StudentRoutes />} />
           </Route>
           <Route path="/*" element={<PublicRoutes />} />
         </Routes>

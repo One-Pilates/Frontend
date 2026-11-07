@@ -16,6 +16,7 @@ import {
 } from 'react-icons/fi';
 import { FaWheelchair } from 'react-icons/fa';
 import api from '../../../../services/api';
+import AvisoPacote from '../../../../components/AvisoPacote';
 import { solicitarRecomendacaoIA } from '../../../../services/ia';
 import Swal from 'sweetalert2';
 import { toast } from 'sonner';
@@ -40,12 +41,53 @@ const AgendamentoModal = ({ isOpen, agendamento, onClose, onDelete }) => {
   }, []);
 
   const [editFields, setEditFields] = useState({});
+  // Aviso (não bloqueante) de alunos que ficariam além do pacote de aulas
+  const [avisosPacote, setAvisosPacote] = useState([]);
   const [professores, setProfessores] = useState([]);
   const [especialidades, setEspecialidades] = useState([]);
   const [salas, setSalas] = useState([]);
   const [todosAlunos, setTodosAlunos] = useState([]);
   const [alunosSelecionados, setAlunosSelecionados] = useState([]);
   const [carregando, setCarregando] = useState(false);
+
+  // Avisa antes de salvar: quem entra na aula (ou todos, se a especialidade mudar) sem pacote
+  useEffect(() => {
+    if (!agendamento) return undefined;
+    const especialidadeId = Number(
+      editFields.especialidadeId !== undefined
+        ? editFields.especialidadeId
+        : agendamento.especialidadeId,
+    );
+    const especialidadeMudou =
+      editFields.especialidadeId !== undefined &&
+      Number(editFields.especialidadeId) !== Number(agendamento.especialidadeId);
+    const jaNaAula = new Set((agendamento.alunos || []).map((a) => a.id));
+    const ids = alunosSelecionados
+      .filter((a) => especialidadeMudou || !jaNaAula.has(a.id))
+      .map((a) => a.id)
+      .filter(Boolean);
+
+    if (!especialidadeId || ids.length === 0) {
+      setAvisosPacote([]);
+      return undefined;
+    }
+    let cancelado = false;
+    api
+      .get('/api/agendamentos/verificar-pacote', {
+        params: { alunoIds: ids.join(','), especialidadeId },
+      })
+      .then((res) => {
+        if (!cancelado) setAvisosPacote((res.data || []).filter((v) => v.excedeUmPacote));
+      })
+      .catch(() => {
+        // o aviso é só informativo
+        if (!cancelado) setAvisosPacote([]);
+      });
+    return () => {
+      cancelado = true;
+    };
+  }, [alunosSelecionados, editFields.especialidadeId, agendamento]);
+
   const [observacoesExpandidas, setObservacoesExpandidas] = useState({});
   const [observacoesAlunos, setObservacoesAlunos] = useState({});
   const [iaRecomendacoes, setiaRecomendacoes] = useState({});
@@ -299,14 +341,20 @@ Como o serviço de IA não respondeu, aqui está uma sugestão genérica para ${
 
       try {
         setCarregando(true);
-        await api.patch(`/api/agendamentos/${agendamento.id}`, patchData);
+        const resposta = await api.patch(`/api/agendamentos/${agendamento.id}`, patchData);
         setEditFields({});
         toast.success('Aula atualizada com sucesso!');
+        // a aula foi salva; os avisos só informam quem ficou além do pacote de aulas
+        const avisos = resposta.data?.avisos || [];
+        avisos.forEach((aviso) => toast.warning(aviso, { duration: 8000 }));
 
         // Pequeno delay para o usuário ver o toast antes de recarregar
-        setTimeout(() => {
-          window.location.reload();
-        }, 1200);
+        setTimeout(
+          () => {
+            window.location.reload();
+          },
+          avisos.length ? 4000 : 1200,
+        );
       } catch (e) {
         setCarregando(false);
         console.error('Erro ao salvar:', e.response?.data);
@@ -811,6 +859,8 @@ Como o serviço de IA não respondeu, aqui está uma sugestão genérica para ${
                     <p>Nenhum aluno vinculado a esta aula.</p>
                   </div>
                 )}
+
+                <AvisoPacote avisos={avisosPacote} />
               </div>
 
               {alunosMudaram && activeTab === 'alunos' && (

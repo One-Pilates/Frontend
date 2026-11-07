@@ -1,6 +1,7 @@
 import React from 'react';
 import { FiUserPlus, FiTrash2, FiChevronDown } from 'react-icons/fi';
 import { FaWheelchair } from 'react-icons/fa';
+import AvisoPacote from '../../../../components/AvisoPacote';
 
 export default function Etapa3Alunos({
   alunos,
@@ -8,6 +9,7 @@ export default function Etapa3Alunos({
   erros,
   handleAdicionarAluno,
   handleRemoverAluno,
+  avisosPacote = [],
 }) {
   const [filtroAluno, setFiltroAluno] = React.useState('');
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
@@ -176,6 +178,8 @@ export default function Etapa3Alunos({
           <p className="no-alunos">Nenhum aluno adicionado ainda</p>
         )}
       </div>
+
+      <AvisoPacote avisos={avisosPacote} />
     </div>
   );
 }

@@ -71,6 +71,10 @@ export function AuthProvider({ children }) {
           path: '/admin/dashboard',
           msg: `Bem-vindo ao painel da One Pilates, ${nome}!`,
         },
+        ALUNO: {
+          path: '/aluno/inicio',
+          msg: `Bem-vindo à One Pilates, ${nome}!`,
+        },
       };
 
       let destino = rotas[role];

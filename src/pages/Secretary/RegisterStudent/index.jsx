@@ -3,13 +3,19 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { FaArrowLeft, FaUser } from 'react-icons/fa';
 import { FiArrowRight, FiArrowLeft as FiArrowLeftIcon, FiCheck } from 'react-icons/fi';
 import { toast } from 'sonner';
+import Swal from 'sweetalert2';
 import api from '../../../services/api';
 import StepIndicator from './components/StepIndicator';
 import DadosPessoaisScreen from './screens/DadosPessoais';
 import EnderecoScreen from './screens/Endereco';
 import InformacoesAlunoScreen from './screens/InformacoesAlunos';
 import ConfirmacaoAlunoScreen from './screens/Confirmacao';
-import { validarCPF, validarEmail } from '../../../utils/utils';
+import {
+  validarCPF,
+  validarEmail,
+  gerarSenhaProvisoria,
+  escaparHtml,
+} from '../../../utils/utils';
 import { useAuth } from '../../../hooks/useAuth';
 import './style.scss';
 import Back from '../../../components/Back';
@@ -58,6 +64,42 @@ export default function RegisterStudent() {
       observacao: '',
     },
   );
+
+  // Pacote de aulas por especialidade: [{ especialidadeId, especialidade, saldo }]
+  const [pacotes, setPacotes] = useState([]);
+  const [pacotesOriginais, setPacotesOriginais] = useState([]);
+
+  useEffect(() => {
+    // Edição: saldo atual do aluno. Cadastro: todas as especialidades começam com 0 aula.
+    const carregar = isEditMode
+      ? api.get(`api/alunos/${id}/pacotes`).then((res) => res.data)
+      : api
+          .get('api/especialidades')
+          .then((res) =>
+            (res.data || []).map((e) => ({
+              especialidadeId: e.id,
+              especialidade: e.nome,
+              saldo: 0,
+            })),
+          );
+
+    carregar
+      .then((lista) => {
+        setPacotes(lista);
+        setPacotesOriginais(lista);
+      })
+      .catch((err) => {
+        console.error('Erro ao carregar o pacote de aulas:', err);
+        toast.warning('Não foi possível carregar o pacote de aulas.');
+      });
+  }, [id]);
+
+  const atualizarPacote = (especialidadeId, valor) => {
+    const aulas = Math.max(0, Number.parseInt(valor, 10) || 0);
+    setPacotes((prev) =>
+      prev.map((p) => (p.especialidadeId === especialidadeId ? { ...p, saldo: aulas } : p)),
+    );
+  };
 
   useEffect(() => {
     if (!isEditMode) return;
@@ -258,6 +300,29 @@ export default function RegisterStudent() {
     navigate(`${basePath}/alunos`);
   };
 
+  /**
+   * Grava no backend os saldos que mudaram (só secretaria/administrador podem).
+   * Devolve false se algum falhar, para avisar sem perder o cadastro já feito.
+   */
+  const salvarPacotes = async (alunoId) => {
+    if (!alunoId) return false;
+    const alterados = pacotes.filter((p) => {
+      const original = pacotesOriginais.find((o) => o.especialidadeId === p.especialidadeId);
+      return p.saldo !== (original?.saldo ?? 0);
+    });
+    try {
+      await Promise.all(
+        alterados.map((p) =>
+          api.put(`api/alunos/${alunoId}/pacotes/${p.especialidadeId}`, { aulas: p.saldo }),
+        ),
+      );
+      return true;
+    } catch (err) {
+      console.error('Erro ao salvar o pacote de aulas:', err);
+      return false;
+    }
+  };
+
   const cadastrarAluno = async () => {
     setCarregando(true);
     const payload = {
@@ -282,18 +347,61 @@ export default function RegisterStudent() {
     };
 
     try {
+      let alunoId = id;
+      let senhaProvisoria = null;
+
       if (isEditMode) {
         await api.patch(`api/alunos/${id}`, payload);
+      } else {
+        // Como no professor: a senha provisória vai no cadastro e o backend a envia por e-mail
+        senhaProvisoria = gerarSenhaProvisoria();
+        const resposta = await api.post('api/alunos', { ...payload, senha: senhaProvisoria });
+        alunoId = resposta.data?.id;
+      }
+
+      const pacoteSalvo = await salvarPacotes(alunoId);
+
+      if (isEditMode) {
         toast.success('Aluno atualizado com sucesso!');
       } else {
-        await api.post('api/alunos', payload);
-        toast.success('Aluno cadastrado com sucesso!');
+        await Swal.fire({
+          icon: 'success',
+          title: 'Aluno cadastrado com sucesso!',
+          html: `
+            <div style="text-align: left; padding: 1rem;">
+              <p><strong>Nome:</strong> ${escaparHtml(dadosPessoais.nomeCompleto)}</p>
+              <p><strong>Email (login):</strong> ${escaparHtml(dadosPessoais.email)}</p>
+              <p style="margin-top: 1rem; padding: 1rem; background: #fef3c7; border-radius: 8px;">
+                <strong>Senha provisória:</strong><br/>
+                <code style="font-size: 1.2rem; color: #92400e;">${senhaProvisoria}</code><br/>
+                <small style="color: #92400e;">Enviada por e-mail ao aluno. Ele deve trocá-la no primeiro acesso.</small>
+              </p>
+            </div>
+          `,
+          confirmButtonText: 'OK, entendi!',
+          confirmButtonColor: '#22c55e',
+          width: '600px',
+        });
+      }
+      if (!pacoteSalvo) {
+        toast.warning(
+          'O aluno foi salvo, mas o pacote de aulas não foi atualizado. Ajuste na edição do aluno.',
+        );
       }
       navigate(`${basePath}/alunos`);
     } catch (error) {
       console.error('Erro ao salvar aluno:', error);
+      const status = error?.response?.status;
+      const msgServidor =
+        typeof error?.response?.data === 'string'
+          ? error.response.data
+          : error?.response?.data?.erro || error?.response?.data?.message;
       toast.error(
-        isEditMode ? 'Não foi possível atualizar o aluno.' : 'Não foi possível cadastrar o aluno.',
+        status === 409 || status === 400
+          ? msgServidor || 'Dados inválidos ou e-mail/CPF já cadastrado.'
+          : isEditMode
+            ? 'Não foi possível atualizar o aluno.'
+            : 'Não foi possível cadastrar o aluno.',
       );
     } finally {
       setCarregando(false);
@@ -325,6 +433,8 @@ export default function RegisterStudent() {
             dados={informacoesAluno}
             atualizar={atualizarInformacoesAluno}
             erros={erros}
+            pacotes={pacotes}
+            atualizarPacote={atualizarPacote}
           />
         );
       case 4:
@@ -333,6 +443,7 @@ export default function RegisterStudent() {
             dadosPessoais={dadosPessoais}
             endereco={endereco}
             informacoesAluno={informacoesAluno}
+            pacotes={pacotes}
           />
         );
       default:
