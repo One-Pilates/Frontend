@@ -69,15 +69,36 @@ function TextoDigitando({ text, onTick }) {
   return <>{text.slice(0, qtd)}</>;
 }
 
+/** Segundos desde que o passo ativo apareceu; depois de um tempo, avisa que a espera é normal. */
+function TempoDoPasso() {
+  const [segundos, setSegundos] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setSegundos((s) => s + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  if (segundos < 3) return null;
+  return (
+    <span className="agente-ia-passo-tempo">
+      {' · '}
+      {segundos}s{segundos >= 15 ? ' — isso pode levar um pouco mais, aguarde' : ''}
+    </span>
+  );
+}
+
 /** Lista de passos: check ao concluir, spinner enquanto executa, alerta se falhou. */
-function ListaPassos({ passos }) {
+function ListaPassos({ passos, aoVivo = false }) {
   return (
     <ol className="agente-ia-passos">
       {passos.map((p, i) => {
         const emAndamento = p.status === 'EM_ANDAMENTO';
         const falhou = p.status === 'ERRO';
         return (
-          <li key={i} className={emAndamento ? 'andamento' : falhou ? 'falha' : 'feito'}>
+          <li
+            key={`${i}-${p.texto}`}
+            className={emAndamento ? 'andamento' : falhou ? 'falha' : 'feito'}
+          >
             <span className="agente-ia-passo-icone">
               {emAndamento ? (
                 <span className="agente-ia-spinner" />
@@ -87,7 +108,10 @@ function ListaPassos({ passos }) {
                 <FiCheck />
               )}
             </span>
-            <span className="agente-ia-passo-texto">{p.texto}</span>
+            <span className="agente-ia-passo-texto">
+              {p.texto}
+              {aoVivo && emAndamento && <TempoDoPasso />}
+            </span>
           </li>
         );
       })}
@@ -227,7 +251,7 @@ export default function AgenteIAChat() {
               <div className="agente-ia-bloco ia">
                 <div className="agente-ia-balao ia" aria-label="O assistente está trabalhando">
                   {passos.length > 0 ? (
-                    <ListaPassos passos={passos} />
+                    <ListaPassos passos={passos} aoVivo />
                   ) : (
                     <span className="agente-ia-digitando">
                       <span />
