@@ -140,19 +140,40 @@
 
   table {
     display: block;
+    width: 100%;
     max-width: 100%;
     overflow-x: auto;
     border-collapse: collapse;
     font-size: 0.8125rem;
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
   }
 
   th, td {
-    padding: 4px 8px;
-    border: 1px solid var(--cor-borda);
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--cor-borda);
     text-align: left;
+    vertical-align: middle;
+    line-height: 1.4;
   }
 
-  th { background: var(--surface-2); }
+  th {
+    background: var(--surface-2);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-cinza);
+    white-space: nowrap;
+  }
+
+  tbody tr:nth-child(even) {
+    background: rgba(0, 0, 0, 0.015);
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
 }
 
 .agente-ia-digitando {
